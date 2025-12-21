@@ -1,6 +1,14 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { Header } from "./header";
+import {
+    applyTheme,
+    getServerSnapshot,
+    getSnapshot,
+    getStoredTheme,
+    getSystemTheme,
+    Header,
+    subscribe,
+} from "./header";
 
 const mockGetUser = vi.fn();
 const mockOnAuthStateChange = vi.fn();
@@ -24,12 +32,41 @@ vi.mock("@/lib/supabase/client", () => ({
 }));
 
 describe("Header", () => {
+  const localStorageMock = {
+    getItem: vi.fn(),
+    setItem: vi.fn(),
+    removeItem: vi.fn(),
+    clear: vi.fn(),
+  };
+
   beforeEach(() => {
     vi.clearAllMocks();
     mockOnAuthStateChange.mockReturnValue({
       data: { subscription: { unsubscribe: vi.fn() } },
     });
     mockSignOut.mockResolvedValue({ error: null });
+
+    Object.defineProperty(window, "localStorage", {
+      value: localStorageMock,
+      writable: true,
+    });
+    localStorageMock.getItem.mockReturnValue(null);
+
+    Object.defineProperty(window, "matchMedia", {
+      writable: true,
+      value: vi.fn().mockImplementation((query: string) => ({
+        matches: query === "(prefers-color-scheme: dark)",
+        media: query,
+        onchange: null,
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+      })),
+    });
+
+    document.documentElement.classList.remove("dark");
   });
 
   it("renders Sign In button when not authenticated", async () => {
@@ -127,6 +164,221 @@ describe("Header", () => {
 
     await waitFor(() => {
       expect(screen.getByText("Sign In")).toBeDefined();
+    });
+  });
+
+  it("renders theme toggle button", async () => {
+    mockGetUser.mockResolvedValue({ data: { user: null } });
+
+    render(<Header />);
+
+    await waitFor(() => {
+      expect(screen.getByLabelText("Toggle theme")).toBeDefined();
+    });
+  });
+
+  it("toggles theme from dark to light when clicked", async () => {
+    mockGetUser.mockResolvedValue({ data: { user: null } });
+    localStorageMock.getItem.mockReturnValue("dark");
+
+    render(<Header />);
+
+    const themeButton = screen.getByLabelText("Toggle theme");
+    fireEvent.click(themeButton);
+
+    expect(localStorageMock.setItem).toHaveBeenCalledWith("theme", "light");
+  });
+
+  it("toggles theme from light to dark when clicked", async () => {
+    mockGetUser.mockResolvedValue({ data: { user: null } });
+    localStorageMock.getItem.mockReturnValue("light");
+
+    render(<Header />);
+
+    const themeButton = screen.getByLabelText("Toggle theme");
+    fireEvent.click(themeButton);
+
+    expect(localStorageMock.setItem).toHaveBeenCalledWith("theme", "dark");
+  });
+
+  it("applies theme from useSyncExternalStore", async () => {
+    mockGetUser.mockResolvedValue({ data: { user: null } });
+    localStorageMock.getItem.mockReturnValue("dark");
+
+    render(<Header />);
+
+    await waitFor(() => {
+      expect(document.documentElement.classList.contains("dark")).toBe(true);
+    });
+  });
+
+  it("applies light theme from localStorage", async () => {
+    mockGetUser.mockResolvedValue({ data: { user: null } });
+    localStorageMock.getItem.mockReturnValue("light");
+
+    render(<Header />);
+
+    await waitFor(() => {
+      expect(document.documentElement.classList.contains("dark")).toBe(false);
+    });
+  });
+
+  it("falls back to light system theme when no stored preference", async () => {
+    mockGetUser.mockResolvedValue({ data: { user: null } });
+    localStorageMock.getItem.mockReturnValue(null);
+
+    // Mock system preference for light mode
+    Object.defineProperty(window, "matchMedia", {
+      writable: true,
+      value: vi.fn().mockImplementation((query: string) => ({
+        matches: query !== "(prefers-color-scheme: dark)",
+        media: query,
+        onchange: null,
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+      })),
+    });
+
+    render(<Header />);
+
+    await waitFor(() => {
+      expect(document.documentElement.classList.contains("dark")).toBe(false);
+    });
+  });
+});
+
+describe("Theme utility functions", () => {
+  const localStorageMock = {
+    getItem: vi.fn(),
+    setItem: vi.fn(),
+    removeItem: vi.fn(),
+    clear: vi.fn(),
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+
+    Object.defineProperty(window, "localStorage", {
+      value: localStorageMock,
+      writable: true,
+    });
+    localStorageMock.getItem.mockReturnValue(null);
+
+    Object.defineProperty(window, "matchMedia", {
+      writable: true,
+      value: vi.fn().mockImplementation((query: string) => ({
+        matches: query === "(prefers-color-scheme: dark)",
+        media: query,
+        onchange: null,
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+      })),
+    });
+
+    document.documentElement.classList.remove("dark");
+  });
+
+  describe("getStoredTheme", () => {
+    it("returns stored theme from localStorage", () => {
+      localStorageMock.getItem.mockReturnValue("light");
+      expect(getStoredTheme()).toBe("light");
+    });
+
+    it("returns null when no theme stored", () => {
+      localStorageMock.getItem.mockReturnValue(null);
+      expect(getStoredTheme()).toBeNull();
+    });
+  });
+
+  describe("getSystemTheme", () => {
+    it("returns dark when system prefers dark", () => {
+      Object.defineProperty(window, "matchMedia", {
+        writable: true,
+        value: vi.fn().mockImplementation(() => ({ matches: true })),
+      });
+      expect(getSystemTheme()).toBe("dark");
+    });
+
+    it("returns light when system prefers light", () => {
+      Object.defineProperty(window, "matchMedia", {
+        writable: true,
+        value: vi.fn().mockImplementation(() => ({ matches: false })),
+      });
+      expect(getSystemTheme()).toBe("light");
+    });
+  });
+
+  describe("applyTheme", () => {
+    it("adds dark class for dark theme", () => {
+      document.documentElement.classList.remove("dark");
+      applyTheme("dark");
+      expect(document.documentElement.classList.contains("dark")).toBe(true);
+    });
+
+    it("removes dark class for light theme", () => {
+      document.documentElement.classList.add("dark");
+      applyTheme("light");
+      expect(document.documentElement.classList.contains("dark")).toBe(false);
+    });
+  });
+
+  describe("getSnapshot", () => {
+    it("returns stored theme when available", () => {
+      localStorageMock.getItem.mockReturnValue("light");
+      expect(getSnapshot()).toBe("light");
+    });
+
+    it("falls back to system theme when no stored theme", () => {
+      localStorageMock.getItem.mockReturnValue(null);
+      Object.defineProperty(window, "matchMedia", {
+        writable: true,
+        value: vi.fn().mockImplementation(() => ({ matches: true })),
+      });
+      expect(getSnapshot()).toBe("dark");
+    });
+  });
+
+  describe("getServerSnapshot", () => {
+    it("always returns dark for SSR", () => {
+      expect(getServerSnapshot()).toBe("dark");
+    });
+  });
+
+  describe("subscribe", () => {
+    it("adds and removes event listeners", () => {
+      const callback = vi.fn();
+      const mockAddEventListener = vi.fn();
+      const mockRemoveEventListener = vi.fn();
+
+      Object.defineProperty(window, "matchMedia", {
+        writable: true,
+        value: vi.fn().mockImplementation(() => ({
+          addEventListener: mockAddEventListener,
+          removeEventListener: mockRemoveEventListener,
+        })),
+      });
+
+      const windowAddEventListener = vi.spyOn(window, "addEventListener");
+      const windowRemoveEventListener = vi.spyOn(window, "removeEventListener");
+
+      const unsubscribe = subscribe(callback);
+
+      expect(mockAddEventListener).toHaveBeenCalledWith("change", expect.any(Function));
+      expect(windowAddEventListener).toHaveBeenCalledWith("storage", expect.any(Function));
+
+      unsubscribe();
+
+      expect(mockRemoveEventListener).toHaveBeenCalledWith("change", expect.any(Function));
+      expect(windowRemoveEventListener).toHaveBeenCalledWith("storage", expect.any(Function));
+
+      windowAddEventListener.mockRestore();
+      windowRemoveEventListener.mockRestore();
     });
   });
 });

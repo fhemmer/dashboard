@@ -21,6 +21,23 @@ export const metadata: Metadata = {
   description: "Manage your demo records and monitor system activity.",
 };
 
+// Script to apply theme before React hydration to prevent flash
+const themeScript = `
+(function() {
+  try {
+    var theme = localStorage.getItem('theme');
+    if (!theme) {
+      theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  } catch (e) {}
+})();
+`;
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -32,7 +49,10 @@ export default async function RootLayout({
   } = await supabase.auth.getUser();
 
   return (
-    <html lang="en" className="dark">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground relative`}
       >

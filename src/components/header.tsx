@@ -7,12 +7,58 @@ import type { User } from "@supabase/supabase-js";
 import { Bell, LogOut, Moon, Search, Sun } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
+
+type Theme = "light" | "dark";
+
+export function getStoredTheme(): Theme | null {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem("theme") as Theme | null;
+}
+
+export function getSystemTheme(): Theme {
+  if (typeof window === "undefined") return "dark";
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+
+export function applyTheme(theme: Theme) {
+  const root = document.documentElement;
+  if (theme === "dark") {
+    root.classList.add("dark");
+  } else {
+    root.classList.remove("dark");
+  }
+}
+
+export function getSnapshot(): Theme {
+  const stored = getStoredTheme();
+  return stored ?? getSystemTheme();
+}
+
+export function getServerSnapshot(): Theme {
+  return "dark";
+}
+
+export function subscribe(callback: () => void): () => void {
+  const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+  const handleChange = () => callback();
+  mediaQuery.addEventListener("change", handleChange);
+  window.addEventListener("storage", handleChange);
+  return () => {
+    mediaQuery.removeEventListener("change", handleChange);
+    window.removeEventListener("storage", handleChange);
+  };
+}
 
 export function Header() {
   const [user, setUser] = useState<User | null>(null);
+  const theme = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   const router = useRouter();
   const supabase = createClient();
+
+  useEffect(() => {
+    applyTheme(theme);
+  }, [theme]);
 
   useEffect(() => {
     const getUser = async () => {
@@ -37,6 +83,14 @@ export function Header() {
     router.refresh();
   };
 
+  const toggleTheme = useCallback(() => {
+    const currentTheme = getSnapshot();
+    const newTheme = currentTheme === "dark" ? "light" : "dark";
+    localStorage.setItem("theme", newTheme);
+    applyTheme(newTheme);
+    window.dispatchEvent(new StorageEvent("storage"));
+  }, []);
+
   return (
     <header className="flex h-16 items-center justify-between border-b bg-card/50 px-6 backdrop-blur-xl sticky top-0 z-10">
       <div className="flex items-center gap-4 flex-1">
@@ -53,7 +107,13 @@ export function Header() {
         <Button variant="ghost" size="icon">
           <Bell className="h-4 w-4" />
         </Button>
-        <Button variant="ghost" size="icon">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={toggleTheme}
+          title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+          aria-label="Toggle theme"
+        >
           <Sun className="h-4 w-4 dark:hidden" />
           <Moon className="h-4 w-4 hidden dark:block" />
         </Button>
