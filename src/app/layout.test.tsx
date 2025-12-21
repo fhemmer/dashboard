@@ -1,7 +1,7 @@
-import { render, screen } from '@testing-library/react'
-import { describe, it, expect, vi } from 'vitest'
-import RootLayout from './layout'
 import { createClient } from '@/lib/supabase/server'
+import { render, screen } from '@testing-library/react'
+import { describe, expect, it, vi } from 'vitest'
+import RootLayout from './layout'
 
 vi.mock('next/font/google', () => ({
   Geist: () => ({ variable: 'geist-sans' }),

@@ -1,17 +1,17 @@
 "use client";
 
+import { signOut } from "@/app/auth/actions";
 import { cn } from "@/lib/utils";
 import { APP_NAME, APP_VERSION } from "@/lib/version";
 import {
-  Database,
-  LayoutDashboard,
-  Settings,
-  Zap,
-  ChevronRight,
+    ChevronRight,
+    Database,
+    LayoutDashboard,
+    Settings,
+    Zap,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { signOut } from "@/app/auth/actions";
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },

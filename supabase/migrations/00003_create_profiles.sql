@@ -30,7 +30,7 @@ BEGIN
   VALUES (
     new.id,
     new.email,
-    CASE 
+    CASE
       WHEN new.email = 'fphemmer@gmail.com' THEN 'admin'
       ELSE 'user'
     END

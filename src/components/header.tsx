@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, Bell, Moon, Sun } from "lucide-react";
+import { Bell, Moon, Search, Sun } from "lucide-react";
 
 export function Header() {
   return (

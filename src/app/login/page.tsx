@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { signIn } from "../auth/actions";
 import Link from "next/link";
+import { signIn } from "../auth/actions";
 
 export default async function LoginPage({
   searchParams,

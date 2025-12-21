@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 describe('env', () => {
   it('should export env object when variables are set', async () => {
@@ -9,7 +9,7 @@ describe('env', () => {
 
     // Import dynamically to ensure env variables are set before parsing
     const { env } = await import('./env')
-    
+
     expect(env).toBeDefined()
     expect(env.NEXT_PUBLIC_SUPABASE_PROJECT_URL).toBe('https://example.supabase.co')
   })

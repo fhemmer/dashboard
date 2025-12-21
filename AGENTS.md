@@ -26,7 +26,7 @@ This project follows the **StackProbe** protocol. All agents and contributors mu
   - Use `supabaseAdmin` from `@/lib/supabase/admin` ONLY for bypass-RLS administrative tasks (Server-side only).
 - **Session Management**: Handled via `src/middleware.ts`. Do not remove or bypass unless explicitly required.
 - **Route Protection**: Prefer server-side redirects in Server Components or Middleware for protected routes.
-- **Authorization**: 
+- **Authorization**:
   - User roles are stored in the `public.profiles` table.
   - `fphemmer@gmail.com` is the default administrator.
   - Use RLS policies on tables to restrict access based on `auth.uid()` and the `profiles.role` column.
