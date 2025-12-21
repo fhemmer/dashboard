@@ -4,6 +4,7 @@ import {
     DropdownMenu,
     DropdownMenuCheckboxItem,
     DropdownMenuContent,
+    DropdownMenuGroup,
     DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuPortal,
@@ -32,10 +33,12 @@ describe('DropdownMenu', () => {
         <DropdownMenuContent>
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
-            Profile
-            <DropdownMenuShortcut>⌘P</DropdownMenuShortcut>
-          </DropdownMenuItem>
+          <DropdownMenuGroup>
+            <DropdownMenuItem>
+              Profile
+              <DropdownMenuShortcut>⌘P</DropdownMenuShortcut>
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
           <DropdownMenuCheckboxItem checked>
             Show Sidebar
           </DropdownMenuCheckboxItem>
@@ -72,5 +75,91 @@ describe('DropdownMenu', () => {
     expect(screen.getByText('Light')).toBeDefined()
     expect(screen.getByText('Dark')).toBeDefined()
     expect(screen.getByText('More Tools')).toBeDefined()
+  })
+
+  it('renders DropdownMenuGroup with data-slot attribute', async () => {
+    render(
+      <DropdownMenu>
+        <DropdownMenuTrigger>Open Menu</DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuGroup data-testid="menu-group">
+            <DropdownMenuItem>Item 1</DropdownMenuItem>
+            <DropdownMenuItem>Item 2</DropdownMenuItem>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    )
+
+    const trigger = screen.getByText('Open Menu')
+    fireEvent.pointerDown(trigger, { pointerId: 1, buttons: 1 })
+    fireEvent.pointerUp(trigger, { pointerId: 1, buttons: 1 })
+
+    expect(await screen.findByText('Item 1')).toBeDefined()
+    expect(screen.getByText('Item 2')).toBeDefined()
+    expect(screen.getByTestId('menu-group')).toBeDefined()
+  })
+
+  it('renders destructive variant correctly', async () => {
+    render(
+      <DropdownMenu>
+        <DropdownMenuTrigger>Open Menu</DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuItem variant="destructive" data-testid="destructive-item">
+            Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    )
+
+    const trigger = screen.getByText('Open Menu')
+    fireEvent.pointerDown(trigger, { pointerId: 1, buttons: 1 })
+    fireEvent.pointerUp(trigger, { pointerId: 1, buttons: 1 })
+
+    const item = await screen.findByTestId('destructive-item')
+    expect(item).toBeDefined()
+    expect(item.getAttribute('data-variant')).toBe('destructive')
+  })
+
+  it('renders inset label correctly', async () => {
+    render(
+      <DropdownMenu>
+        <DropdownMenuTrigger>Open Menu</DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuLabel inset data-testid="inset-label">Inset Label</DropdownMenuLabel>
+          <DropdownMenuItem inset data-testid="inset-item">Inset Item</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    )
+
+    const trigger = screen.getByText('Open Menu')
+    fireEvent.pointerDown(trigger, { pointerId: 1, buttons: 1 })
+    fireEvent.pointerUp(trigger, { pointerId: 1, buttons: 1 })
+
+    expect(await screen.findByTestId('inset-label')).toBeDefined()
+    expect(screen.getByTestId('inset-item')).toBeDefined()
+  })
+
+  it('renders submenu with sub trigger and content', async () => {
+    render(
+      <DropdownMenu>
+        <DropdownMenuTrigger>Open Menu</DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger inset data-testid="sub-trigger">
+              Submenu
+            </DropdownMenuSubTrigger>
+            <DropdownMenuSubContent data-testid="sub-content">
+              <DropdownMenuItem>Sub Item</DropdownMenuItem>
+            </DropdownMenuSubContent>
+          </DropdownMenuSub>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    )
+
+    const trigger = screen.getByText('Open Menu')
+    fireEvent.pointerDown(trigger, { pointerId: 1, buttons: 1 })
+    fireEvent.pointerUp(trigger, { pointerId: 1, buttons: 1 })
+
+    expect(await screen.findByTestId('sub-trigger')).toBeDefined()
   })
 })

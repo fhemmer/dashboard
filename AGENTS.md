@@ -4,7 +4,7 @@ This project follows the **StackProbe** protocol. All agents and contributors mu
 
 ## Quality Standards
 - **Clean Lint Requirement**: ALL changes must result in a clean `bun lint` result. No code should be committed unless linting passes with zero errors and zero warnings.
-- **Test Coverage**: New features must include tests. Maintain 90% coverage.
+- **Test Coverage Requirement**: ALL changes must result in a clean `bun test:coverage` result. No code should be committed unless test coverage passes the 90% threshold for statements, branches, functions, and lines.
 - **Type Safety**: Strict TypeScript mode is enabled. No `any` types allowed.
 
 ## Visual System: "Finesse"
