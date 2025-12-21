@@ -1,3 +1,4 @@
+import { ThemePicker } from "@/components/theme-picker";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -96,16 +97,9 @@ export default async function AccountPage({
               <label htmlFor="theme" className="text-sm font-medium">
                 Theme
               </label>
-              <select
-                id="theme"
-                name="theme"
-                defaultValue={profile?.theme || "default"}
-                className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-xs transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                <option value="default">Default</option>
-              </select>
+              <ThemePicker defaultValue={profile?.theme} />
               <p className="text-xs text-muted-foreground">
-                Choose your preferred visual theme. More themes coming soon.
+                Choose your preferred color palette. Works with both light and dark modes.
               </p>
             </div>
 

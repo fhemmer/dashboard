@@ -12,6 +12,7 @@ This project follows the **StackProbe** protocol. All agents and contributors mu
 - **Colors**: OKLCH-based color system.
 - **Components**: shadcn/ui (Tailwind CSS 4).
 - **Layout**: Responsive, mobile-first, with subtle glassmorphism effects.
+- **Theming**: Multiple theme palettes (default, ocean, forest, sunset) with light/dark mode support. See `.claude/skills/theming/SKILL.md` for expert guidance on creating and modifying themes.
 
 ## Tech Stack
 - **Runtime**: Bun
