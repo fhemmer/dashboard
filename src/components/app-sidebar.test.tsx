@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import { usePathname } from 'next/navigation'
 import { describe, expect, it, vi } from 'vitest'
 import { AppSidebar } from './app-sidebar'
@@ -59,5 +59,52 @@ describe('AppSidebar', () => {
     const dashboardLink = screen.getAllByText('Dashboard').find(el => el.tagName === 'A')
     expect(dashboardLink).not.toHaveClass('bg-primary')
     expect(dashboardLink).toHaveClass('text-muted-foreground')
+  })
+
+  it('renders displayName when provided', () => {
+    vi.mocked(usePathname).mockReturnValue('/')
+    render(<AppSidebar userEmail="test@example.com" displayName="John Doe" />)
+
+    expect(screen.getByText('John Doe')).toBeDefined()
+  })
+
+  it('renders "User" when displayName is not provided', () => {
+    vi.mocked(usePathname).mockReturnValue('/')
+    render(<AppSidebar userEmail="test@example.com" />)
+
+    expect(screen.getByText('User')).toBeDefined()
+  })
+
+  it('has dropdown menu trigger for user section', () => {
+    vi.mocked(usePathname).mockReturnValue('/')
+    render(<AppSidebar userEmail="test@example.com" displayName="John Doe" />)
+
+    const userButton = screen.getByRole('button', { name: /john doe/i })
+    expect(userButton).toBeDefined()
+    expect(userButton).toHaveAttribute('aria-haspopup', 'menu')
+  })
+
+  it('opens dropdown menu when user section is clicked', async () => {
+    vi.mocked(usePathname).mockReturnValue('/')
+    render(<AppSidebar userEmail="test@example.com" displayName="John Doe" />)
+
+    const userButton = screen.getByRole('button', { name: /john doe/i })
+    fireEvent.pointerDown(userButton, { pointerId: 1, buttons: 1 })
+    fireEvent.pointerUp(userButton, { pointerId: 1, buttons: 1 })
+
+    expect(await screen.findByText('Account Settings')).toBeDefined()
+    expect(screen.getByText('Sign Out')).toBeDefined()
+  })
+
+  it('has account settings link pointing to /account', async () => {
+    vi.mocked(usePathname).mockReturnValue('/')
+    render(<AppSidebar userEmail="test@example.com" />)
+
+    const userButton = screen.getByRole('button', { name: /user/i })
+    fireEvent.pointerDown(userButton, { pointerId: 1, buttons: 1 })
+    fireEvent.pointerUp(userButton, { pointerId: 1, buttons: 1 })
+
+    const accountLink = await screen.findByRole('link', { name: /account settings/i })
+    expect(accountLink).toHaveAttribute('href', '/account')
   })
 })

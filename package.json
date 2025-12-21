@@ -9,7 +9,8 @@
     "lint": "eslint",
     "test": "vitest",
     "test:run": "vitest run",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "db:types": "npx supabase gen types typescript --project-id xofrtpzskdypkzhwxibo > src/lib/supabase/database.types.ts"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.11",

@@ -31,8 +31,7 @@ export function applyTheme(theme: Theme) {
 }
 
 export function getSnapshot(): Theme {
-  const stored = getStoredTheme();
-  return stored ?? getSystemTheme();
+  return getStoredTheme() ?? "dark";
 }
 
 export function getServerSnapshot(): Theme {

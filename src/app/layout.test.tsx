@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { render, screen } from '@testing-library/react'
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import RootLayout from './layout'
 
 vi.mock('next/font/google', () => ({
@@ -8,16 +8,24 @@ vi.mock('next/font/google', () => ({
   Geist_Mono: () => ({ variable: 'geist-mono' }),
 }))
 
+const mockFrom = vi.fn()
+const mockSelect = vi.fn()
+const mockEq = vi.fn()
+const mockSingle = vi.fn()
+
 vi.mock('@/lib/supabase/server', () => ({
   createClient: vi.fn(() => Promise.resolve({
     auth: {
-      getUser: vi.fn().mockResolvedValue({ data: { user: { email: 'test@example.com' } }, error: null }),
+      getUser: vi.fn().mockResolvedValue({ data: { user: { id: 'user-123', email: 'test@example.com' } }, error: null }),
     },
+    from: mockFrom,
   })),
 }))
 
 vi.mock('@/components/app-sidebar', () => ({
-  AppSidebar: () => <div data-testid="sidebar">Sidebar</div>,
+  AppSidebar: ({ displayName }: { displayName?: string }) => (
+    <div data-testid="sidebar" data-display-name={displayName || ''}>Sidebar</div>
+  ),
 }))
 
 vi.mock('@/components/header', () => ({
@@ -25,6 +33,14 @@ vi.mock('@/components/header', () => ({
 }))
 
 describe('RootLayout', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockFrom.mockReturnValue({ select: mockSelect })
+    mockSelect.mockReturnValue({ eq: mockEq })
+    mockEq.mockReturnValue({ single: mockSingle })
+    mockSingle.mockResolvedValue({ data: { display_name: 'Test User' } })
+  })
+
   it('renders correctly with children when logged in', async () => {
     const Layout = await RootLayout({ children: <div data-testid="child">Child Content</div> })
     render(Layout)
@@ -38,6 +54,7 @@ describe('RootLayout', () => {
       auth: {
         getUser: vi.fn().mockResolvedValue({ data: { user: null }, error: null }),
       },
+      from: mockFrom,
     } as unknown as Awaited<ReturnType<typeof createClient>>)
 
     const Layout = await RootLayout({ children: <div data-testid="child">Child Content</div> })
@@ -45,5 +62,25 @@ describe('RootLayout', () => {
     expect(screen.queryByTestId('sidebar')).toBeNull()
     expect(screen.queryByTestId('header')).toBeNull()
     expect(screen.getByTestId('child')).toBeDefined()
+  })
+
+  it('fetches and passes displayName to AppSidebar', async () => {
+    mockSingle.mockResolvedValue({ data: { display_name: 'John Doe' } })
+
+    const Layout = await RootLayout({ children: <div data-testid="child">Child Content</div> })
+    render(Layout)
+
+    const sidebar = screen.getByTestId('sidebar')
+    expect(sidebar.getAttribute('data-display-name')).toBe('John Doe')
+  })
+
+  it('passes undefined displayName when profile has no display_name', async () => {
+    mockSingle.mockResolvedValue({ data: { display_name: null } })
+
+    const Layout = await RootLayout({ children: <div data-testid="child">Child Content</div> })
+    render(Layout)
+
+    const sidebar = screen.getByTestId('sidebar')
+    expect(sidebar.getAttribute('data-display-name')).toBe('')
   })
 })

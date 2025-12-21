@@ -4,7 +4,7 @@ This project follows the **StackProbe** protocol. All agents and contributors mu
 
 ## Quality Standards
 - **Clean Lint Requirement**: ALL changes must result in a clean `bun lint` result. No code should be committed unless linting passes with zero errors and zero warnings.
-- **Test Coverage Requirement**: ALL changes must result in a clean `bun test:coverage` result. No code should be committed unless test coverage passes the 90% threshold for statements, branches, functions, and lines.
+- **Test Coverage Requirement**: ALL changes must result in a clean `bun test:coverage` result. No code should be committed unless test coverage passes the 100% threshold for statements, branches, functions, and lines.
 - **Type Safety**: Strict TypeScript mode is enabled. No `any` types allowed.
 
 ## Visual System: "Finesse"
@@ -31,7 +31,11 @@ This project follows the **StackProbe** protocol. All agents and contributors mu
   - `fphemmer@gmail.com` is the default administrator.
   - Use RLS policies on tables to restrict access based on `auth.uid()` and the `profiles.role` column.
 
+## Database Migrations
+- **Push Migrations**: Use `npx supabase db push --yes` to push migrations non-interactively.
+- **Generate Types**: Run `bun db:types` after schema changes to regenerate `src/lib/supabase/database.types.ts`.
+
 ## Agentic Workflow
 - **Plan-First**: Always present a plan before making modifications.
 - **Consent**: Wait for explicit user approval before executing non-trivial tool calls.
-- **Non-Interactive**: Use non-interactive flags for all CLI commands (e.g., `--yes`).
+- **Non-Interactive**: Use non-interactive flags for all CLI commands (e.g., `--yes`, `supabase db push --yes`).

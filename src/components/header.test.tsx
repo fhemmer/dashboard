@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
     applyTheme,
@@ -131,8 +131,10 @@ describe("Header", () => {
     });
 
     // Simulate auth state change to logged in
-    authStateCallback!("SIGNED_IN", {
-      user: { id: "456", email: "new@example.com" },
+    act(() => {
+      authStateCallback!("SIGNED_IN", {
+        user: { id: "456", email: "new@example.com" },
+      });
     });
 
     await waitFor(() => {
@@ -160,7 +162,9 @@ describe("Header", () => {
     });
 
     // Simulate sign out event
-    authStateCallback!("SIGNED_OUT", null);
+    act(() => {
+      authStateCallback!("SIGNED_OUT", null);
+    });
 
     await waitFor(() => {
       expect(screen.getByText("Sign In")).toBeDefined();
@@ -223,29 +227,14 @@ describe("Header", () => {
     });
   });
 
-  it("falls back to light system theme when no stored preference", async () => {
+  it("defaults to dark theme when no stored preference", async () => {
     mockGetUser.mockResolvedValue({ data: { user: null } });
     localStorageMock.getItem.mockReturnValue(null);
-
-    // Mock system preference for light mode
-    Object.defineProperty(window, "matchMedia", {
-      writable: true,
-      value: vi.fn().mockImplementation((query: string) => ({
-        matches: query !== "(prefers-color-scheme: dark)",
-        media: query,
-        onchange: null,
-        addListener: vi.fn(),
-        removeListener: vi.fn(),
-        addEventListener: vi.fn(),
-        removeEventListener: vi.fn(),
-        dispatchEvent: vi.fn(),
-      })),
-    });
 
     render(<Header />);
 
     await waitFor(() => {
-      expect(document.documentElement.classList.contains("dark")).toBe(false);
+      expect(document.documentElement.classList.contains("dark")).toBe(true);
     });
   });
 });
