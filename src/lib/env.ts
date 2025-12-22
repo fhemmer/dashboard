@@ -16,6 +16,8 @@ export const env = clientEnvSchema.parse({
 // Server-only env vars (lazy-loaded to avoid client-side errors)
 const serverEnvSchema = z.object({
   SUPABASE_SECRET_SERVICE_ROLE_KEY: z.string().min(1),
+  GITHUB_DASHBOARD_CLIENT_ID: z.string().min(1).optional(),
+  GITHUB_DASHBOARD_CLIENT_SECRET: z.string().min(1).optional(),
 });
 
 let _serverEnv: z.infer<typeof serverEnvSchema> | null = null;
@@ -24,6 +26,8 @@ export function getServerEnv() {
   if (_serverEnv === null) {
     _serverEnv = serverEnvSchema.parse({
       SUPABASE_SECRET_SERVICE_ROLE_KEY: process.env.SUPABASE_SECRET_SERVICE_ROLE_KEY,
+      GITHUB_DASHBOARD_CLIENT_ID: process.env.GITHUB_DASHBOARD_CLIENT_ID,
+      GITHUB_DASHBOARD_CLIENT_SECRET: process.env.GITHUB_DASHBOARD_CLIENT_SECRET,
     });
   }
   return _serverEnv;

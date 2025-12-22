@@ -11,6 +11,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { createClient } from "@/lib/supabase/server";
+import { PRWidget } from "@/modules/github-prs";
 import { NewsWidget } from "@/modules/news";
 import { Activity, Clock, Download, MoreHorizontal, Plus, Users } from "lucide-react";
 import { addDemoRecord } from "./actions";
@@ -88,7 +89,8 @@ export default async function Home() {
       </div>
 
       <div className="grid gap-8 lg:grid-cols-7">
-        <div className="lg:col-span-3">
+        <div className="lg:col-span-3 space-y-8">
+          <PRWidget />
           <NewsWidget />
         </div>
 

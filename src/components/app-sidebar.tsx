@@ -13,6 +13,7 @@ import { APP_NAME, APP_VERSION } from "@/lib/version";
 import {
     ChevronRight,
     Database,
+    GitPullRequest,
     LayoutDashboard,
     Newspaper,
     Settings,
@@ -24,6 +25,7 @@ import { usePathname } from "next/navigation";
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
+  { name: "Pull Requests", href: "/prs", icon: GitPullRequest },
   { name: "News", href: "/news", icon: Newspaper },
   { name: "Data Explorer", href: "#", icon: Database },
   { name: "Integrations", href: "#", icon: Zap },

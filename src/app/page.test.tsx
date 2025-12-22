@@ -24,6 +24,10 @@ vi.mock('@/modules/news', () => ({
   NewsWidget: () => <div data-testid="news-widget">News Widget</div>,
 }))
 
+vi.mock('@/modules/github-prs', () => ({
+  PRWidget: () => <div data-testid="pr-widget">PR Widget</div>,
+}))
+
 describe('Home Page', () => {
   it('renders the dashboard with records', async () => {
     const Page = await Home()

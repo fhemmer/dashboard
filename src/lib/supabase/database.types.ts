@@ -32,6 +32,42 @@ export type Database = {
         }
         Relationships: []
       }
+      github_accounts: {
+        Row: {
+          access_token: string
+          account_label: string
+          avatar_url: string | null
+          created_at: string
+          github_user_id: number
+          github_username: string
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          access_token: string
+          account_label?: string
+          avatar_url?: string | null
+          created_at?: string
+          github_user_id: number
+          github_username: string
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          access_token?: string
+          account_label?: string
+          avatar_url?: string | null
+          created_at?: string
+          github_user_id?: number
+          github_username?: string
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           display_name: string | null
