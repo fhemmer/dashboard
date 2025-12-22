@@ -23,6 +23,6 @@ export function getSupabaseAdmin(): SupabaseClient<Database> {
 // Alias for backwards compatibility - calls getSupabaseAdmin() lazily
 export const supabaseAdmin = new Proxy({} as SupabaseClient<Database>, {
   get(_, prop) {
-    return (getSupabaseAdmin() as Record<string, unknown>)[prop as string];
+    return (getSupabaseAdmin() as unknown as Record<string, unknown>)[prop as string];
   },
 });
