@@ -22,11 +22,11 @@ export async function NewsWidget({ maxItems = 3 }: NewsWidgetProps) {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Newspaper className="h-4 w-4 text-muted-foreground" />
+        <div className="flex items-start gap-2">
+          <Newspaper className="h-4 w-4 text-muted-foreground mt-1" />
           <div>
             <CardTitle>News</CardTitle>
-            <CardDescription>Latest updates from your sources</CardDescription>
+            <CardDescription className="text-xs">Latest updates from your sources</CardDescription>
           </div>
         </div>
         <Button variant="ghost" size="sm" asChild>

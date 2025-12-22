@@ -13,6 +13,13 @@ vi.mock('next/link', () => ({
   ),
 }))
 
+vi.mock('next/image', () => ({
+  default: ({ src, alt, className }: { src: string, alt: string, className?: string }) => (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src={src} alt={alt} className={className} data-testid="gravatar-image" />
+  ),
+}))
+
 vi.mock('@/app/auth/actions', () => ({
   signOut: vi.fn(),
 }))
@@ -22,7 +29,6 @@ describe('AppSidebar', () => {
     vi.mocked(usePathname).mockReturnValue('/')
     render(<AppSidebar userEmail="test@example.com" />)
     expect(screen.getAllByText('Dashboard').length).toBeGreaterThan(0)
-    expect(screen.getByText('Pro Plan')).toBeDefined()
     expect(screen.getByText('test@example.com')).toBeDefined()
   })
 
@@ -43,12 +49,15 @@ describe('AppSidebar', () => {
     expect(screen.getByText('user@example.com')).toBeDefined()
   })
 
-  it('renders user initial from email when provided', () => {
+  it('renders gravatar image when email is provided', () => {
     vi.mocked(usePathname).mockReturnValue('/')
     render(<AppSidebar userEmail="alice@test.com" />)
 
-    // Should show first letter of email uppercased
-    expect(screen.getByText('A')).toBeDefined()
+    // Should show gravatar image instead of initial
+    const gravatarImage = screen.getByTestId('gravatar-image')
+    expect(gravatarImage).toBeDefined()
+    expect(gravatarImage).toHaveAttribute('src')
+    expect(gravatarImage.getAttribute('src')).toContain('gravatar.com/avatar')
     expect(screen.getByText('alice@test.com')).toBeDefined()
   })
 

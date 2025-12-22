@@ -8,18 +8,17 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { getGravatarUrl } from "@/lib/gravatar";
 import { cn } from "@/lib/utils";
 import { APP_NAME, APP_VERSION } from "@/lib/version";
 import {
-    ChevronRight,
-    Database,
     GitPullRequest,
     LayoutDashboard,
     Newspaper,
-    Settings,
     User,
     Zap,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -27,9 +26,6 @@ const navigation = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
   { name: "Pull Requests", href: "/prs", icon: GitPullRequest },
   { name: "News", href: "/news", icon: Newspaper },
-  { name: "Data Explorer", href: "#", icon: Database },
-  { name: "Integrations", href: "#", icon: Zap },
-  { name: "Settings", href: "#", icon: Settings },
 ];
 
 export function AppSidebar({
@@ -61,24 +57,6 @@ export function AppSidebar({
       </Link>
 
       <div className="flex-1 overflow-y-auto py-4 px-3">
-        <div className="mb-4 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Plan
-        </div>
-        <div className="mb-6 px-3">
-          <div className="rounded-lg border bg-accent/50 p-3">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium">Pro Plan</span>
-              <ChevronRight className="h-4 w-4 text-muted-foreground" />
-            </div>
-            <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-              <div className="h-full w-3/4 bg-primary" />
-            </div>
-            <p className="mt-2 text-xs text-muted-foreground">
-              75% of resources used
-            </p>
-          </div>
-        </div>
-
         <nav className="space-y-1">
           {navigation.map((item) => {
             const isActive = pathname === item.href;
@@ -106,12 +84,21 @@ export function AppSidebar({
           <DropdownMenuTrigger asChild>
             <button
               type="button"
+              suppressHydrationWarning
               className="flex w-full items-center gap-3 px-2 mb-4 rounded-lg py-2 hover:bg-accent transition-colors text-left"
             >
-              <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center shrink-0">
-                <span className="text-xs font-medium">
-                  {userEmail?.[0].toUpperCase() || "U"}
-                </span>
+              <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center shrink-0 overflow-hidden">
+                {userEmail ? (
+                  <Image
+                    src={getGravatarUrl(userEmail, { size: 64 })}
+                    alt="Avatar"
+                    width={32}
+                    height={32}
+                    className="h-8 w-8 rounded-full object-cover"
+                  />
+                ) : (
+                  <span className="text-xs font-medium">U</span>
+                )}
               </div>
               <div className="flex-1 overflow-hidden">
                 <p className="text-sm font-medium truncate">{displayName || "User"}</p>

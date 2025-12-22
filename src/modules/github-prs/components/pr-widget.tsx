@@ -17,11 +17,11 @@ export async function PRWidget() {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
-        <div className="flex items-center gap-2">
-          <GitPullRequest className="h-4 w-4 text-muted-foreground" />
+        <div className="flex items-start gap-2">
+          <GitPullRequest className="h-4 w-4 text-muted-foreground mt-1" />
           <div>
             <CardTitle>Pull Requests</CardTitle>
-            <CardDescription>GitHub PRs across your accounts</CardDescription>
+            <CardDescription className="text-xs">GitHub PRs across your accounts</CardDescription>
           </div>
         </div>
         <Button variant="ghost" size="sm" asChild>
