@@ -8,11 +8,13 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useSidebarWidth, useSidebarWidthInit } from "@/hooks/use-sidebar-width";
 import { getGravatarUrl } from "@/lib/gravatar";
 import { cn } from "@/lib/utils";
 import { APP_NAME, APP_VERSION } from "@/lib/version";
 import {
     GitPullRequest,
+    GripVertical,
     LayoutDashboard,
     Newspaper,
     User,
@@ -21,6 +23,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useCallback, useRef, useState } from "react";
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
@@ -31,14 +34,61 @@ const navigation = [
 export function AppSidebar({
   userEmail,
   displayName,
+  serverSidebarWidth,
+  onWidthChange,
 }: {
   userEmail?: string;
   displayName?: string;
+  serverSidebarWidth?: number | null;
+  onWidthChange?: (width: number) => void;
 }) {
   const pathname = usePathname();
+  const { width, setWidth, minWidth, maxWidth } = useSidebarWidth();
+  const [isResizing, setIsResizing] = useState(false);
+  const sidebarRef = useRef<HTMLDivElement>(null);
+
+  useSidebarWidthInit(serverSidebarWidth);
+
+  const handleMouseDown = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      setIsResizing(true);
+
+      const startX = e.clientX;
+      const startWidth = width;
+
+      const handleMouseMove = (moveEvent: MouseEvent) => {
+        const delta = moveEvent.clientX - startX;
+        const newWidth = Math.min(maxWidth, Math.max(minWidth, startWidth + delta));
+        setWidth(newWidth);
+      };
+
+      const handleMouseUp = () => {
+        setIsResizing(false);
+        document.removeEventListener("mousemove", handleMouseMove);
+        document.removeEventListener("mouseup", handleMouseUp);
+        document.body.style.cursor = "";
+        document.body.style.userSelect = "";
+        onWidthChange?.(width);
+      };
+
+      document.body.style.cursor = "col-resize";
+      document.body.style.userSelect = "none";
+      document.addEventListener("mousemove", handleMouseMove);
+      document.addEventListener("mouseup", handleMouseUp);
+    },
+    [width, setWidth, minWidth, maxWidth, onWidthChange]
+  );
 
   return (
-    <div className="flex h-full w-64 flex-col border-r bg-card/50 backdrop-blur-xl">
+    <div
+      ref={sidebarRef}
+      style={{ width }}
+      className={cn(
+        "relative flex h-full flex-col border-r bg-card/50 backdrop-blur-xl",
+        isResizing && "select-none"
+      )}
+    >
       <Link
         href="/"
         className="flex h-16 items-center px-6 border-b hover:bg-accent transition-colors"
@@ -128,6 +178,30 @@ export function AppSidebar({
             </form>
           </DropdownMenuContent>
         </DropdownMenu>
+      </div>
+
+      {/* Resize handle */}
+      <div
+        role="separator"
+        aria-orientation="vertical"
+        aria-label="Resize sidebar"
+        tabIndex={0}
+        onMouseDown={handleMouseDown}
+        onKeyDown={(e) => {
+          if (e.key === "ArrowLeft") {
+            setWidth(width - 10);
+          } else if (e.key === "ArrowRight") {
+            setWidth(width + 10);
+          }
+        }}
+        className={cn(
+          "absolute right-0 top-0 bottom-0 w-1 cursor-col-resize group hover:bg-primary/20 transition-colors",
+          isResizing && "bg-primary/30"
+        )}
+      >
+        <div className="absolute right-0 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
+          <GripVertical className="h-4 w-4 text-muted-foreground" />
+        </div>
       </div>
     </div>
   );

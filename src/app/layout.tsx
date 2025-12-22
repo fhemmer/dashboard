@@ -1,19 +1,22 @@
-import { AppSidebar } from "@/components/app-sidebar";
 import { Header } from "@/components/header";
+import { SidebarWrapper } from "@/components/sidebar-wrapper";
 import { createClient } from "@/lib/supabase/server";
 import { APP_NAME } from "@/lib/version";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter, Lato, Nunito, Open_Sans, Roboto } from "next/font/google";
 import "./globals.css";
 
-async function getDisplayName(userId: string): Promise<string | null> {
+async function getProfileData(userId: string): Promise<{ displayName: string | null; sidebarWidth: number | null }> {
   const supabase = await createClient();
   const { data: profile } = await supabase
     .from("profiles")
-    .select("display_name")
+    .select("display_name, sidebar_width")
     .eq("id", userId)
     .single();
-  return profile?.display_name ?? null;
+  return {
+    displayName: profile?.display_name ?? null,
+    sidebarWidth: profile?.sidebar_width ?? null,
+  };
 }
 
 const geistSans = Geist({
@@ -108,7 +111,7 @@ export default async function RootLayout({
     data: { user },
   } = await supabase.auth.getUser();
 
-  const displayName = user ? await getDisplayName(user.id) : null;
+  const profileData = user ? await getProfileData(user.id) : null;
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -123,7 +126,11 @@ export default async function RootLayout({
         </div>
         {user ? (
           <div className="flex h-screen overflow-hidden">
-            <AppSidebar userEmail={user.email} displayName={displayName ?? undefined} />
+            <SidebarWrapper
+              userEmail={user.email}
+              displayName={profileData?.displayName ?? undefined}
+              serverSidebarWidth={profileData?.sidebarWidth}
+            />
             <div className="flex flex-1 flex-col overflow-hidden">
               <Header />
               <main className="flex-1 overflow-y-auto p-6">{children}</main>

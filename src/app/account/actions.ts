@@ -57,3 +57,31 @@ export async function updateProfile(formData: FormData) {
   revalidatePath("/", "layout");
   redirect("/account?success=true");
 }
+
+export async function updateSidebarWidth(width: number): Promise<{ error?: string }> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { error: "Not authenticated" };
+  }
+
+  // Clamp width to valid range
+  const clampedWidth = Math.min(400, Math.max(200, width));
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({
+      sidebar_width: clampedWidth,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", user.id);
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  return {};
+}

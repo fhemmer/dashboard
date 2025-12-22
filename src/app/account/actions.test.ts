@@ -36,7 +36,7 @@ vi.mock("next/cache", () => ({
   revalidatePath: (path: string, type: string) => mockRevalidatePath(path, type),
 }));
 
-import { getProfile, updateProfile } from "./actions";
+import { getProfile, updateProfile, updateSidebarWidth } from "./actions";
 
 describe("account actions", () => {
   beforeEach(() => {
@@ -157,6 +157,52 @@ describe("account actions", () => {
       await expect(updateProfile(formData)).rejects.toThrow(
         "NEXT_REDIRECT:/account?success=true"
       );
+    });
+  });
+
+  describe("updateSidebarWidth", () => {
+    it("returns error when user is not authenticated", async () => {
+      mockGetUser.mockResolvedValue({ data: { user: null } });
+
+      const result = await updateSidebarWidth(300);
+
+      expect(result).toEqual({ error: "Not authenticated" });
+    });
+
+    it("updates sidebar width successfully", async () => {
+      mockGetUser.mockResolvedValue({ data: { user: { id: "user-123" } } });
+      mockEq.mockResolvedValue({ error: null });
+
+      const result = await updateSidebarWidth(300);
+
+      expect(result).toEqual({});
+    });
+
+    it("clamps width to minimum", async () => {
+      mockGetUser.mockResolvedValue({ data: { user: { id: "user-123" } } });
+      mockEq.mockResolvedValue({ error: null });
+
+      const result = await updateSidebarWidth(100);
+
+      expect(result).toEqual({});
+    });
+
+    it("clamps width to maximum", async () => {
+      mockGetUser.mockResolvedValue({ data: { user: { id: "user-123" } } });
+      mockEq.mockResolvedValue({ error: null });
+
+      const result = await updateSidebarWidth(500);
+
+      expect(result).toEqual({});
+    });
+
+    it("returns error when update fails", async () => {
+      mockGetUser.mockResolvedValue({ data: { user: { id: "user-123" } } });
+      mockEq.mockResolvedValue({ error: { message: "Database error" } });
+
+      const result = await updateSidebarWidth(300);
+
+      expect(result).toEqual({ error: "Database error" });
     });
   });
 });

@@ -27,9 +27,9 @@ vi.mock('@/lib/supabase/server', () => ({
   })),
 }))
 
-vi.mock('@/components/app-sidebar', () => ({
-  AppSidebar: ({ displayName }: { displayName?: string }) => (
-    <div data-testid="sidebar" data-display-name={displayName || ''}>Sidebar</div>
+vi.mock('@/components/sidebar-wrapper', () => ({
+  SidebarWrapper: ({ displayName, serverSidebarWidth }: { displayName?: string; serverSidebarWidth?: number | null }) => (
+    <div data-testid="sidebar" data-display-name={displayName || ''} data-sidebar-width={serverSidebarWidth ?? ''}>Sidebar</div>
   ),
 }))
 
@@ -43,7 +43,7 @@ describe('RootLayout', () => {
     mockFrom.mockReturnValue({ select: mockSelect })
     mockSelect.mockReturnValue({ eq: mockEq })
     mockEq.mockReturnValue({ single: mockSingle })
-    mockSingle.mockResolvedValue({ data: { display_name: 'Test User' } })
+    mockSingle.mockResolvedValue({ data: { display_name: 'Test User', sidebar_width: 256 } })
   })
 
   it('renders correctly with children when logged in', async () => {
@@ -70,7 +70,7 @@ describe('RootLayout', () => {
   })
 
   it('fetches and passes displayName to AppSidebar', async () => {
-    mockSingle.mockResolvedValue({ data: { display_name: 'John Doe' } })
+    mockSingle.mockResolvedValue({ data: { display_name: 'John Doe', sidebar_width: 256 } })
 
     const Layout = await RootLayout({ children: <div data-testid="child">Child Content</div> })
     render(Layout)
@@ -80,12 +80,22 @@ describe('RootLayout', () => {
   })
 
   it('passes undefined displayName when profile has no display_name', async () => {
-    mockSingle.mockResolvedValue({ data: { display_name: null } })
+    mockSingle.mockResolvedValue({ data: { display_name: null, sidebar_width: null } })
 
     const Layout = await RootLayout({ children: <div data-testid="child">Child Content</div> })
     render(Layout)
 
     const sidebar = screen.getByTestId('sidebar')
     expect(sidebar.getAttribute('data-display-name')).toBe('')
+  })
+
+  it('passes sidebar width to SidebarWrapper', async () => {
+    mockSingle.mockResolvedValue({ data: { display_name: 'Test User', sidebar_width: 320 } })
+
+    const Layout = await RootLayout({ children: <div data-testid="child">Child Content</div> })
+    render(Layout)
+
+    const sidebar = screen.getByTestId('sidebar')
+    expect(sidebar.getAttribute('data-sidebar-width')).toBe('320')
   })
 })

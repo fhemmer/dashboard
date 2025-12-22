@@ -75,6 +75,7 @@ export type Database = {
           font: string | null
           id: string
           role: string | null
+          sidebar_width: number | null
           theme: string | null
           updated_at: string | null
         }
@@ -84,6 +85,7 @@ export type Database = {
           font?: string | null
           id: string
           role?: string | null
+          sidebar_width?: number | null
           theme?: string | null
           updated_at?: string | null
         }
@@ -93,6 +95,7 @@ export type Database = {
           font?: string | null
           id?: string
           role?: string | null
+          sidebar_width?: number | null
           theme?: string | null
           updated_at?: string | null
         }

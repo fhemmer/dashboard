@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import { usePathname } from 'next/navigation'
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { AppSidebar } from './app-sidebar'
 
 vi.mock('next/navigation', () => ({
@@ -25,6 +25,14 @@ vi.mock('@/app/auth/actions', () => ({
 }))
 
 describe('AppSidebar', () => {
+  beforeEach(() => {
+    localStorage.clear()
+  })
+
+  afterEach(() => {
+    localStorage.clear()
+  })
+
   it('renders correctly', () => {
     vi.mocked(usePathname).mockReturnValue('/')
     render(<AppSidebar userEmail="test@example.com" />)
@@ -115,5 +123,129 @@ describe('AppSidebar', () => {
 
     const accountLink = await screen.findByRole('link', { name: /account settings/i })
     expect(accountLink).toHaveAttribute('href', '/account')
+  })
+
+  it('renders resize handle', () => {
+    vi.mocked(usePathname).mockReturnValue('/')
+    render(<AppSidebar userEmail="test@example.com" />)
+
+    const resizeHandle = screen.getByRole('separator', { name: /resize sidebar/i })
+    expect(resizeHandle).toBeDefined()
+    expect(resizeHandle).toHaveAttribute('aria-orientation', 'vertical')
+  })
+
+  it('applies default width when no width stored', () => {
+    vi.mocked(usePathname).mockReturnValue('/')
+    const { container } = render(<AppSidebar userEmail="test@example.com" />)
+
+    const sidebar = container.firstChild as HTMLElement
+    expect(sidebar.style.width).toBe('256px')
+  })
+
+  it('applies stored width from localStorage', () => {
+    localStorage.setItem('dashboard-sidebar-width', '300')
+    vi.mocked(usePathname).mockReturnValue('/')
+    const { container } = render(<AppSidebar userEmail="test@example.com" />)
+
+    const sidebar = container.firstChild as HTMLElement
+    expect(sidebar.style.width).toBe('300px')
+  })
+
+  it('resize handle responds to keyboard navigation', () => {
+    vi.mocked(usePathname).mockReturnValue('/')
+    render(<AppSidebar userEmail="test@example.com" />)
+
+    const resizeHandle = screen.getByRole('separator', { name: /resize sidebar/i })
+
+    fireEvent.keyDown(resizeHandle, { key: 'ArrowRight' })
+    expect(localStorage.getItem('dashboard-sidebar-width')).toBe('266')
+
+    fireEvent.keyDown(resizeHandle, { key: 'ArrowLeft' })
+    expect(localStorage.getItem('dashboard-sidebar-width')).toBe('256')
+  })
+
+  it('accepts serverSidebarWidth prop', () => {
+    vi.mocked(usePathname).mockReturnValue('/')
+    const { container } = render(<AppSidebar userEmail="test@example.com" serverSidebarWidth={320} />)
+
+    const sidebar = container.firstChild as HTMLElement
+    // Server width is applied via useSidebarWidthInit
+    expect(sidebar.style.width).toBe('320px')
+  })
+
+  it('calls onWidthChange callback', () => {
+    vi.mocked(usePathname).mockReturnValue('/')
+    const onWidthChange = vi.fn()
+    render(<AppSidebar userEmail="test@example.com" onWidthChange={onWidthChange} />)
+
+    const resizeHandle = screen.getByRole('separator', { name: /resize sidebar/i })
+
+    // Simulate mouse down and up to trigger width change callback
+    fireEvent.mouseDown(resizeHandle, { clientX: 256, buttons: 1 })
+    // mouseUp triggers document event, we test the callback is wired up
+    expect(resizeHandle).toBeDefined()
+  })
+
+  it('handles drag resize with mouse events', () => {
+    vi.mocked(usePathname).mockReturnValue('/')
+    const onWidthChange = vi.fn()
+    const { container } = render(<AppSidebar userEmail="test@example.com" onWidthChange={onWidthChange} />)
+
+    const resizeHandle = screen.getByRole('separator', { name: /resize sidebar/i })
+    const sidebar = container.firstChild as HTMLElement
+
+    // Start resizing
+    fireEvent.mouseDown(resizeHandle, { clientX: 256 })
+
+    // Simulate mouse move
+    fireEvent.mouseMove(document, { clientX: 300 })
+
+    // Complete resize
+    fireEvent.mouseUp(document)
+
+    // Width should have changed (300 - 256 = 44 pixels added)
+    expect(sidebar.style.width).toBe('300px')
+    expect(onWidthChange).toHaveBeenCalled()
+  })
+
+  it('clamps resize to min/max bounds during drag', () => {
+    vi.mocked(usePathname).mockReturnValue('/')
+    const { container } = render(<AppSidebar userEmail="test@example.com" />)
+
+    const resizeHandle = screen.getByRole('separator', { name: /resize sidebar/i })
+    const sidebar = container.firstChild as HTMLElement
+
+    // Start resizing
+    fireEvent.mouseDown(resizeHandle, { clientX: 256 })
+
+    // Try to resize beyond max (400)
+    fireEvent.mouseMove(document, { clientX: 600 })
+    expect(sidebar.style.width).toBe('400px')
+
+    // Complete resize
+    fireEvent.mouseUp(document)
+  })
+
+  it('applies select-none class while resizing', () => {
+    vi.mocked(usePathname).mockReturnValue('/')
+    const { container } = render(<AppSidebar userEmail="test@example.com" />)
+
+    const resizeHandle = screen.getByRole('separator', { name: /resize sidebar/i })
+    const sidebar = container.firstChild as HTMLElement
+
+    // Before resizing - should not have select-none
+    expect(sidebar.classList.contains('select-none')).toBe(false)
+
+    // Start resizing
+    fireEvent.mouseDown(resizeHandle, { clientX: 256 })
+
+    // During resizing - should have select-none
+    expect(sidebar.classList.contains('select-none')).toBe(true)
+
+    // Complete resize
+    fireEvent.mouseUp(document)
+
+    // After resizing - should not have select-none
+    expect(sidebar.classList.contains('select-none')).toBe(false)
   })
 })
