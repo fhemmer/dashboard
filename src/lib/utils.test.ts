@@ -7,7 +7,9 @@ describe('cn', () => {
   })
 
   it('handles conditional classes', () => {
-    expect(cn('a', true && 'b', false && 'c')).toBe('a b')
+    const includeB = true;
+    const includeC = false;
+    expect(cn('a', includeB && 'b', includeC && 'c')).toBe('a b')
   })
 
   it('merges tailwind classes correctly', () => {

@@ -14,7 +14,8 @@ const mockAccounts = [
   },
 ];
 
-const mockSupabase = {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- Mock object type is intentionally loose
+const mockSupabase: any = {
   auth: {
     getUser: vi.fn().mockResolvedValue({ data: { user: mockUser } }),
   },

@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-hardcoded-passwords -- Test file contains form field names 'password', not actual credentials */
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // Mock supabase client first (before imports that use it)
@@ -52,13 +53,13 @@ describe("auth actions", () => {
 
       const formData = new FormData();
       formData.set("email", "test@example.com");
-      formData.set("password", "password123");
+      formData.set("password", "testSecret123");
 
       await expect(signIn(formData)).rejects.toThrow("NEXT_REDIRECT:/");
 
       expect(mockSignInWithPassword).toHaveBeenCalledWith({
         email: "test@example.com",
-        password: "password123",
+        password: "testSecret123",
       });
       expect(mockRevalidatePath).toHaveBeenCalledWith("/", "layout");
       expect(mockRedirect).toHaveBeenCalledWith("/");
@@ -89,7 +90,7 @@ describe("auth actions", () => {
 
       const formData = new FormData();
       formData.set("email", "test@example.com");
-      formData.set("password", "password123");
+      formData.set("password", "testSecret123");
 
       await expect(signUp(formData)).rejects.toThrow(
         "NEXT_REDIRECT:/login?message=Check%20your%20email%20to%20confirm%20your%20account."
@@ -97,7 +98,7 @@ describe("auth actions", () => {
 
       expect(mockSignUp).toHaveBeenCalledWith({
         email: "test@example.com",
-        password: "password123",
+        password: "testSecret123",
         options: {
           emailRedirectTo: "http://localhost:3000/auth/callback",
         },
@@ -111,7 +112,7 @@ describe("auth actions", () => {
 
       const formData = new FormData();
       formData.set("email", "test@example.com");
-      formData.set("password", "password123");
+      formData.set("password", "testSecret123");
 
       await expect(signUp(formData)).rejects.toThrow(
         "NEXT_REDIRECT:/signup?error=Email%20already%20exists"

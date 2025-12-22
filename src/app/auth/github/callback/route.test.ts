@@ -19,26 +19,56 @@ vi.mock("@/lib/supabase/server", () => ({
   createClient: vi.fn(() => Promise.resolve(mockSupabase)),
 }));
 
-const mockAdmin = {
-  from: vi.fn(() => ({
-    select: vi.fn(() => ({
-      eq: vi.fn(() => ({
-        eq: vi.fn(() => ({
-          single: vi.fn().mockResolvedValue({ data: null, error: { code: "PGRST116" } }),
+// Build a chainable mock for supabaseAdmin
+const createChainableMock = (options: {
+  existingAccount?: { id: string } | null;
+  accountCount?: number;
+  throwOnFrom?: boolean;
+}) => {
+  const { existingAccount = null, accountCount = 0, throwOnFrom = false } = options;
+
+  return {
+    from: vi.fn(() => {
+      if (throwOnFrom) {
+        throw new Error("Database connection failed");
+      }
+      return {
+        select: vi.fn((columns: string, opts?: { count?: string; head?: boolean }) => {
+          // For count queries
+          if (opts?.count === "exact" && opts?.head === true) {
+            return {
+              eq: vi.fn(() => Promise.resolve({ count: accountCount, error: null })),
+            };
+          }
+          // For regular select queries
+          return {
+            eq: vi.fn(() => ({
+              eq: vi.fn(() => ({
+                single: vi.fn(() =>
+                  Promise.resolve({
+                    data: existingAccount,
+                    error: existingAccount ? null : { code: "PGRST116" },
+                  })
+                ),
+              })),
+            })),
+          };
+        }),
+        insert: vi.fn(() => Promise.resolve({ error: null })),
+        update: vi.fn(() => ({
+          eq: vi.fn(() => Promise.resolve({ error: null })),
         })),
-        single: vi.fn().mockResolvedValue({ data: null, error: { code: "PGRST116" } }),
-      })),
-      count: vi.fn().mockResolvedValue({ count: 0 }),
-    })),
-    insert: vi.fn().mockResolvedValue({ error: null }),
-    update: vi.fn(() => ({
-      eq: vi.fn().mockResolvedValue({ error: null }),
-    })),
-  })),
+      };
+    }),
+  };
 };
 
+let mockAdminInstance = createChainableMock({});
+
 vi.mock("@/lib/supabase/admin", () => ({
-  supabaseAdmin: vi.fn(() => mockAdmin),
+  get supabaseAdmin() {
+    return mockAdminInstance;
+  },
 }));
 
 vi.mock("@/modules/github-prs/lib/github-client", () => ({
@@ -55,6 +85,7 @@ global.fetch = mockFetch;
 describe("GitHub OAuth Callback Route", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.resetModules();
     process.env.GITHUB_DASHBOARD_CLIENT_ID = "test-client-id";
     process.env.GITHUB_DASHBOARD_CLIENT_SECRET = "test-client-secret";
     mockFetch.mockResolvedValue({
@@ -63,6 +94,7 @@ describe("GitHub OAuth Callback Route", () => {
           access_token: "gho_test_token",
         }),
     });
+    mockAdminInstance = createChainableMock({});
   });
 
   it("redirects with error when code is missing", async () => {
@@ -127,18 +159,8 @@ describe("GitHub OAuth Callback Route", () => {
     expect(response.headers.get("location")).toContain("error=github_user_fetch_failed");
   });
 
-  it("creates new account on successful OAuth", async () => {
-    // Reset mocks to success state
-    mockAdmin.from.mockReturnValue({
-      select: vi.fn(() => ({
-        eq: vi.fn(() => ({
-          eq: vi.fn(() => ({
-            single: vi.fn().mockResolvedValue({ data: null, error: { code: "PGRST116" } }),
-          })),
-        })),
-      })),
-      insert: vi.fn().mockResolvedValue({ error: null }),
-    });
+  it("creates new account with Personal label when no existing accounts", async () => {
+    mockAdminInstance = createChainableMock({ existingAccount: null, accountCount: 0 });
 
     const { GET } = await import("./route");
     const request = new NextRequest(
@@ -147,23 +169,24 @@ describe("GitHub OAuth Callback Route", () => {
     const response = await GET(request);
 
     expect(response.status).toBe(307);
-    // May return success or database_error depending on mock setup
-    expect(response.headers.get("location")).toContain("/account/github");
+    expect(response.headers.get("location")).toContain("success=connected");
+  });
+
+  it("creates new account with Account N label when existing accounts present", async () => {
+    mockAdminInstance = createChainableMock({ existingAccount: null, accountCount: 2 });
+
+    const { GET } = await import("./route");
+    const request = new NextRequest(
+      "http://localhost:3000/auth/github/callback?code=test_code"
+    );
+    const response = await GET(request);
+
+    expect(response.status).toBe(307);
+    expect(response.headers.get("location")).toContain("success=connected");
   });
 
   it("updates existing account on reconnection", async () => {
-    mockAdmin.from.mockReturnValue({
-      select: vi.fn(() => ({
-        eq: vi.fn(() => ({
-          eq: vi.fn(() => ({
-            single: vi.fn().mockResolvedValue({ data: { id: "existing-acc" }, error: null }),
-          })),
-        })),
-      })),
-      update: vi.fn(() => ({
-        eq: vi.fn().mockResolvedValue({ error: null }),
-      })),
-    });
+    mockAdminInstance = createChainableMock({ existingAccount: { id: "existing-acc" } });
 
     const { GET } = await import("./route");
     const request = new NextRequest(
@@ -172,15 +195,12 @@ describe("GitHub OAuth Callback Route", () => {
     const response = await GET(request);
 
     expect(response.status).toBe(307);
-    // May return success or database_error depending on mock setup
-    expect(response.headers.get("location")).toContain("/account/github");
+    expect(response.headers.get("location")).toContain("success=connected");
   });
 
   it("handles database error gracefully", async () => {
     const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-    mockAdmin.from.mockImplementation(() => {
-      throw new Error("Database connection failed");
-    });
+    mockAdminInstance = createChainableMock({ throwOnFrom: true });
 
     const { GET } = await import("./route");
     const request = new NextRequest(

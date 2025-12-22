@@ -21,14 +21,8 @@ const mockClient = {
   },
 };
 
-const mockCreateServerClient = vi.fn(
-  (url: string, key: string, options: unknown) => {
-    void url;
-    void key;
-    void options;
-    return mockClient;
-  }
-);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- Mock needs to accept any args from vi.mock
+const mockCreateServerClient: any = vi.fn(() => mockClient);
 
 vi.mock("@supabase/ssr", () => ({
   createServerClient: (url: string, key: string, options: unknown) =>

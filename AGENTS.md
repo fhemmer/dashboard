@@ -5,7 +5,17 @@ This project follows the **StackProbe** protocol. All agents and contributors mu
 ## Quality Standards
 - **Clean Lint Requirement**: ALL changes must result in a clean `bun lint` result. No code should be committed unless linting passes with zero errors and zero warnings.
 - **Test Coverage Requirement**: ALL changes must result in a clean `bun test:coverage` result. No code should be committed unless test coverage passes the 100% threshold for statements, branches, functions, and lines.
-- **Type Safety**: Strict TypeScript mode is enabled. No `any` types allowed.
+- **Type Safety**: Strict TypeScript mode is enabled. No `any` types allowed (except in test mocks where unavoidable).
+- **Pre-Commit Validation**: Run `bun check` before committing. This runs lint, typecheck, and tests in sequence.
+
+## Build Scripts
+| Script | Command | Purpose |
+|--------|---------|---------|
+| `bun check` | `lint && typecheck && test:run` | **Run before every commit** - validates all quality gates |
+| `bun lint` | `eslint` | ESLint + SonarQube rules |
+| `bun typecheck` | `tsc --noEmit` | TypeScript type checking |
+| `bun test:run` | `vitest run` | Run tests once |
+| `bun test:coverage` | `vitest run --coverage` | Tests with 100% coverage requirement |
 
 ## Visual System: "Finesse"
 - **Theme**: Mesh/Grid/Glass aesthetic.

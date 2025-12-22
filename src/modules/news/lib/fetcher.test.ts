@@ -35,10 +35,34 @@ const mockRssXml = (title: string, daysAgo: number) => {
     </rss>`;
 };
 
+const mockMultiItemRssXml = (items: Array<{ title: string; daysAgo: number }>) => {
+  const itemsXml = items
+    .map(({ title, daysAgo }) => {
+      const date = new Date();
+      date.setDate(date.getDate() - daysAgo);
+      return `<item>
+          <title>${title}</title>
+          <link>https://example.com/${title.toLowerCase().replace(/\s/g, "-")}</link>
+          <pubDate>${date.toUTCString()}</pubDate>
+          <description>Description for ${title}</description>
+        </item>`;
+    })
+    .join("\n");
+
+  return `<?xml version="1.0"?>
+    <rss version="2.0">
+      <channel>
+        ${itemsXml}
+      </channel>
+    </rss>`;
+};
+
+type FetchUrl = string | URL | Request;
+
 describe("News Fetcher", () => {
   describe("fetchAllNews", () => {
     it("fetches from all sources and merges results", async () => {
-      global.fetch = vi.fn((url: string | URL | Request) => {
+      global.fetch = vi.fn((url: FetchUrl) => {
         const urlStr = typeof url === "string" ? url : url.toString();
         if (urlStr.includes("test1")) {
           return Promise.resolve({
@@ -59,7 +83,7 @@ describe("News Fetcher", () => {
     });
 
     it("records errors for failed fetches", async () => {
-      global.fetch = vi.fn((url: string | URL | Request) => {
+      global.fetch = vi.fn((url: FetchUrl) => {
         const urlStr = typeof url === "string" ? url : url.toString();
         if (urlStr.includes("test1")) {
           return Promise.resolve({
@@ -83,7 +107,7 @@ describe("News Fetcher", () => {
     });
 
     it("records errors for network failures", async () => {
-      global.fetch = vi.fn((url: string | URL | Request) => {
+      global.fetch = vi.fn((url: FetchUrl) => {
         const urlStr = typeof url === "string" ? url : url.toString();
         if (urlStr.includes("test1")) {
           return Promise.reject(new Error("Network error"));
@@ -102,7 +126,7 @@ describe("News Fetcher", () => {
     });
 
     it("filters out old items", async () => {
-      global.fetch = vi.fn((url: string | URL | Request) => {
+      global.fetch = vi.fn((url: FetchUrl) => {
         const urlStr = typeof url === "string" ? url : url.toString();
         if (urlStr.includes("test1")) {
           return Promise.resolve({
@@ -123,7 +147,7 @@ describe("News Fetcher", () => {
     });
 
     it("sorts items by date (newest first)", async () => {
-      global.fetch = vi.fn((url: string | URL | Request) => {
+      global.fetch = vi.fn((url: FetchUrl) => {
         const urlStr = typeof url === "string" ? url : url.toString();
         if (urlStr.includes("test1")) {
           return Promise.resolve({
@@ -167,6 +191,41 @@ describe("News Fetcher", () => {
 
       expect(capturedHeaders).toBeDefined();
       expect((capturedHeaders as Record<string, string>)["User-Agent"]).toContain("Mozilla");
+    });
+
+    it("sorts items within a source by date when multiple items returned", async () => {
+      global.fetch = vi.fn((url: FetchUrl) => {
+        const urlStr = typeof url === "string" ? url : url.toString();
+        if (urlStr.includes("test1")) {
+          // Return multiple items out of order to test the sort
+          return Promise.resolve({
+            ok: true,
+            text: () =>
+              Promise.resolve(
+                mockMultiItemRssXml([
+                  { title: "Oldest Item", daysAgo: 3 },
+                  { title: "Newest Item", daysAgo: 0 },
+                  { title: "Middle Item", daysAgo: 1 },
+                ])
+              ),
+          } as Response);
+        }
+        return Promise.resolve({
+          ok: true,
+          text: () => Promise.resolve(mockRssXml("Other Source", 0)),
+        } as Response);
+      });
+
+      const result = await fetchAllNews();
+
+      // Find items from test source 1 - they should be sorted by date
+      const test1Items = result.items.filter((item) =>
+        ["Oldest Item", "Newest Item", "Middle Item"].includes(item.title)
+      );
+      expect(test1Items).toHaveLength(3);
+      expect(test1Items[0].title).toBe("Newest Item");
+      expect(test1Items[1].title).toBe("Middle Item");
+      expect(test1Items[2].title).toBe("Oldest Item");
     });
   });
 });

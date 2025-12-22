@@ -29,7 +29,8 @@ describe("supabaseAdmin", () => {
     expect(mockCreateClient).not.toHaveBeenCalled();
 
     // Trigger lazy initialization by calling from()
-    supabaseAdmin.from("test_table");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Testing with non-existent table
+    (supabaseAdmin as any).from("test_table");
 
     expect(mockCreateClient).toHaveBeenCalledWith(
       "https://test.supabase.co",
