@@ -8,6 +8,7 @@ import { Bell, LogOut, Moon, Search, Sun } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
+import { DateTimeDisplay } from "./datetime-display";
 
 type Theme = "light" | "dark";
 
@@ -102,6 +103,10 @@ export function Header() {
           />
         </div>
       </div>
+
+      {/* Center: Date/Time Display */}
+      <DateTimeDisplay className="hidden md:flex" />
+
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="icon">
           <Bell className="h-4 w-4" />
