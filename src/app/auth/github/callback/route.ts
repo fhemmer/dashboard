@@ -70,10 +70,8 @@ export async function GET(request: NextRequest) {
 
   // Create/update account record using admin client
   try {
-    const admin = supabaseAdmin();
-
     // Check if account already exists
-    const { data: existing } = await admin
+    const { data: existing } = await supabaseAdmin
       .from("github_accounts")
       .select("id")
       .eq("user_id", user.id)
@@ -82,7 +80,7 @@ export async function GET(request: NextRequest) {
 
     if (existing) {
       // Update existing account
-      await admin
+      await supabaseAdmin
         .from("github_accounts")
         .update({
           github_username: githubUser.login,
@@ -92,7 +90,7 @@ export async function GET(request: NextRequest) {
         .eq("id", existing.id);
     } else {
       // Determine label based on existing accounts
-      const { count } = await admin
+      const { count } = await supabaseAdmin
         .from("github_accounts")
         .select("*", { count: "exact", head: true })
         .eq("user_id", user.id);
@@ -100,7 +98,7 @@ export async function GET(request: NextRequest) {
       const label = count === 0 ? "Personal" : `Account ${(count ?? 0) + 1}`;
 
       // Insert new account
-      await admin.from("github_accounts").insert({
+      await supabaseAdmin.from("github_accounts").insert({
         user_id: user.id,
         github_user_id: githubUser.id,
         github_username: githubUser.login,
