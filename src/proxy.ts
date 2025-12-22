@@ -44,11 +44,16 @@ export async function proxy(request: NextRequest) {
     request.nextUrl.pathname.startsWith("/signup") ||
     request.nextUrl.pathname.startsWith("/auth");
 
+  // Auth callback routes that should not redirect logged-in users
+  const isAuthCallback =
+    request.nextUrl.pathname.startsWith("/auth/callback") ||
+    request.nextUrl.pathname.startsWith("/auth/github/callback");
+
   if (!user && !isAuthPage) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  if (user && isAuthPage && !request.nextUrl.pathname.startsWith("/auth/callback")) {
+  if (user && isAuthPage && !isAuthCallback) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
