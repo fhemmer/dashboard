@@ -1,0 +1,49 @@
+name: Bump Version
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  bump:
+    # Skip if commit message contains [skip ci] or was made by this action
+    if: "!contains(github.event.head_commit.message, '[skip ci]') && !contains(github.event.head_commit.message, 'chore: bump version')"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Bump version and date
+        run: |
+          VERSION_FILE="src/lib/version.ts"
+          
+          # Extract current version (e.g., "0.2.0")
+          CURRENT=$(grep -oP 'APP_VERSION = "\K[0-9]+\.[0-9]+\.[0-9]+' "$VERSION_FILE")
+          
+          # Split into parts
+          MAJOR=$(echo "$CURRENT" | cut -d. -f1)
+          MINOR=$(echo "$CURRENT" | cut -d. -f2)
+          PATCH=$(echo "$CURRENT" | cut -d. -f3)
+          
+          # Increment patch
+          NEW_PATCH=$((PATCH + 1))
+          NEW_VERSION="$MAJOR.$MINOR.$NEW_PATCH"
+          
+          # Get current date in MM/DD/YYYY format
+          NEW_DATE=$(date +"%m/%d/%Y")
+          
+          # Update the file
+          sed -i "s/APP_VERSION = \".*\"/APP_VERSION = \"$NEW_VERSION - $NEW_DATE\"/" "$VERSION_FILE"
+          
+          echo "Bumped version: $CURRENT -> $NEW_VERSION ($NEW_DATE)"
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add src/lib/version.ts
+          git diff --staged --quiet || git commit -m "chore: bump version [skip ci]"
+          git push
