@@ -20,8 +20,9 @@ export function getSupabaseAdmin(): SupabaseClient<Database> {
   return _supabaseAdmin;
 }
 
-// Backwards compatibility - but prefer getSupabaseAdmin() for lazy loading
-export const supabaseAdmin = {
-  from: (...args: Parameters<SupabaseClient<Database>["from"]>) =>
-    getSupabaseAdmin().from(...args),
-};
+// Alias for backwards compatibility - calls getSupabaseAdmin() lazily
+export const supabaseAdmin = new Proxy({} as SupabaseClient<Database>, {
+  get(_, prop) {
+    return (getSupabaseAdmin() as Record<string, unknown>)[prop as string];
+  },
+});
