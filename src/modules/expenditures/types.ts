@@ -1,5 +1,25 @@
 export type BillingCycle = "monthly" | "yearly";
 
+export const MONTH_NAMES = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+] as const;
+
+export function getMonthName(month: number | null): string {
+  if (month === null || month < 1 || month > 12) return "";
+  return MONTH_NAMES[month - 1];
+}
+
 export interface ExpenditureSource {
   id: string;
   userId: string;
@@ -7,8 +27,10 @@ export interface ExpenditureSource {
   baseCost: number;
   billingCycle: BillingCycle;
   billingDayOfMonth: number;
+  billingMonth: number | null;
   consumptionCost: number;
   detailsUrl: string | null;
+  notes: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -18,8 +40,10 @@ export interface ExpenditureSourceInput {
   baseCost: number;
   billingCycle: BillingCycle;
   billingDayOfMonth: number;
+  billingMonth?: number | null;
   consumptionCost?: number;
   detailsUrl?: string | null;
+  notes?: string | null;
 }
 
 export interface FetchExpendituresResult {
@@ -36,6 +60,11 @@ export function calculateTotalCost(source: ExpenditureSource): number {
   return source.baseCost + source.consumptionCost;
 }
 
+export function calculateMonthlyCost(source: ExpenditureSource): number {
+  const total = calculateTotalCost(source);
+  return source.billingCycle === "yearly" ? total / 12 : total;
+}
+
 export function calculateNextBillingDate(source: ExpenditureSource): Date {
   const now = new Date();
   const currentDay = now.getDate();
@@ -44,11 +73,11 @@ export function calculateNextBillingDate(source: ExpenditureSource): Date {
   let nextBilling: Date;
 
   if (source.billingCycle === "yearly") {
-    // For yearly, assume billing month is the current month of creation
-    // Set to next occurrence of billing day
-    nextBilling = new Date(now.getFullYear(), now.getMonth(), billingDay);
+    // For yearly, use the stored billing month (0-indexed for Date constructor)
+    const billingMonthIndex = (source.billingMonth ?? 1) - 1;
+    nextBilling = new Date(now.getFullYear(), billingMonthIndex, billingDay);
     if (nextBilling <= now) {
-      nextBilling = new Date(now.getFullYear() + 1, now.getMonth(), billingDay);
+      nextBilling = new Date(now.getFullYear() + 1, billingMonthIndex, billingDay);
     }
   } else if (currentDay < billingDay) {
     // Billing day is later this month

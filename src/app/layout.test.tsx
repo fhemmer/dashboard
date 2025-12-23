@@ -11,6 +11,17 @@ vi.mock('next/font/google', () => ({
   Nunito: () => ({ variable: 'nunito' }),
   Open_Sans: () => ({ variable: 'open-sans' }),
   Lato: () => ({ variable: 'lato' }),
+  Playfair_Display: () => ({ variable: 'playfair' }),
+  JetBrains_Mono: () => ({ variable: 'jetbrains' }),
+  Fira_Code: () => ({ variable: 'fira-code' }),
+  Source_Serif_4: () => ({ variable: 'source-serif' }),
+  Merriweather: () => ({ variable: 'merriweather' }),
+}))
+
+vi.mock('next/headers', () => ({
+  cookies: vi.fn(() => Promise.resolve({
+    get: vi.fn().mockReturnValue({ value: 'true' }),
+  })),
 }))
 
 const mockFrom = vi.fn()
@@ -28,9 +39,16 @@ vi.mock('@/lib/supabase/server', () => ({
 }))
 
 vi.mock('@/components/sidebar-wrapper', () => ({
-  SidebarWrapper: ({ displayName, serverSidebarWidth }: { displayName?: string; serverSidebarWidth?: number | null }) => (
-    <div data-testid="sidebar" data-display-name={displayName || ''} data-sidebar-width={serverSidebarWidth ?? ''}>Sidebar</div>
+  SidebarWrapper: ({ displayName, serverSidebarWidth, children }: { displayName?: string; serverSidebarWidth?: number | null; children?: React.ReactNode }) => (
+    <div data-testid="sidebar" data-display-name={displayName || ''} data-sidebar-width={serverSidebarWidth ?? ''}>
+      Sidebar
+      {children}
+    </div>
   ),
+}))
+
+vi.mock('@/components/ui/sidebar', () => ({
+  SidebarInset: ({ children }: { children: React.ReactNode }) => <div data-testid="sidebar-inset">{children}</div>,
 }))
 
 vi.mock('@/components/header', () => ({

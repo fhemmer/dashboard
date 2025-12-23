@@ -77,6 +77,11 @@ function FontPreview({ font }: { font: FontName }) {
     nunito: "var(--font-nunito)",
     "open-sans": "var(--font-open-sans)",
     lato: "var(--font-lato)",
+    playfair: "var(--font-playfair)",
+    jetbrains: "var(--font-jetbrains)",
+    "fira-code": "var(--font-fira-code)",
+    "source-serif": "var(--font-source-serif)",
+    merriweather: "var(--font-merriweather)",
   };
 
   return (

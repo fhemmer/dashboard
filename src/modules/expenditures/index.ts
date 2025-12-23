@@ -2,7 +2,6 @@ export {
     createExpenditureSource,
     deleteExpenditureSource,
     getExpenditures,
-    isCurrentUserAdmin,
     updateConsumptionCost,
     updateExpenditureSource
 } from "./actions";

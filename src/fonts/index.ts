@@ -5,7 +5,19 @@
  * Fonts are applied using the data-font attribute on the document root.
  */
 
-export const FONTS = ["geist", "inter", "roboto", "nunito", "open-sans", "lato"] as const;
+export const FONTS = [
+  "geist",
+  "inter",
+  "roboto",
+  "nunito",
+  "open-sans",
+  "lato",
+  "playfair",
+  "jetbrains",
+  "fira-code",
+  "source-serif",
+  "merriweather",
+] as const;
 
 export type FontName = (typeof FONTS)[number];
 
@@ -52,6 +64,36 @@ export const fontRegistry: FontInfo[] = [
     label: "Lato",
     description: "Warm, semi-rounded aesthetic",
     variable: "--font-lato",
+  },
+  {
+    name: "playfair",
+    label: "Playfair Display",
+    description: "Elegant serif with high contrast",
+    variable: "--font-playfair",
+  },
+  {
+    name: "jetbrains",
+    label: "JetBrains Mono",
+    description: "Developer-focused monospace font",
+    variable: "--font-jetbrains",
+  },
+  {
+    name: "fira-code",
+    label: "Fira Code",
+    description: "Monospace with programming ligatures",
+    variable: "--font-fira-code",
+  },
+  {
+    name: "source-serif",
+    label: "Source Serif",
+    description: "Adobe's elegant serif typeface",
+    variable: "--font-source-serif",
+  },
+  {
+    name: "merriweather",
+    label: "Merriweather",
+    description: "Traditional serif, excellent readability",
+    variable: "--font-merriweather",
   },
 ];
 

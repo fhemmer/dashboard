@@ -3,10 +3,10 @@
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import type {
-    ExpenditureSource,
-    ExpenditureSourceInput,
-    FetchExpendituresResult,
-    UpdateResult,
+  ExpenditureSource,
+  ExpenditureSourceInput,
+  FetchExpendituresResult,
+  UpdateResult,
 } from "./types";
 
 export async function isCurrentUserAdmin(): Promise<boolean> {
@@ -23,12 +23,6 @@ export async function getExpenditures(): Promise<FetchExpendituresResult> {
 
   if (!user) {
     return { sources: [], error: "Not authenticated" };
-  }
-
-  // Check admin status
-  const isAdmin = await isCurrentUserAdmin();
-  if (!isAdmin) {
-    return { sources: [], error: "Admin access required" };
   }
 
   const { data, error } = await supabase
@@ -49,8 +43,10 @@ export async function getExpenditures(): Promise<FetchExpendituresResult> {
     baseCost: Number(row.base_cost),
     billingCycle: row.billing_cycle as "monthly" | "yearly",
     billingDayOfMonth: row.billing_day_of_month,
+    billingMonth: row.billing_month,
     consumptionCost: Number(row.consumption_cost),
     detailsUrl: row.details_url,
+    notes: row.notes,
     createdAt: new Date(row.created_at),
     updatedAt: new Date(row.updated_at),
   }));
@@ -70,11 +66,6 @@ export async function createExpenditureSource(
     return { success: false, error: "Not authenticated" };
   }
 
-  const isAdmin = await isCurrentUserAdmin();
-  if (!isAdmin) {
-    return { success: false, error: "Admin access required" };
-  }
-
   const { data, error } = await supabase
     .from("expenditure_sources")
     .insert({
@@ -83,8 +74,10 @@ export async function createExpenditureSource(
       base_cost: input.baseCost,
       billing_cycle: input.billingCycle,
       billing_day_of_month: input.billingDayOfMonth,
+      billing_month: input.billingMonth ?? null,
       consumption_cost: input.consumptionCost ?? 0,
       details_url: input.detailsUrl ?? null,
+      notes: input.notes ?? null,
     })
     .select("id")
     .single();
@@ -112,20 +105,18 @@ export async function updateExpenditureSource(
     return { success: false, error: "Not authenticated" };
   }
 
-  const isAdmin = await isCurrentUserAdmin();
-  if (!isAdmin) {
-    return { success: false, error: "Admin access required" };
-  }
-
   const updateData: Record<string, unknown> = {};
   if (input.name !== undefined) updateData.name = input.name;
   if (input.baseCost !== undefined) updateData.base_cost = input.baseCost;
   if (input.billingCycle !== undefined) updateData.billing_cycle = input.billingCycle;
   if (input.billingDayOfMonth !== undefined)
     updateData.billing_day_of_month = input.billingDayOfMonth;
+  if (input.billingMonth !== undefined)
+    updateData.billing_month = input.billingMonth;
   if (input.consumptionCost !== undefined)
     updateData.consumption_cost = input.consumptionCost;
   if (input.detailsUrl !== undefined) updateData.details_url = input.detailsUrl;
+  if (input.notes !== undefined) updateData.notes = input.notes;
 
   const { error } = await supabase
     .from("expenditure_sources")
@@ -158,11 +149,6 @@ export async function deleteExpenditureSource(id: string): Promise<UpdateResult>
 
   if (!user) {
     return { success: false, error: "Not authenticated" };
-  }
-
-  const isAdmin = await isCurrentUserAdmin();
-  if (!isAdmin) {
-    return { success: false, error: "Admin access required" };
   }
 
   const { error } = await supabase

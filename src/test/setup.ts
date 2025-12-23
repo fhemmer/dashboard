@@ -1,6 +1,29 @@
 import "@testing-library/jest-dom";
 import { vi } from "vitest";
 
+// Polyfill scrollIntoView for Radix UI components (not available in JSDOM)
+// Guard for Node environment tests that don't have Element
+if (typeof Element !== "undefined") {
+  Element.prototype.scrollIntoView = vi.fn();
+}
+
+// Mock window.matchMedia for responsive hooks
+if (typeof window !== "undefined" && !window.matchMedia) {
+  Object.defineProperty(window, "matchMedia", {
+    writable: true,
+    value: vi.fn().mockImplementation((query: string) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    })),
+  });
+}
+
 // Global mocks for Supabase
 vi.mock("@/lib/supabase/server", () => ({
   createClient: vi.fn(() =>

@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -6,15 +7,37 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-import { AlertTriangle, ExternalLink, Wallet } from "lucide-react";
+import { AlertTriangle, Wallet } from "lucide-react";
 import Link from "next/link";
 import { getExpenditures, isCurrentUserAdmin } from "../actions";
 import {
+    calculateMonthlyCost,
     calculateNextBillingDate,
     calculateTotalCost,
-    formatBillingCycle,
+    ExpenditureSource,
     formatCurrency,
 } from "../types";
+
+function findNextExpenditure(
+  sources: ExpenditureSource[]
+): { source: ExpenditureSource; date: Date } | null {
+  if (sources.length === 0) return null;
+
+  let earliest: { source: ExpenditureSource; date: Date } | null = null;
+
+  for (const source of sources) {
+    const nextDate = calculateNextBillingDate(source);
+    if (!earliest || nextDate < earliest.date) {
+      earliest = { source, date: nextDate };
+    }
+  }
+
+  return earliest;
+}
+
+function calculateAverageMonthly(sources: ExpenditureSource[]): number {
+  return sources.reduce((sum, s) => sum + calculateMonthlyCost(s), 0);
+}
 
 export async function ExpendituresWidget() {
   const isAdmin = await isCurrentUserAdmin();
@@ -25,7 +48,8 @@ export async function ExpendituresWidget() {
 
   const { sources, error } = await getExpenditures();
 
-  const grandTotal = sources.reduce((sum, s) => sum + calculateTotalCost(s), 0);
+  const nextExpenditure = findNextExpenditure(sources);
+  const avgMonthly = calculateAverageMonthly(sources);
 
   return (
     <Card>
@@ -33,7 +57,14 @@ export async function ExpendituresWidget() {
         <div className="flex items-start gap-2">
           <Wallet className="h-4 w-4 text-muted-foreground mt-1" />
           <div>
-            <CardTitle>Expenditures</CardTitle>
+            <div className="flex items-center gap-2">
+              <CardTitle>Expenditures</CardTitle>
+              {sources.length > 0 && (
+                <Badge variant="secondary" className="text-xs tabular-nums">
+                  {sources.length}
+                </Badge>
+              )}
+            </div>
             <CardDescription className="text-xs">
               Subscriptions & consumption costs
             </CardDescription>
@@ -60,58 +91,24 @@ export async function ExpendituresWidget() {
             </Button>
           </div>
         ) : (
-          <div className="space-y-4">
-            {sources.map((source) => {
-              const total = calculateTotalCost(source);
-              const nextBilling = calculateNextBillingDate(source);
-              const formattedDate = nextBilling.toLocaleDateString("en-US", {
-                month: "short",
-                day: "numeric",
-              });
-
-              return (
-                <div key={source.id} className="flex items-center justify-between">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium truncate">{source.name}</span>
-                      {source.detailsUrl && (
-                        <a
-                          href={source.detailsUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-muted-foreground hover:text-foreground transition-colors"
-                        >
-                          <ExternalLink className="h-3 w-3" />
-                        </a>
-                      )}
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      Base: {formatCurrency(source.baseCost)}
-                      {formatBillingCycle(source.billingCycle)}
-                      {source.consumptionCost > 0 && (
-                        <span>
-                          {" "}
-                          · Consumption: {formatCurrency(source.consumptionCost)}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-sm font-semibold">{formatCurrency(total)}</div>
-                    <div className="text-xs text-muted-foreground">
-                      Next: {formattedDate}
-                    </div>
-                  </div>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-sm text-muted-foreground">Next expenditure:</div>
+                <div className="text-sm font-medium">
+                  {nextExpenditure?.source.name},{" "}
+                  {nextExpenditure?.date.toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                  })}{" "}
+                  ({nextExpenditure && formatCurrency(calculateTotalCost(nextExpenditure.source))})
                 </div>
-              );
-            })}
-
-            {sources.length > 0 && (
-              <div className="pt-3 border-t flex items-center justify-between">
-                <span className="text-sm font-medium">Total</span>
-                <span className="text-lg font-bold">{formatCurrency(grandTotal)}</span>
               </div>
-            )}
+              <div className="text-right">
+                <div className="text-sm text-muted-foreground">Avg.exp./mo</div>
+                <div className="text-lg font-bold">{formatCurrency(avgMonthly)}</div>
+              </div>
+            </div>
           </div>
         )}
       </CardContent>

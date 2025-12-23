@@ -4,16 +4,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 import { Loader2, Plus } from "lucide-react";
 import { useState, useTransition } from "react";
 import { createExpenditureSource } from "../actions";
 import type { BillingCycle } from "../types";
+import { MONTH_NAMES } from "../types";
 
 export function AddExpenditureForm() {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,8 +24,10 @@ export function AddExpenditureForm() {
   const [baseCost, setBaseCost] = useState("0");
   const [billingCycle, setBillingCycle] = useState<BillingCycle>("monthly");
   const [billingDay, setBillingDay] = useState("1");
+  const [billingMonth, setBillingMonth] = useState<string>("");
   const [consumptionCost, setConsumptionCost] = useState("0");
   const [detailsUrl, setDetailsUrl] = useState("");
+  const [notes, setNotes] = useState("");
   const [error, setError] = useState<string | null>(null);
 
   const resetForm = () => {
@@ -32,8 +35,10 @@ export function AddExpenditureForm() {
     setBaseCost("0");
     setBillingCycle("monthly");
     setBillingDay("1");
+    setBillingMonth("");
     setConsumptionCost("0");
     setDetailsUrl("");
+    setNotes("");
     setError(null);
   };
 
@@ -51,8 +56,10 @@ export function AddExpenditureForm() {
         baseCost: Number.parseFloat(baseCost) || 0,
         billingCycle,
         billingDayOfMonth: Number.parseInt(billingDay, 10) || 1,
+        billingMonth: billingCycle === "yearly" && billingMonth ? Number.parseInt(billingMonth, 10) : null,
         consumptionCost: Number.parseFloat(consumptionCost) || 0,
         detailsUrl: detailsUrl.trim() || null,
+        notes: notes.trim() || null,
       });
 
       if (result.success) {
@@ -103,7 +110,17 @@ export function AddExpenditureForm() {
         </div>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-4">
+      <div className="space-y-2">
+        <Label htmlFor="new-notes">Notes</Label>
+        <Input
+          id="new-notes"
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+          placeholder="Additional notes or comments"
+        />
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         <div className="space-y-2">
           <Label htmlFor="new-base">Base Cost ($)</Label>
           <Input
@@ -117,7 +134,12 @@ export function AddExpenditureForm() {
         </div>
         <div className="space-y-2">
           <Label htmlFor="new-cycle">Billing Cycle</Label>
-          <Select value={billingCycle} onValueChange={(v: BillingCycle) => setBillingCycle(v)}>
+          <Select value={billingCycle} onValueChange={(v: BillingCycle) => {
+            setBillingCycle(v);
+            if (v === "monthly") {
+              setBillingMonth("");
+            }
+          }}>
             <SelectTrigger id="new-cycle">
               <SelectValue />
             </SelectTrigger>
@@ -138,6 +160,23 @@ export function AddExpenditureForm() {
             onChange={(e) => setBillingDay(e.target.value)}
           />
         </div>
+        {billingCycle === "yearly" && (
+          <div className="space-y-2">
+            <Label htmlFor="new-month">Billing Month</Label>
+            <Select value={billingMonth} onValueChange={setBillingMonth}>
+              <SelectTrigger id="new-month">
+                <SelectValue placeholder="Select month" />
+              </SelectTrigger>
+              <SelectContent>
+                {MONTH_NAMES.map((month, index) => (
+                  <SelectItem key={month} value={(index + 1).toString()}>
+                    {month}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
         <div className="space-y-2">
           <Label htmlFor="new-consumption">Consumption ($)</Label>
           <Input

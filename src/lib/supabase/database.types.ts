@@ -37,11 +37,13 @@ export type Database = {
           base_cost: number
           billing_cycle: string
           billing_day_of_month: number
+          billing_month: number | null
           consumption_cost: number
           created_at: string
           details_url: string | null
           id: string
           name: string
+          notes: string | null
           updated_at: string
           user_id: string
         }
@@ -49,11 +51,13 @@ export type Database = {
           base_cost?: number
           billing_cycle?: string
           billing_day_of_month?: number
+          billing_month?: number | null
           consumption_cost?: number
           created_at?: string
           details_url?: string | null
           id?: string
           name: string
+          notes?: string | null
           updated_at?: string
           user_id: string
         }
@@ -61,11 +65,13 @@ export type Database = {
           base_cost?: number
           billing_cycle?: string
           billing_day_of_month?: number
+          billing_month?: number | null
           consumption_cost?: number
           created_at?: string
           details_url?: string | null
           id?: string
           name?: string
+          notes?: string | null
           updated_at?: string
           user_id?: string
         }

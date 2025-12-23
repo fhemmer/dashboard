@@ -14,7 +14,7 @@ import { Check, Loader2, Pencil, X } from "lucide-react";
 import { useState, useTransition } from "react";
 import { updateExpenditureSource } from "../actions";
 import type { BillingCycle, ExpenditureSource } from "../types";
-import { formatBillingCycle, formatCurrency } from "../types";
+import { formatBillingCycle, formatCurrency, getMonthName, MONTH_NAMES } from "../types";
 
 interface ExpenditureItemProps {
   readonly source: ExpenditureSource;
@@ -28,10 +28,14 @@ export function ExpenditureItem({ source }: ExpenditureItemProps) {
   const [baseCost, setBaseCost] = useState(source.baseCost.toString());
   const [billingCycle, setBillingCycle] = useState<BillingCycle>(source.billingCycle);
   const [billingDay, setBillingDay] = useState(source.billingDayOfMonth.toString());
+  const [billingMonth, setBillingMonth] = useState<string>(
+    source.billingMonth?.toString() ?? ""
+  );
   const [consumptionCost, setConsumptionCost] = useState(
     source.consumptionCost.toString()
   );
   const [detailsUrl, setDetailsUrl] = useState(source.detailsUrl ?? "");
+  const [notes, setNotes] = useState(source.notes ?? "");
   const [error, setError] = useState<string | null>(null);
 
   const handleSave = () => {
@@ -42,8 +46,10 @@ export function ExpenditureItem({ source }: ExpenditureItemProps) {
         baseCost: Number.parseFloat(baseCost) || 0,
         billingCycle,
         billingDayOfMonth: Number.parseInt(billingDay, 10) || 1,
+        billingMonth: billingCycle === "yearly" && billingMonth ? Number.parseInt(billingMonth, 10) : null,
         consumptionCost: Number.parseFloat(consumptionCost) || 0,
         detailsUrl: detailsUrl || null,
+        notes: notes || null,
       });
 
       if (result.success) {
@@ -59,8 +65,10 @@ export function ExpenditureItem({ source }: ExpenditureItemProps) {
     setBaseCost(source.baseCost.toString());
     setBillingCycle(source.billingCycle);
     setBillingDay(source.billingDayOfMonth.toString());
+    setBillingMonth(source.billingMonth?.toString() ?? "");
     setConsumptionCost(source.consumptionCost.toString());
     setDetailsUrl(source.detailsUrl ?? "");
+    setNotes(source.notes ?? "");
     setError(null);
     setIsEditing(false);
   };
@@ -92,7 +100,17 @@ export function ExpenditureItem({ source }: ExpenditureItemProps) {
           </div>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-4">
+        <div className="space-y-2">
+          <Label htmlFor={`notes-${source.id}`}>Notes</Label>
+          <Input
+            id={`notes-${source.id}`}
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            placeholder="Additional notes or comments"
+          />
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
           <div className="space-y-2">
             <Label htmlFor={`base-${source.id}`}>Base Cost ($)</Label>
             <Input
@@ -106,7 +124,12 @@ export function ExpenditureItem({ source }: ExpenditureItemProps) {
           </div>
           <div className="space-y-2">
             <Label htmlFor={`cycle-${source.id}`}>Billing Cycle</Label>
-            <Select value={billingCycle} onValueChange={(v: BillingCycle) => setBillingCycle(v)}>
+            <Select value={billingCycle} onValueChange={(v: BillingCycle) => {
+              setBillingCycle(v);
+              if (v === "monthly") {
+                setBillingMonth("");
+              }
+            }}>
               <SelectTrigger id={`cycle-${source.id}`}>
                 <SelectValue />
               </SelectTrigger>
@@ -127,6 +150,23 @@ export function ExpenditureItem({ source }: ExpenditureItemProps) {
               onChange={(e) => setBillingDay(e.target.value)}
             />
           </div>
+          {billingCycle === "yearly" && (
+            <div className="space-y-2">
+              <Label htmlFor={`month-${source.id}`}>Billing Month</Label>
+              <Select value={billingMonth} onValueChange={setBillingMonth}>
+                <SelectTrigger id={`month-${source.id}`}>
+                  <SelectValue placeholder="Select month" />
+                </SelectTrigger>
+                <SelectContent>
+                  {MONTH_NAMES.map((month, index) => (
+                    <SelectItem key={month} value={(index + 1).toString()}>
+                      {month}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
           <div className="space-y-2">
             <Label htmlFor={`consumption-${source.id}`}>Consumption ($)</Label>
             <Input
@@ -183,7 +223,10 @@ export function ExpenditureItem({ source }: ExpenditureItemProps) {
         </div>
         <div className="text-sm text-muted-foreground mt-1">
           Base: {formatCurrency(source.baseCost)}
-          {formatBillingCycle(source.billingCycle)} (day {source.billingDayOfMonth})
+          {formatBillingCycle(source.billingCycle)}
+          {source.billingCycle === "yearly" && source.billingMonth
+            ? ` (${getMonthName(source.billingMonth)} ${source.billingDayOfMonth})`
+            : ` (day ${source.billingDayOfMonth})`}
           {source.consumptionCost > 0 && (
             <span> · Consumption: {formatCurrency(source.consumptionCost)}</span>
           )}

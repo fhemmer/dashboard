@@ -22,8 +22,8 @@ describe("fonts", () => {
       expect(FONTS).toContain("lato");
     });
 
-    it("has exactly 6 fonts", () => {
-      expect(FONTS).toHaveLength(6);
+    it("has exactly 11 fonts", () => {
+      expect(FONTS).toHaveLength(11);
     });
   });
 

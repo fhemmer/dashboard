@@ -101,6 +101,6 @@ describe("FontPicker", () => {
 
     // Each preview should show the sample text
     const previews = screen.getAllByText("The quick brown fox");
-    expect(previews).toHaveLength(6);
+    expect(previews).toHaveLength(11);
   });
 });

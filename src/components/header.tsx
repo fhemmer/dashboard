@@ -2,6 +2,8 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 import { createClient } from "@/lib/supabase/client";
 import type { User } from "@supabase/supabase-js";
 import { Bell, LogOut, Moon, Search, Sun } from "lucide-react";
@@ -94,6 +96,8 @@ export function Header() {
   return (
     <header className="flex h-16 items-center justify-between border-b bg-card/50 px-6 backdrop-blur-xl sticky top-0 z-10">
       <div className="flex items-center gap-4 flex-1">
+        <SidebarTrigger className="-ml-2" />
+        <Separator orientation="vertical" className="h-6" />
         <div className="relative w-full max-w-md">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input

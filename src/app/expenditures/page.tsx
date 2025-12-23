@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
-import { getExpenditures, isCurrentUserAdmin } from "@/modules/expenditures";
-import { calculateTotalCost, formatCurrency } from "@/modules/expenditures/types";
+import { getExpenditures } from "@/modules/expenditures";
+import { calculateMonthlyCost, formatCurrency } from "@/modules/expenditures/types";
 import { Wallet } from "lucide-react";
 import { redirect } from "next/navigation";
 import { AddExpenditureForm } from "../../modules/expenditures/components/add-expenditure-form";
@@ -16,13 +16,8 @@ export default async function ExpendituresPage() {
     redirect("/login");
   }
 
-  const isAdmin = await isCurrentUserAdmin();
-  if (!isAdmin) {
-    redirect("/");
-  }
-
   const { sources, error } = await getExpenditures();
-  const grandTotal = sources.reduce((sum, s) => sum + calculateTotalCost(s), 0);
+  const monthlyTotal = sources.reduce((sum, s) => sum + calculateMonthlyCost(s), 0);
 
   return (
     <div className="flex flex-col gap-6">
@@ -37,8 +32,8 @@ export default async function ExpendituresPage() {
           </div>
         </div>
         <div className="text-right">
-          <div className="text-2xl font-bold">{formatCurrency(grandTotal)}</div>
-          <div className="text-sm text-muted-foreground">Total Current</div>
+          <div className="text-2xl font-bold">{formatCurrency(monthlyTotal)}</div>
+          <div className="text-sm text-muted-foreground">Est. Monthly Total</div>
         </div>
       </div>
 

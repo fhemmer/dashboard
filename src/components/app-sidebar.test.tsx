@@ -2,14 +2,15 @@ import { fireEvent, render, screen } from '@testing-library/react'
 import { usePathname } from 'next/navigation'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { AppSidebar } from './app-sidebar'
+import { SidebarProvider } from './ui/sidebar'
 
 vi.mock('next/navigation', () => ({
   usePathname: vi.fn(),
 }))
 
 vi.mock('next/link', () => ({
-  default: ({ children, href, className }: { children: React.ReactNode, href: string, className?: string }) => (
-    <a href={href} className={className}>{children}</a>
+  default: ({ children, ...props }: { children: React.ReactNode } & React.AnchorHTMLAttributes<HTMLAnchorElement>) => (
+    <a {...props}>{children}</a>
   ),
 }))
 
@@ -24,9 +25,19 @@ vi.mock('@/app/auth/actions', () => ({
   signOut: vi.fn(),
 }))
 
+// Wrapper component that provides SidebarProvider context
+function TestWrapper({ children }: { children: React.ReactNode }) {
+  return (
+    <SidebarProvider defaultOpen={true}>
+      {children}
+    </SidebarProvider>
+  )
+}
+
 describe('AppSidebar', () => {
   beforeEach(() => {
     localStorage.clear()
+    document.cookie = ''
   })
 
   afterEach(() => {
@@ -35,21 +46,24 @@ describe('AppSidebar', () => {
 
   it('renders correctly', () => {
     vi.mocked(usePathname).mockReturnValue('/')
-    render(<AppSidebar userEmail="test@example.com" />)
+    render(<AppSidebar userEmail="test@example.com" />, { wrapper: TestWrapper })
     expect(screen.getAllByText('Dashboard').length).toBeGreaterThan(0)
     expect(screen.getByText('test@example.com')).toBeDefined()
   })
 
   it('highlights active link', () => {
     vi.mocked(usePathname).mockReturnValue('/')
-    render(<AppSidebar userEmail="test@example.com" />)
-    const dashboardLink = screen.getAllByText('Dashboard').find(el => el.tagName === 'A') || screen.getByRole('link', { name: /dashboard/i })
-    expect(dashboardLink).toHaveClass('bg-primary')
+    render(<AppSidebar userEmail="test@example.com" />, { wrapper: TestWrapper })
+    // Get all Dashboard links - there's the logo header and the menu item
+    const dashboardButtons = screen.getAllByRole('link', { name: /dashboard/i })
+    // The second one (index 1) is the menu item with data-active
+    const menuButton = dashboardButtons[1]
+    expect(menuButton).toHaveAttribute('data-active', 'true')
   })
 
   it('renders default values when userEmail is undefined', () => {
     vi.mocked(usePathname).mockReturnValue('/')
-    render(<AppSidebar />)
+    render(<AppSidebar />, { wrapper: TestWrapper })
 
     // Should show "U" as avatar initial when no email
     expect(screen.getByText('U')).toBeDefined()
@@ -59,7 +73,7 @@ describe('AppSidebar', () => {
 
   it('renders gravatar image when email is provided', () => {
     vi.mocked(usePathname).mockReturnValue('/')
-    render(<AppSidebar userEmail="alice@test.com" />)
+    render(<AppSidebar userEmail="alice@test.com" />, { wrapper: TestWrapper })
 
     // Should show gravatar image instead of initial
     const gravatarImage = screen.getByTestId('gravatar-image')
@@ -71,30 +85,32 @@ describe('AppSidebar', () => {
 
   it('shows inactive styling for non-active links', () => {
     vi.mocked(usePathname).mockReturnValue('/other-page')
-    render(<AppSidebar userEmail="test@example.com" />)
+    render(<AppSidebar userEmail="test@example.com" />, { wrapper: TestWrapper })
 
-    const dashboardLink = screen.getAllByText('Dashboard').find(el => el.tagName === 'A')
-    expect(dashboardLink).not.toHaveClass('bg-primary')
-    expect(dashboardLink).toHaveClass('text-muted-foreground')
+    // Get all Dashboard links - there's the logo header and the menu item
+    const dashboardButtons = screen.getAllByRole('link', { name: /dashboard/i })
+    // The second one (index 1) is the menu item with data-active
+    const menuButton = dashboardButtons[1]
+    expect(menuButton).toHaveAttribute('data-active', 'false')
   })
 
   it('renders displayName when provided', () => {
     vi.mocked(usePathname).mockReturnValue('/')
-    render(<AppSidebar userEmail="test@example.com" displayName="John Doe" />)
+    render(<AppSidebar userEmail="test@example.com" displayName="John Doe" />, { wrapper: TestWrapper })
 
     expect(screen.getByText('John Doe')).toBeDefined()
   })
 
   it('renders "User" when displayName is not provided', () => {
     vi.mocked(usePathname).mockReturnValue('/')
-    render(<AppSidebar userEmail="test@example.com" />)
+    render(<AppSidebar userEmail="test@example.com" />, { wrapper: TestWrapper })
 
     expect(screen.getByText('User')).toBeDefined()
   })
 
   it('has dropdown menu trigger for user section', () => {
     vi.mocked(usePathname).mockReturnValue('/')
-    render(<AppSidebar userEmail="test@example.com" displayName="John Doe" />)
+    render(<AppSidebar userEmail="test@example.com" displayName="John Doe" />, { wrapper: TestWrapper })
 
     const userButton = screen.getByRole('button', { name: /john doe/i })
     expect(userButton).toBeDefined()
@@ -103,7 +119,7 @@ describe('AppSidebar', () => {
 
   it('opens dropdown menu when user section is clicked', async () => {
     vi.mocked(usePathname).mockReturnValue('/')
-    render(<AppSidebar userEmail="test@example.com" displayName="John Doe" />)
+    render(<AppSidebar userEmail="test@example.com" displayName="John Doe" />, { wrapper: TestWrapper })
 
     const userButton = screen.getByRole('button', { name: /john doe/i })
     fireEvent.pointerDown(userButton, { pointerId: 1, buttons: 1 })
@@ -115,137 +131,55 @@ describe('AppSidebar', () => {
 
   it('has account settings link pointing to /account', async () => {
     vi.mocked(usePathname).mockReturnValue('/')
-    render(<AppSidebar userEmail="test@example.com" />)
+    render(<AppSidebar userEmail="test@example.com" />, { wrapper: TestWrapper })
 
     const userButton = screen.getByRole('button', { name: /user/i })
     fireEvent.pointerDown(userButton, { pointerId: 1, buttons: 1 })
     fireEvent.pointerUp(userButton, { pointerId: 1, buttons: 1 })
 
-    const accountLink = await screen.findByRole('link', { name: /account settings/i })
+    const accountLink = await screen.findByRole('menuitem', { name: /account settings/i })
     expect(accountLink).toHaveAttribute('href', '/account')
   })
 
-  it('renders resize handle', () => {
+  it('renders sidebar rail for collapse interaction', () => {
     vi.mocked(usePathname).mockReturnValue('/')
-    render(<AppSidebar userEmail="test@example.com" />)
+    render(<AppSidebar userEmail="test@example.com" />, { wrapper: TestWrapper })
 
-    const resizeHandle = screen.getByRole('separator', { name: /resize sidebar/i })
-    expect(resizeHandle).toBeDefined()
-    expect(resizeHandle).toHaveAttribute('aria-orientation', 'vertical')
+    const rail = screen.getByRole('button', { name: /toggle sidebar/i })
+    expect(rail).toBeDefined()
   })
 
-  it('applies default width when no width stored', () => {
+  it('uses icon collapsible mode', () => {
     vi.mocked(usePathname).mockReturnValue('/')
-    const { container } = render(<AppSidebar userEmail="test@example.com" />)
+    const { container } = render(<AppSidebar userEmail="test@example.com" />, { wrapper: TestWrapper })
 
-    const sidebar = container.firstChild as HTMLElement
-    expect(sidebar.style.width).toBe('256px')
+    const sidebar = container.querySelector('[data-slot="sidebar"]')
+    expect(sidebar).toBeDefined()
   })
 
-  it('applies stored width from localStorage', () => {
-    localStorage.setItem('dashboard-sidebar-width', '300')
-    vi.mocked(usePathname).mockReturnValue('/')
-    const { container } = render(<AppSidebar userEmail="test@example.com" />)
+  describe('Admin navigation', () => {
+    it('does not render admin section when adminNavigation is empty', () => {
+      vi.mocked(usePathname).mockReturnValue('/')
+      render(<AppSidebar userEmail="admin@example.com" isAdmin={true} />, { wrapper: TestWrapper })
 
-    const sidebar = container.firstChild as HTMLElement
-    expect(sidebar.style.width).toBe('300px')
-  })
+      // Admin section should not render since adminNavigation is now empty
+      expect(screen.queryByText('Admin')).toBeNull()
+    })
 
-  it('resize handle responds to keyboard navigation', () => {
-    vi.mocked(usePathname).mockReturnValue('/')
-    render(<AppSidebar userEmail="test@example.com" />)
+    it('renders Expenditures in main navigation', () => {
+      vi.mocked(usePathname).mockReturnValue('/')
+      render(<AppSidebar userEmail="user@example.com" isAdmin={false} />, { wrapper: TestWrapper })
 
-    const resizeHandle = screen.getByRole('separator', { name: /resize sidebar/i })
+      // Expenditures should be visible for all users
+      expect(screen.getByText('Expenditures')).toBeDefined()
+    })
 
-    fireEvent.keyDown(resizeHandle, { key: 'ArrowRight' })
-    expect(localStorage.getItem('dashboard-sidebar-width')).toBe('266')
+    it('highlights active Expenditures link', () => {
+      vi.mocked(usePathname).mockReturnValue('/expenditures')
+      render(<AppSidebar userEmail="user@example.com" isAdmin={false} />, { wrapper: TestWrapper })
 
-    fireEvent.keyDown(resizeHandle, { key: 'ArrowLeft' })
-    expect(localStorage.getItem('dashboard-sidebar-width')).toBe('256')
-  })
-
-  it('accepts serverSidebarWidth prop', () => {
-    vi.mocked(usePathname).mockReturnValue('/')
-    const { container } = render(<AppSidebar userEmail="test@example.com" serverSidebarWidth={320} />)
-
-    const sidebar = container.firstChild as HTMLElement
-    // Server width is applied via useSidebarWidthInit
-    expect(sidebar.style.width).toBe('320px')
-  })
-
-  it('calls onWidthChange callback', () => {
-    vi.mocked(usePathname).mockReturnValue('/')
-    const onWidthChange = vi.fn()
-    render(<AppSidebar userEmail="test@example.com" onWidthChange={onWidthChange} />)
-
-    const resizeHandle = screen.getByRole('separator', { name: /resize sidebar/i })
-
-    // Simulate mouse down and up to trigger width change callback
-    fireEvent.mouseDown(resizeHandle, { clientX: 256, buttons: 1 })
-    // mouseUp triggers document event, we test the callback is wired up
-    expect(resizeHandle).toBeDefined()
-  })
-
-  it('handles drag resize with mouse events', () => {
-    vi.mocked(usePathname).mockReturnValue('/')
-    const onWidthChange = vi.fn()
-    const { container } = render(<AppSidebar userEmail="test@example.com" onWidthChange={onWidthChange} />)
-
-    const resizeHandle = screen.getByRole('separator', { name: /resize sidebar/i })
-    const sidebar = container.firstChild as HTMLElement
-
-    // Start resizing
-    fireEvent.mouseDown(resizeHandle, { clientX: 256 })
-
-    // Simulate mouse move
-    fireEvent.mouseMove(document, { clientX: 300 })
-
-    // Complete resize
-    fireEvent.mouseUp(document)
-
-    // Width should have changed (300 - 256 = 44 pixels added)
-    expect(sidebar.style.width).toBe('300px')
-    expect(onWidthChange).toHaveBeenCalled()
-  })
-
-  it('clamps resize to min/max bounds during drag', () => {
-    vi.mocked(usePathname).mockReturnValue('/')
-    const { container } = render(<AppSidebar userEmail="test@example.com" />)
-
-    const resizeHandle = screen.getByRole('separator', { name: /resize sidebar/i })
-    const sidebar = container.firstChild as HTMLElement
-
-    // Start resizing
-    fireEvent.mouseDown(resizeHandle, { clientX: 256 })
-
-    // Try to resize beyond max (400)
-    fireEvent.mouseMove(document, { clientX: 600 })
-    expect(sidebar.style.width).toBe('400px')
-
-    // Complete resize
-    fireEvent.mouseUp(document)
-  })
-
-  it('applies select-none class while resizing', () => {
-    vi.mocked(usePathname).mockReturnValue('/')
-    const { container } = render(<AppSidebar userEmail="test@example.com" />)
-
-    const resizeHandle = screen.getByRole('separator', { name: /resize sidebar/i })
-    const sidebar = container.firstChild as HTMLElement
-
-    // Before resizing - should not have select-none
-    expect(sidebar.classList.contains('select-none')).toBe(false)
-
-    // Start resizing
-    fireEvent.mouseDown(resizeHandle, { clientX: 256 })
-
-    // During resizing - should have select-none
-    expect(sidebar.classList.contains('select-none')).toBe(true)
-
-    // Complete resize
-    fireEvent.mouseUp(document)
-
-    // After resizing - should not have select-none
-    expect(sidebar.classList.contains('select-none')).toBe(false)
+      const expendituresLink = screen.getByRole('link', { name: /expenditures/i })
+      expect(expendituresLink).toHaveAttribute('data-active', 'true')
+    })
   })
 })

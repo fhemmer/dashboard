@@ -9,6 +9,7 @@ import {
     Header,
     subscribe,
 } from "./header";
+import { SidebarProvider } from "./ui/sidebar";
 
 const mockGetUser = vi.fn();
 const mockOnAuthStateChange = vi.fn();
@@ -30,6 +31,15 @@ vi.mock("@/lib/supabase/client", () => ({
     },
   }),
 }));
+
+// Wrapper component that provides SidebarProvider context
+function TestWrapper({ children }: { children: React.ReactNode }) {
+  return (
+    <SidebarProvider defaultOpen={true}>
+      {children}
+    </SidebarProvider>
+  );
+}
 
 describe("Header", () => {
   const localStorageMock = {
@@ -72,7 +82,7 @@ describe("Header", () => {
   it("renders Sign In button when not authenticated", async () => {
     mockGetUser.mockResolvedValue({ data: { user: null } });
 
-    render(<Header />);
+    render(<Header />, { wrapper: TestWrapper });
 
     await waitFor(() => {
       expect(screen.getByText("Sign In")).toBeDefined();
@@ -85,7 +95,7 @@ describe("Header", () => {
       data: { user: { id: "123", email: "test@example.com" } },
     });
 
-    render(<Header />);
+    render(<Header />, { wrapper: TestWrapper });
 
     await waitFor(() => {
       expect(screen.queryByText("Sign In")).toBeNull();
@@ -98,7 +108,7 @@ describe("Header", () => {
       data: { user: { id: "123", email: "test@example.com" } },
     });
 
-    render(<Header />);
+    render(<Header />, { wrapper: TestWrapper });
 
     await waitFor(() => {
       expect(screen.getByTitle("Sign Out")).toBeDefined();
@@ -124,7 +134,7 @@ describe("Header", () => {
       };
     });
 
-    render(<Header />);
+    render(<Header />, { wrapper: TestWrapper });
 
     await waitFor(() => {
       expect(screen.getByText("Sign In")).toBeDefined();
@@ -155,7 +165,7 @@ describe("Header", () => {
       };
     });
 
-    render(<Header />);
+    render(<Header />, { wrapper: TestWrapper });
 
     await waitFor(() => {
       expect(screen.getByTitle("Sign Out")).toBeDefined();
@@ -174,7 +184,7 @@ describe("Header", () => {
   it("renders theme toggle button", async () => {
     mockGetUser.mockResolvedValue({ data: { user: null } });
 
-    render(<Header />);
+    render(<Header />, { wrapper: TestWrapper });
 
     await waitFor(() => {
       expect(screen.getByLabelText("Toggle theme")).toBeDefined();
@@ -185,7 +195,7 @@ describe("Header", () => {
     mockGetUser.mockResolvedValue({ data: { user: null } });
     localStorageMock.getItem.mockReturnValue("dark");
 
-    render(<Header />);
+    render(<Header />, { wrapper: TestWrapper });
 
     const themeButton = screen.getByLabelText("Toggle theme");
     fireEvent.click(themeButton);
@@ -197,7 +207,7 @@ describe("Header", () => {
     mockGetUser.mockResolvedValue({ data: { user: null } });
     localStorageMock.getItem.mockReturnValue("light");
 
-    render(<Header />);
+    render(<Header />, { wrapper: TestWrapper });
 
     const themeButton = screen.getByLabelText("Toggle theme");
     fireEvent.click(themeButton);
@@ -209,7 +219,7 @@ describe("Header", () => {
     mockGetUser.mockResolvedValue({ data: { user: null } });
     localStorageMock.getItem.mockReturnValue("dark");
 
-    render(<Header />);
+    render(<Header />, { wrapper: TestWrapper });
 
     await waitFor(() => {
       expect(document.documentElement.classList.contains("dark")).toBe(true);
@@ -220,7 +230,7 @@ describe("Header", () => {
     mockGetUser.mockResolvedValue({ data: { user: null } });
     localStorageMock.getItem.mockReturnValue("light");
 
-    render(<Header />);
+    render(<Header />, { wrapper: TestWrapper });
 
     await waitFor(() => {
       expect(document.documentElement.classList.contains("dark")).toBe(false);
@@ -231,7 +241,7 @@ describe("Header", () => {
     mockGetUser.mockResolvedValue({ data: { user: null } });
     localStorageMock.getItem.mockReturnValue(null);
 
-    render(<Header />);
+    render(<Header />, { wrapper: TestWrapper });
 
     await waitFor(() => {
       expect(document.documentElement.classList.contains("dark")).toBe(true);
