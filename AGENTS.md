@@ -29,6 +29,7 @@ This project follows the **StackProbe** protocol. All agents and contributors mu
 - **Runtime**: Bun
 - **Frontend**: Next.js 16+ (App Router)
 - **Database/Auth**: Supabase Cloud (@supabase/ssr)
+- **Email**: Resend (SMTP provider, account linked to fphemmer@gmail.com, API key in `RESEND_API_KEY`)
 - **Deployment**: Vercel
 
 ## Authentication Protocol

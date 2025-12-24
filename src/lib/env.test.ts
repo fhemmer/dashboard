@@ -17,12 +17,14 @@ describe('env', () => {
     vi.stubEnv('NEXT_PUBLIC_SUPABASE_PROJECT_URL', 'https://example.supabase.co')
     vi.stubEnv('NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY', 'test-key')
     vi.stubEnv('SUPABASE_SECRET_SERVICE_ROLE_KEY', 'test-secret')
+    vi.stubEnv('RESEND_API_KEY', 'test-resend-key')
 
     const { getServerEnv } = await import('./env')
 
     const serverEnv = getServerEnv()
     expect(serverEnv).toBeDefined()
     expect(serverEnv.SUPABASE_SECRET_SERVICE_ROLE_KEY).toBe('test-secret')
+    expect(serverEnv.RESEND_API_KEY).toBe('test-resend-key')
   })
 
   it('should cache getServerEnv result on subsequent calls', async () => {
