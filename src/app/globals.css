@@ -6,6 +6,28 @@
 @import "../themes/ocean.css";
 @import "../themes/forest.css";
 @import "../themes/sunset.css";
+@import "../themes/gold.css";
+
+/* Agave Nerd Font Mono - loaded from CDN */
+@font-face {
+  font-family: "Agave Nerd Font Mono";
+  src: url("https://cdn.jsdelivr.net/gh/ryanoasis/nerd-fonts@v3.3.0/patched-fonts/Agave/AgaveNerdFontMono-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Agave Nerd Font Mono";
+  src: url("https://cdn.jsdelivr.net/gh/ryanoasis/nerd-fonts@v3.3.0/patched-fonts/Agave/AgaveNerdFontMono-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --font-agave: "Agave Nerd Font Mono", monospace;
+}
 
 @custom-variant dark (&:is(.dark *));
 

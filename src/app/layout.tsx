@@ -132,7 +132,8 @@ const themeScript = `
       'jetbrains': '--font-jetbrains',
       'fira-code': '--font-fira-code',
       'source-serif': '--font-source-serif',
-      'merriweather': '--font-merriweather'
+      'merriweather': '--font-merriweather',
+      'agave': '--font-agave'
     };
     var font = localStorage.getItem('dashboard-font') || 'geist';
     var fontVar = fontMap[font] || fontMap['geist'];

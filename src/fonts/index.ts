@@ -17,6 +17,7 @@ export const FONTS = [
   "fira-code",
   "source-serif",
   "merriweather",
+  "agave",
 ] as const;
 
 export type FontName = (typeof FONTS)[number];
@@ -94,6 +95,12 @@ export const fontRegistry: FontInfo[] = [
     label: "Merriweather",
     description: "Traditional serif, excellent readability",
     variable: "--font-merriweather",
+  },
+  {
+    name: "agave",
+    label: "Agave Nerd Font Mono",
+    description: "Clean monospace with Nerd Font icons",
+    variable: "--font-agave",
   },
 ];
 

@@ -44,6 +44,18 @@ describe("NewsItemComponent", () => {
       expect(sourceBadge).toBeDefined();
       expect(sourceBadge?.querySelector("svg")).toBeDefined();
     });
+
+    it("renders NEW badge when isNew is true", () => {
+      render(<NewsItemComponent item={mockItem} compact isNew />);
+
+      expect(screen.getByText("NEW")).toBeDefined();
+    });
+
+    it("does not render NEW badge when isNew is false", () => {
+      render(<NewsItemComponent item={mockItem} compact isNew={false} />);
+
+      expect(screen.queryByText("NEW")).toBeNull();
+    });
   });
 
   describe("full mode", () => {
@@ -67,6 +79,27 @@ describe("NewsItemComponent", () => {
       const sourceBadge = screen.getByText("Test Source").closest("span");
       expect(sourceBadge).toBeDefined();
       expect(sourceBadge?.querySelector("svg")).toBeDefined();
+    });
+
+    it("renders NEW badge when isNew is true", () => {
+      render(<NewsItemComponent item={mockItem} isNew />);
+
+      expect(screen.getByText("NEW")).toBeDefined();
+    });
+
+    it("applies highlighted styling when isNew is true", () => {
+      render(<NewsItemComponent item={mockItem} isNew />);
+
+      const link = screen.getByRole("link");
+      expect(link.className).toContain("border-primary/50");
+      expect(link.className).toContain("bg-primary/5");
+    });
+
+    it("does not apply highlighted styling when isNew is false", () => {
+      render(<NewsItemComponent item={mockItem} isNew={false} />);
+
+      const link = screen.getByRole("link");
+      expect(link.className).not.toContain("border-primary/50");
     });
   });
 

@@ -5,6 +5,7 @@ import type { NewsItem as NewsItemType } from "../types";
 interface NewsItemProps {
   readonly item: NewsItemType;
   readonly compact?: boolean;
+  readonly isNew?: boolean;
 }
 
 const categoryColors: Record<NewsItemType["category"], string> = {
@@ -48,7 +49,11 @@ function SourceBadge({ source }: SourceBadgeProps) {
   );
 }
 
-export function NewsItemComponent({ item, compact = false }: NewsItemProps) {
+export function NewsItemComponent({
+  item,
+  compact = false,
+  isNew = false,
+}: NewsItemProps) {
   if (compact) {
     return (
       <a
@@ -59,9 +64,16 @@ export function NewsItemComponent({ item, compact = false }: NewsItemProps) {
       >
         <div className="flex items-start justify-between gap-2">
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium leading-tight line-clamp-2">
-              {item.title}
-            </p>
+            <div className="flex items-center gap-2">
+              {isNew && (
+                <Badge className="bg-primary text-primary-foreground text-[10px] px-1.5 py-0 h-4 shrink-0">
+                  NEW
+                </Badge>
+              )}
+              <p className="text-sm font-medium leading-tight line-clamp-2">
+                {item.title}
+              </p>
+            </div>
             <div className="flex items-center gap-2 mt-1.5">
               <SourceBadge source={item.source} />
               <span className="text-xs text-muted-foreground">
@@ -82,11 +94,18 @@ export function NewsItemComponent({ item, compact = false }: NewsItemProps) {
       href={item.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="block py-2 px-3 border rounded-lg hover:bg-accent/50 transition-colors"
+      className={`block py-2 px-3 border rounded-lg hover:bg-accent/50 transition-colors ${isNew ? "border-primary/50 bg-primary/5" : ""}`}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
-          <h3 className="text-sm font-semibold leading-tight">{item.title}</h3>
+          <div className="flex items-center gap-2">
+            {isNew && (
+              <Badge className="bg-primary text-primary-foreground text-[10px] px-1.5 py-0 h-4 shrink-0">
+                NEW
+              </Badge>
+            )}
+            <h3 className="text-sm font-semibold leading-tight">{item.title}</h3>
+          </div>
           {item.summary && (
             <p className="text-xs text-muted-foreground mt-1 line-clamp-1">
               {item.summary}

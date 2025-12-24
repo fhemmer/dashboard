@@ -82,6 +82,7 @@ function FontPreview({ font }: { font: FontName }) {
     "fira-code": "var(--font-fira-code)",
     "source-serif": "var(--font-source-serif)",
     merriweather: "var(--font-merriweather)",
+    agave: "var(--font-agave)",
   };
 
   return (

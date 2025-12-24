@@ -20,10 +20,11 @@ describe("fonts", () => {
       expect(FONTS).toContain("nunito");
       expect(FONTS).toContain("open-sans");
       expect(FONTS).toContain("lato");
+      expect(FONTS).toContain("agave");
     });
 
-    it("has exactly 11 fonts", () => {
-      expect(FONTS).toHaveLength(11);
+    it("has exactly 12 fonts", () => {
+      expect(FONTS).toHaveLength(12);
     });
   });
 

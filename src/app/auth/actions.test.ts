@@ -107,7 +107,7 @@ describe("auth actions", () => {
 
     it("redirects to signup with error on failed sign up", async () => {
       mockSignUp.mockResolvedValue({
-        error: { message: "Email already exists" },
+        error: { message: "Some unknown error" },
       });
 
       const formData = new FormData();
@@ -115,11 +115,81 @@ describe("auth actions", () => {
       formData.set("password", "testSecret123");
 
       await expect(signUp(formData)).rejects.toThrow(
-        "NEXT_REDIRECT:/signup?error=Email%20already%20exists"
+        "NEXT_REDIRECT:/signup?error=Some%20unknown%20error"
       );
 
       expect(mockRedirect).toHaveBeenCalledWith(
-        "/signup?error=Email%20already%20exists"
+        "/signup?error=Some%20unknown%20error"
+      );
+    });
+
+    it("shows friendly message for email confirmation errors", async () => {
+      mockSignUp.mockResolvedValue({
+        error: { message: "Error sending confirmation email" },
+      });
+
+      const formData = new FormData();
+      formData.set("email", "test@example.com");
+      formData.set("password", "testSecret123");
+
+      await expect(signUp(formData)).rejects.toThrow(
+        "NEXT_REDIRECT:/signup?error=Unable%20to%20send%20confirmation%20email.%20Please%20try%20again%20later%20or%20contact%20support."
+      );
+    });
+
+    it("shows friendly message for already registered email", async () => {
+      mockSignUp.mockResolvedValue({
+        error: { message: "User already registered" },
+      });
+
+      const formData = new FormData();
+      formData.set("email", "test@example.com");
+      formData.set("password", "testSecret123");
+
+      await expect(signUp(formData)).rejects.toThrow(
+        "NEXT_REDIRECT:/signup?error=This%20email%20is%20already%20registered.%20Try%20logging%20in%20instead."
+      );
+    });
+
+    it("shows friendly message for weak password", async () => {
+      mockSignUp.mockResolvedValue({
+        error: { message: "Password is too weak" },
+      });
+
+      const formData = new FormData();
+      formData.set("email", "test@example.com");
+      formData.set("password", "123");
+
+      await expect(signUp(formData)).rejects.toThrow(
+        "NEXT_REDIRECT:/signup?error=Password%20is%20too%20weak.%20Use%20at%20least%206%20characters%20with%20a%20mix%20of%20letters%20and%20numbers."
+      );
+    });
+
+    it("shows friendly message for invalid email", async () => {
+      mockSignUp.mockResolvedValue({
+        error: { message: "Invalid email address" },
+      });
+
+      const formData = new FormData();
+      formData.set("email", "notanemail");
+      formData.set("password", "testSecret123");
+
+      await expect(signUp(formData)).rejects.toThrow(
+        "NEXT_REDIRECT:/signup?error=Please%20enter%20a%20valid%20email%20address."
+      );
+    });
+
+    it("shows friendly message for rate limiting", async () => {
+      mockSignUp.mockResolvedValue({
+        error: { message: "Rate limit exceeded" },
+      });
+
+      const formData = new FormData();
+      formData.set("email", "test@example.com");
+      formData.set("password", "testSecret123");
+
+      await expect(signUp(formData)).rejects.toThrow(
+        "NEXT_REDIRECT:/signup?error=Too%20many%20signup%20attempts.%20Please%20wait%20a%20few%20minutes%20and%20try%20again."
       );
     });
   });

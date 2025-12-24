@@ -5,7 +5,7 @@
  * Themes are applied using the data-theme attribute on the document root.
  */
 
-export const THEMES = ["default", "ocean", "forest", "sunset"] as const;
+export const THEMES = ["default", "ocean", "forest", "sunset", "gold"] as const;
 
 export type ThemeName = (typeof THEMES)[number];
 
@@ -35,6 +35,11 @@ export const themeRegistry: ThemeInfo[] = [
     name: "sunset",
     label: "Sunset",
     description: "Warm oranges and soft pinks, vibrant and energetic",
+  },
+  {
+    name: "gold",
+    label: "Gold",
+    description: "Luxurious gold and warm amber, elegant and refined",
   },
 ];
 

@@ -75,6 +75,7 @@ function ThemePreview({ theme }: { theme: ThemeName }) {
     ocean: { primary: "#2563eb", accent: "#0ea5e9", bg: "#eff6ff" },
     forest: { primary: "#16a34a", accent: "#84cc16", bg: "#f0fdf4" },
     sunset: { primary: "#ea580c", accent: "#f472b6", bg: "#fff7ed" },
+    gold: { primary: "#ca8a04", accent: "#d97706", bg: "#fefce8" },
   };
 
   const c = colors[theme];

@@ -17,10 +17,11 @@ describe("themes", () => {
       expect(THEMES).toContain("ocean");
       expect(THEMES).toContain("forest");
       expect(THEMES).toContain("sunset");
+      expect(THEMES).toContain("gold");
     });
 
-    it("has exactly 4 themes", () => {
-      expect(THEMES).toHaveLength(4);
+    it("has exactly 5 themes", () => {
+      expect(THEMES).toHaveLength(5);
     });
   });
 
