@@ -162,4 +162,7 @@ describe("proxy", () => {
     expect(request.cookies.get("session")?.value).toBe("abc123");
     expect(request.cookies.get("refresh")?.value).toBe("xyz789");
   });
+
+  // Note: /api/cron routes are excluded from the middleware matcher in config
+  // They handle their own authentication via CRON_SECRET
 });
