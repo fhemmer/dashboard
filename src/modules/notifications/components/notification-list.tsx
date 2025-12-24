@@ -7,8 +7,8 @@ import { useOptimistic, useTransition } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
-  dismissAllNotifications,
-  dismissNotification,
+    dismissAllNotifications,
+    dismissNotification,
 } from "../actions";
 import type { Notification } from "../types";
 import { NotificationItem } from "./notification-item";

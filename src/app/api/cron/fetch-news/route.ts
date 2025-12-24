@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server";
 import { getServerEnv } from "@/lib/env";
-import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { fetchNews } from "@/lib/news-fetcher";
+import { getSupabaseAdmin } from "@/lib/supabase/admin";
+import { NextResponse } from "next/server";
 
 /**
  * POST /api/cron/fetch-news

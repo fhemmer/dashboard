@@ -2,11 +2,11 @@
 
 import { formatDistanceToNow } from "date-fns";
 import {
-  GitPullRequest,
-  Info,
-  Newspaper,
-  Wallet,
-  X,
+    GitPullRequest,
+    Info,
+    Newspaper,
+    Wallet,
+    X,
 } from "lucide-react";
 import { useTransition } from "react";
 

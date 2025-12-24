@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
 import type { NewsSourceRow } from "./types";
 import {
-  BRAND_COLORS,
-  getBrandColorClass,
-  getCategoryColorClass,
-  getCategoryLabel,
-  SOURCE_ICONS,
-  toNewsSource,
+    BRAND_COLORS,
+    getBrandColorClass,
+    getCategoryColorClass,
+    getCategoryLabel,
+    SOURCE_ICONS,
+    toNewsSource,
 } from "./types";
 
 describe("news-sources types", () => {

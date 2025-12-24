@@ -54,7 +54,7 @@ describe("auth actions", () => {
 
   describe("signIn", () => {
     it("redirects to home on successful sign in", async () => {
-      mockSignInWithPassword.mockResolvedValue({ 
+      mockSignInWithPassword.mockResolvedValue({
         error: null,
         data: { user: { id: "user-123" } }
       });

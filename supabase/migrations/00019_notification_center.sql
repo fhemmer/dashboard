@@ -360,5 +360,5 @@ CREATE INDEX IF NOT EXISTS idx_notifications_type ON public.notifications(type);
 ALTER TABLE public.profiles DROP CONSTRAINT IF EXISTS profiles_role_check;
 
 -- Add new constraint with news_manager role
-ALTER TABLE public.profiles ADD CONSTRAINT profiles_role_check 
+ALTER TABLE public.profiles ADD CONSTRAINT profiles_role_check
     CHECK (role IN ('user', 'admin', 'news_manager'));

@@ -2,10 +2,10 @@
 
 import { createClient } from "@/lib/supabase/server";
 import type {
-  DismissResult,
-  Notification,
-  NotificationsResult,
-  UnreadCountResult,
+    DismissResult,
+    Notification,
+    NotificationsResult,
+    UnreadCountResult,
 } from "./types";
 import { toNotification } from "./types";
 

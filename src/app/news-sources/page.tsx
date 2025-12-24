@@ -5,9 +5,9 @@ import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/server";
 import {
-  getCurrentUserRole,
-  getNewsSources,
-  SourceList,
+    getCurrentUserRole,
+    getNewsSources,
+    SourceList,
 } from "@/modules/news-sources";
 
 export default async function NewsSourcesPage() {

@@ -1,18 +1,18 @@
 import { describe, expect, it } from "vitest";
 import {
-  dismissAllNotifications,
-  dismissNotification,
-  dismissNotificationsByType,
-  getNotificationColor,
-  getNotificationIcon,
-  getNotifications,
-  getUnreadCount,
-  NotificationBell,
-  NotificationBellServer,
-  NotificationBellWrapper,
-  NotificationItem,
-  NotificationList,
-  toNotification,
+    dismissAllNotifications,
+    dismissNotification,
+    dismissNotificationsByType,
+    getNotificationColor,
+    getNotificationIcon,
+    getNotifications,
+    getUnreadCount,
+    NotificationBell,
+    NotificationBellServer,
+    NotificationBellWrapper,
+    NotificationItem,
+    NotificationList,
+    toNotification,
 } from "./index";
 
 describe("notifications module exports", () => {

@@ -1,12 +1,12 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import type {
-  ParsedFeedItem,
-  ParseFeedResult,
-  FetchSourceResult,
-  FetchNewsResult,
-  FetcherSettings,
-  FetchableSource,
-  UserWithExclusions,
+    FetchableSource,
+    FetcherSettings,
+    FetchNewsResult,
+    FetchSourceResult,
+    ParsedFeedItem,
+    ParseFeedResult,
+    UserWithExclusions,
 } from "./types";
 
 describe("news-fetcher types", () => {

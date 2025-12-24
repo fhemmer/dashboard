@@ -43,16 +43,16 @@ vi.mock("next/cache", () => ({
 
 // Import after mocks
 import {
-  canManageNewsSources,
-  createNewsSource,
-  deleteNewsSource,
-  getCurrentUserRole,
-  getNewsSources,
-  getSystemSetting,
-  getSystemSettings,
-  toggleNewsSourceActive,
-  updateNewsSource,
-  updateSystemSetting,
+    canManageNewsSources,
+    createNewsSource,
+    deleteNewsSource,
+    getCurrentUserRole,
+    getNewsSources,
+    getSystemSetting,
+    getSystemSettings,
+    toggleNewsSourceActive,
+    updateNewsSource,
+    updateSystemSetting,
 } from "./actions";
 
 describe("news-sources actions", () => {

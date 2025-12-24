@@ -26,7 +26,7 @@ describe("auth callback route", () => {
   });
 
   it("exchanges code for session and redirects to home", async () => {
-    mockExchangeCodeForSession.mockResolvedValue({ 
+    mockExchangeCodeForSession.mockResolvedValue({
       error: null,
       data: { user: { id: "user-123" } }
     });
@@ -44,7 +44,7 @@ describe("auth callback route", () => {
   });
 
   it("redirects to custom next URL if provided", async () => {
-    mockExchangeCodeForSession.mockResolvedValue({ 
+    mockExchangeCodeForSession.mockResolvedValue({
       error: null,
       data: { user: { id: "user-456" } }
     });

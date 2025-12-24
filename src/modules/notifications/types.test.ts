@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 import type { NotificationRow } from "./types";
 import {
-  getNotificationColor,
-  getNotificationIcon,
-  toNotification,
+    getNotificationColor,
+    getNotificationIcon,
+    toNotification,
 } from "./types";
 
 describe("notifications types", () => {

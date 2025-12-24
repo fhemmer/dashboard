@@ -3,20 +3,20 @@
  * Fetches RSS/Atom feeds, upserts news items, creates notifications, and cleans up old data.
  */
 
-import { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/supabase/database.types";
-import { parseFeed, hashGuid } from "./parser";
+import { SupabaseClient } from "@supabase/supabase-js";
+import { hashGuid, parseFeed } from "./parser";
 import type {
-  FetchNewsResult,
-  FetcherSettings,
-  FetchableSource,
-  FetchSourceResult,
-  UserWithExclusions,
-  ParsedFeedItem,
+    FetchableSource,
+    FetcherSettings,
+    FetchNewsResult,
+    FetchSourceResult,
+    ParsedFeedItem,
+    UserWithExclusions,
 } from "./types";
 
+export { hashGuid, parseFeed } from "./parser";
 export * from "./types";
-export { parseFeed, hashGuid } from "./parser";
 
 /**
  * Main entry point for the news fetcher.

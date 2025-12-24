@@ -4,8 +4,8 @@ import { useRouter } from "next/navigation";
 import { useOptimistic, useTransition } from "react";
 
 import {
-  dismissAllNotifications,
-  dismissNotification,
+    dismissAllNotifications,
+    dismissNotification,
 } from "../actions";
 import type { Notification } from "../types";
 import { NotificationBell } from "./notification-bell";

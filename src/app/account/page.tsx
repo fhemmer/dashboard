@@ -5,9 +5,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { createClient } from "@/lib/supabase/server";
 import {
-  AdminSettingsForm,
-  getCurrentUserRole,
-  getSystemSettings,
+    AdminSettingsForm,
+    getCurrentUserRole,
+    getSystemSettings,
 } from "@/modules/news-sources";
 import { ArrowLeft, Check } from "lucide-react";
 import Link from "next/link";

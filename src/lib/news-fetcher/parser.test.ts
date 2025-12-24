@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { parseFeed, hashGuid } from "./parser";
+import { describe, expect, it } from "vitest";
+import { hashGuid, parseFeed } from "./parser";
 
 describe("parser", () => {
   describe("parseFeed", () => {

@@ -1,8 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
 import {
-  getNotifications,
-  getUnreadCount,
-  NotificationBellWrapper,
+    getNotifications,
+    getUnreadCount,
+    NotificationBellWrapper,
 } from "@/modules/notifications";
 
 /**

@@ -27,11 +27,11 @@ vi.mock("@/lib/supabase/server", () => ({
 
 // Import after mocks
 import {
-  dismissAllNotifications,
-  dismissNotification,
-  dismissNotificationsByType,
-  getNotifications,
-  getUnreadCount,
+    dismissAllNotifications,
+    dismissNotification,
+    dismissNotificationsByType,
+    getNotifications,
+    getUnreadCount,
 } from "./actions";
 
 describe("notifications actions", () => {

@@ -1,8 +1,8 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { GET, POST } from "./route";
 import * as envModule from "@/lib/env";
-import * as adminModule from "@/lib/supabase/admin";
 import * as fetcherModule from "@/lib/news-fetcher";
+import * as adminModule from "@/lib/supabase/admin";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { GET, POST } from "./route";
 
 // Mock modules
 vi.mock("@/lib/env", () => ({

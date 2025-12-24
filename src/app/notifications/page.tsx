@@ -5,8 +5,8 @@ import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/server";
 import {
-  getNotifications,
-  NotificationList,
+    getNotifications,
+    NotificationList,
 } from "@/modules/notifications";
 
 export default async function NotificationsPage() {
