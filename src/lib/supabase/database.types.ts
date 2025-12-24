@@ -113,6 +113,132 @@ export type Database = {
         }
         Relationships: []
       }
+      news_items: {
+        Row: {
+          created_at: string
+          guid_hash: string
+          id: string
+          image_url: string | null
+          link: string
+          published_at: string
+          source_id: string
+          summary: string | null
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          guid_hash: string
+          id?: string
+          image_url?: string | null
+          link: string
+          published_at: string
+          source_id: string
+          summary?: string | null
+          title: string
+        }
+        Update: {
+          created_at?: string
+          guid_hash?: string
+          id?: string
+          image_url?: string | null
+          link?: string
+          published_at?: string
+          source_id?: string
+          summary?: string | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "news_items_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "news_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      news_sources: {
+        Row: {
+          brand_color: string
+          category: string
+          created_at: string
+          created_by: string | null
+          icon_name: string
+          id: string
+          is_active: boolean
+          name: string
+          url: string
+        }
+        Insert: {
+          brand_color?: string
+          category: string
+          created_at?: string
+          created_by?: string | null
+          icon_name?: string
+          id?: string
+          is_active?: boolean
+          name: string
+          url: string
+        }
+        Update: {
+          brand_color?: string
+          category?: string
+          created_at?: string
+          created_by?: string | null
+          icon_name?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "news_sources_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          created_at: string
+          id: string
+          message: string | null
+          metadata: Json | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message?: string | null
+          metadata?: Json | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: string | null
+          metadata?: Json | null
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           display_name: string | null
@@ -151,6 +277,57 @@ export type Database = {
           widget_settings?: Json | null
         }
         Relationships: []
+      }
+      system_settings: {
+        Row: {
+          key: string
+          updated_at: string
+          value: Json
+        }
+        Insert: {
+          key: string
+          updated_at?: string
+          value: Json
+        }
+        Update: {
+          key?: string
+          updated_at?: string
+          value?: Json
+        }
+        Relationships: []
+      }
+      user_news_source_exclusions: {
+        Row: {
+          created_at: string
+          source_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          source_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          source_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_news_source_exclusions_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "news_sources"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_news_source_exclusions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

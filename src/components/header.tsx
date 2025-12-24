@@ -6,9 +6,10 @@ import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { createClient } from "@/lib/supabase/client";
 import type { User } from "@supabase/supabase-js";
-import { Bell, LogOut, Moon, Search, Sun } from "lucide-react";
+import { LogOut, Moon, Search, Sun } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import type { ReactNode } from "react";
 import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
 import { DateTimeDisplay } from "./datetime-display";
 
@@ -52,7 +53,7 @@ export function subscribe(callback: () => void): () => void {
   };
 }
 
-export function Header() {
+export function Header({ notificationBell }: { notificationBell?: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const theme = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   const router = useRouter();
@@ -112,9 +113,7 @@ export function Header() {
       <DateTimeDisplay className="hidden md:flex mr-6" />
 
       <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon">
-          <Bell className="h-4 w-4" />
-        </Button>
+        {notificationBell}
         <Button
           variant="ghost"
           size="icon"

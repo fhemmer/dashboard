@@ -19,6 +19,7 @@ const serverEnvSchema = z.object({
   GITHUB_DASHBOARD_CLIENT_ID: z.string().min(1).optional(),
   GITHUB_DASHBOARD_CLIENT_SECRET: z.string().min(1).optional(),
   RESEND_API_KEY: z.string().min(1).optional(),
+  CRON_SECRET: z.string().min(1).optional(),
 });
 
 let _serverEnv: z.infer<typeof serverEnvSchema> | null = null;
@@ -30,6 +31,7 @@ export function getServerEnv() {
       GITHUB_DASHBOARD_CLIENT_ID: process.env.GITHUB_DASHBOARD_CLIENT_ID,
       GITHUB_DASHBOARD_CLIENT_SECRET: process.env.GITHUB_DASHBOARD_CLIENT_SECRET,
       RESEND_API_KEY: process.env.RESEND_API_KEY,
+      CRON_SECRET: process.env.CRON_SECRET,
     });
   }
   return _serverEnv;

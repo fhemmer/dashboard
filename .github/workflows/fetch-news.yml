@@ -1,0 +1,45 @@
+name: Fetch News
+
+on:
+  schedule:
+    # Run every 15 minutes
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+    # Allow manual trigger for testing
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger news fetch
+        run: |
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Content-Type: application/json" \
+            "${{ secrets.SITE_URL }}/api/cron/fetch-news")
+          
+          # Extract status code (last line)
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n 1)
+          # Extract body (all but last line)
+          BODY=$(echo "$RESPONSE" | head -n -1)
+          
+          echo "Response: $BODY"
+          echo "HTTP Status: $HTTP_CODE"
+          
+          # Fail if not 2xx
+          if [ "$HTTP_CODE" -lt 200 ] || [ "$HTTP_CODE" -ge 300 ]; then
+            echo "Request failed with status $HTTP_CODE"
+            exit 1
+          fi
+          
+          # Parse and display results
+          echo ""
+          echo "=== Fetch Results ==="
+          echo "$BODY" | jq -r '
+            "Sources processed: \(.sourcesProcessed)",
+            "New items: \(.totalNewItems)",
+            "Notifications created: \(.notificationsCreated)",
+            "Notifications deleted: \(.notificationsDeleted)",
+            "Duration: \(.durationMs)ms",
+            if .errors | length > 0 then "Errors: \(.errors | join(", "))" else empty end
+          '

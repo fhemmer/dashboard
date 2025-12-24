@@ -3,6 +3,7 @@ import { SidebarWrapper } from "@/components/sidebar-wrapper";
 import { SidebarInset } from "@/components/ui/sidebar";
 import { createClient } from "@/lib/supabase/server";
 import { APP_NAME } from "@/lib/version";
+import { NotificationBellServer } from "@/modules/notifications/components/notification-bell-server";
 import type { Metadata } from "next";
 import {
     Fira_Code,
@@ -195,7 +196,7 @@ export default async function RootLayout({
             defaultOpen={defaultSidebarOpen}
           >
             <SidebarInset>
-              <Header />
+              <Header notificationBell={<NotificationBellServer />} />
               <main className="flex-1 overflow-y-auto p-6">{children}</main>
             </SidebarInset>
           </SidebarWrapper>

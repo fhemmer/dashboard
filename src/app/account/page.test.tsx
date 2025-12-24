@@ -8,6 +8,19 @@ vi.mock("./actions", () => ({
   updateProfile: vi.fn(),
 }));
 
+// Mock news-sources module
+const mockGetCurrentUserRole = vi.fn();
+const mockGetSystemSettings = vi.fn();
+vi.mock("@/modules/news-sources", () => ({
+  getCurrentUserRole: () => mockGetCurrentUserRole(),
+  getSystemSettings: () => mockGetSystemSettings(),
+  AdminSettingsForm: ({ fetchIntervalMinutes, notificationRetentionDays }: { fetchIntervalMinutes: number; notificationRetentionDays: number }) => (
+    <div data-testid="admin-settings-form">
+      Fetch: {fetchIntervalMinutes}, Retention: {notificationRetentionDays}
+    </div>
+  ),
+}));
+
 // Mock supabase server
 const mockGetUser = vi.fn();
 vi.mock("@/lib/supabase/server", () => ({
@@ -44,6 +57,13 @@ describe("AccountPage", () => {
       theme: "default",
       font: "geist",
       updated_at: "2024-01-01T00:00:00Z",
+    });
+    mockGetCurrentUserRole.mockResolvedValue("user");
+    mockGetSystemSettings.mockResolvedValue({
+      fetchIntervalMinutes: 30,
+      notificationRetentionDays: 30,
+      lastFetchAt: null,
+      error: null,
     });
   });
 
@@ -197,5 +217,80 @@ describe("AccountPage", () => {
 
     const fontSelect = screen.getByLabelText("Font") as HTMLSelectElement;
     expect(fontSelect.value).toBe("geist");
+  });
+
+  it("shows admin settings section for admin users", async () => {
+    mockGetCurrentUserRole.mockResolvedValue("admin");
+
+    const Page = await AccountPage({
+      searchParams: Promise.resolve({}),
+    });
+
+    render(Page);
+
+    expect(screen.getByText("System Settings")).toBeDefined();
+    expect(screen.getByTestId("admin-settings-form")).toBeDefined();
+  });
+
+  it("hides admin settings section for regular users", async () => {
+    mockGetCurrentUserRole.mockResolvedValue("user");
+
+    const Page = await AccountPage({
+      searchParams: Promise.resolve({}),
+    });
+
+    render(Page);
+
+    expect(screen.queryByText("System Settings")).toBeNull();
+    expect(screen.queryByTestId("admin-settings-form")).toBeNull();
+  });
+
+  it("hides admin settings section for news_manager", async () => {
+    mockGetCurrentUserRole.mockResolvedValue("news_manager");
+
+    const Page = await AccountPage({
+      searchParams: Promise.resolve({}),
+    });
+
+    render(Page);
+
+    expect(screen.queryByText("System Settings")).toBeNull();
+    expect(screen.queryByTestId("admin-settings-form")).toBeNull();
+  });
+
+  it("hides admin settings when system settings have error", async () => {
+    mockGetCurrentUserRole.mockResolvedValue("admin");
+    mockGetSystemSettings.mockResolvedValue({
+      fetchIntervalMinutes: 30,
+      notificationRetentionDays: 30,
+      lastFetchAt: null,
+      error: "Permission denied",
+    });
+
+    const Page = await AccountPage({
+      searchParams: Promise.resolve({}),
+    });
+
+    render(Page);
+
+    expect(screen.queryByTestId("admin-settings-form")).toBeNull();
+  });
+
+  it("passes system settings to admin form", async () => {
+    mockGetCurrentUserRole.mockResolvedValue("admin");
+    mockGetSystemSettings.mockResolvedValue({
+      fetchIntervalMinutes: 60,
+      notificationRetentionDays: 14,
+      lastFetchAt: null,
+      error: null,
+    });
+
+    const Page = await AccountPage({
+      searchParams: Promise.resolve({}),
+    });
+
+    render(Page);
+
+    expect(screen.getByText("Fetch: 60, Retention: 14")).toBeDefined();
   });
 });

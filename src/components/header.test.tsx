@@ -247,6 +247,17 @@ describe("Header", () => {
       expect(document.documentElement.classList.contains("dark")).toBe(true);
     });
   });
+
+  it("renders notification bell when passed as prop", async () => {
+    mockGetUser.mockResolvedValue({ data: { user: null } });
+
+    render(
+      <Header notificationBell={<button data-testid="custom-bell">Bell</button>} />,
+      { wrapper: TestWrapper }
+    );
+
+    expect(screen.getByTestId("custom-bell")).toBeDefined();
+  });
 });
 
 describe("Theme utility functions", () => {

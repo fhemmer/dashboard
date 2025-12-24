@@ -4,6 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { createClient } from "@/lib/supabase/server";
+import {
+  AdminSettingsForm,
+  getCurrentUserRole,
+  getSystemSettings,
+} from "@/modules/news-sources";
 import { ArrowLeft, Check } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -25,6 +30,11 @@ export default async function AccountPage({
 
   const profile = await getProfile();
   const params = await searchParams;
+  const role = await getCurrentUserRole();
+  const isAdmin = role === "admin";
+
+  // Fetch system settings for admin users
+  const systemSettings = isAdmin ? await getSystemSettings() : null;
 
   return (
     <div className="flex flex-col gap-8 max-w-2xl">
@@ -118,6 +128,24 @@ export default async function AccountPage({
           </form>
         </CardContent>
       </Card>
+
+      {isAdmin && systemSettings && !systemSettings.error && (
+        <Card>
+          <CardHeader>
+            <CardTitle>System Settings</CardTitle>
+            <CardDescription>
+              Configure news fetching and notification retention (admin only).
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <AdminSettingsForm
+              fetchIntervalMinutes={systemSettings.fetchIntervalMinutes}
+              notificationRetentionDays={systemSettings.notificationRetentionDays}
+              lastFetchAt={systemSettings.lastFetchAt}
+            />
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }
