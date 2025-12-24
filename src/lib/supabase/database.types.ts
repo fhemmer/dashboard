@@ -332,6 +332,94 @@ export type Database = {
           },
         ]
       }
+      mail_account_settings: {
+        Row: {
+          id: string
+          user_id: string
+          provider: string
+          account_name: string
+          email_address: string
+          is_enabled: boolean
+          sync_frequency_minutes: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          provider: string
+          account_name: string
+          email_address: string
+          is_enabled?: boolean
+          sync_frequency_minutes?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          provider?: string
+          account_name?: string
+          email_address?: string
+          is_enabled?: boolean
+          sync_frequency_minutes?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mail_account_settings_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mail_oauth_tokens: {
+        Row: {
+          id: string
+          account_id: string
+          encrypted_access_token: string
+          encrypted_refresh_token: string | null
+          token_expires_at: string | null
+          iv: string
+          auth_tag: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          account_id: string
+          encrypted_access_token: string
+          encrypted_refresh_token?: string | null
+          token_expires_at?: string | null
+          iv: string
+          auth_tag: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          account_id?: string
+          encrypted_access_token?: string
+          encrypted_refresh_token?: string | null
+          token_expires_at?: string | null
+          iv?: string
+          auth_tag?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mail_oauth_tokens_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: true
+            referencedRelation: "mail_account_settings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
