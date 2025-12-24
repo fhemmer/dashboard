@@ -14,7 +14,10 @@ import { getToken } from "./token-manager";
 
 /**
  * Fetch unread count for an IMAP account
+ * NOTE: This is a placeholder implementation that always returns 0.
+ * Full implementation requires IMAP connection setup.
  */
+// eslint-disable-next-line sonarjs/no-invariant-returns
 export async function getImapUnreadCount(accountId: string): Promise<number> {
   try {
     const token = await getToken(accountId);

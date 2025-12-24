@@ -14,7 +14,10 @@ import { getToken, isTokenExpired } from "./token-manager";
 
 /**
  * Fetch unread count for an Outlook account
+ * NOTE: This is a placeholder implementation that always returns 0.
+ * Full implementation requires Microsoft Graph API integration.
  */
+// eslint-disable-next-line sonarjs/no-invariant-returns
 export async function getOutlookUnreadCount(accountId: string): Promise<number> {
   try {
     const token = await getToken(accountId);

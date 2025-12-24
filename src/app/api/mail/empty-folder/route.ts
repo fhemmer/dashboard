@@ -1,7 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { invalidateMessagesCache, invalidateSummaryCache } from "@/modules/mail/lib/cache";
 import { checkRateLimit } from "@/modules/mail/lib/rate-limiter";
-import type { MailProvider } from "@/modules/mail/types";
 import { NextResponse } from "next/server";
 
 /**
@@ -69,8 +68,6 @@ export async function DELETE(request: Request) {
     }
 
     // Placeholder: Implementation requires provider-specific API integration
-    const _provider = account.provider as MailProvider;
-    
     // For now, return success placeholder
     const success = true;
     const deletedCount = 0;

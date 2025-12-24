@@ -38,16 +38,19 @@ export default function MailSettingsPage() {
   const [syncFrequency, setSyncFrequency] = useState("5");
 
   // Load accounts
-  useEffect(() => {
-    loadAccounts();
-  }, []);
-
   async function loadAccounts() {
     setLoading(true);
     const result = await getMailAccounts();
     setAccounts(result.accounts || []);
     setLoading(false);
   }
+
+  useEffect(() => {
+    async function fetchAccounts() {
+      await loadAccounts();
+    }
+    void fetchAccounts();
+  }, []);
 
   async function handleAddAccount() {
     if (!accountName || !emailAddress) {
@@ -188,21 +191,25 @@ export default function MailSettingsPage() {
           <div className="text-center py-8">
             <p className="text-sm text-muted-foreground">Loading accounts...</p>
           </div>
-        ) : accounts.length === 0 ? (
-          <div className="text-center py-8">
-            <p className="text-sm text-muted-foreground">
-              No accounts configured. Click &ldquo;Add Account&rdquo; to get started.
-            </p>
-          </div>
         ) : (
-          accounts.map((account) => (
-            <AccountCard
-              key={account.id}
-              account={account}
-              onToggle={handleToggleAccount}
-              onDelete={handleDeleteAccount}
-            />
-          ))
+          <>
+            {accounts.length === 0 ? (
+              <div className="text-center py-8">
+                <p className="text-sm text-muted-foreground">
+                  No accounts configured. Click &ldquo;Add Account&rdquo; to get started.
+                </p>
+              </div>
+            ) : (
+              accounts.map((account) => (
+                <AccountCard
+                  key={account.id}
+                  account={account}
+                  onToggle={handleToggleAccount}
+                  onDelete={handleDeleteAccount}
+                />
+              ))
+            )}
+          </>
         )}
       </div>
     </div>

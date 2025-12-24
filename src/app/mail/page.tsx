@@ -142,7 +142,7 @@ export default function MailPageClient() {
       </div>
 
       <AccountTabs
-        accounts={accounts as any}
+        accounts={accounts}
         activeAccountId={activeAccountId}
         onSelectAccount={setActiveAccountId}
       />
