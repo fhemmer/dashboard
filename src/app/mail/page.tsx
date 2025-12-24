@@ -5,7 +5,7 @@ import { getMailAccounts } from "@/modules/mail/actions";
 import { MailList } from "@/modules/mail/components/mail-list";
 import { AccountTabs } from "@/modules/mail/components/account-tabs";
 import { BulkActionBar } from "@/modules/mail/components/bulk-action-bar";
-import type { MailMessage, BulkActionType } from "@/modules/mail/types";
+import type { MailMessage, MailAccount, BulkActionType } from "@/modules/mail/types";
 import { Mail, Settings } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
@@ -15,7 +15,7 @@ import { useState, useEffect } from "react";
  * Displays emails with unified inbox and bulk actions
  */
 export default function MailPageClient() {
-  const [accounts, setAccounts] = useState<Array<{ id: string; accountName: string; provider: string }>>([]);
+  const [accounts, setAccounts] = useState<MailAccount[]>([]);
   const [activeAccountId, setActiveAccountId] = useState<string | null>(null);
   const [messages, setMessages] = useState<MailMessage[]>([]);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
