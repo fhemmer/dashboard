@@ -100,6 +100,10 @@ export async function changePassword(formData: FormData) {
     return redirect("/login");
   }
 
+  if (!user.email) {
+    return redirect("/account?error=" + encodeURIComponent("User email not found."));
+  }
+
   // Validate new password confirmation
   if (newPassword !== confirmNewPassword) {
     return redirect("/account?error=" + encodeURIComponent("New passwords do not match."));
@@ -107,7 +111,7 @@ export async function changePassword(formData: FormData) {
 
   // Verify current password by attempting to sign in
   const { error: signInError } = await supabase.auth.signInWithPassword({
-    email: user.email!,
+    email: user.email,
     password: currentPassword,
   });
 

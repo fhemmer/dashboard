@@ -315,5 +315,23 @@ describe("account actions", () => {
         password: "newPassword123",
       });
     });
+
+    it("redirects with error when user email is not found", async () => {
+      mockGetUser.mockResolvedValue({ 
+        data: { user: { id: "user-123", email: null } } 
+      });
+
+      const formData = new FormData();
+      formData.set("currentPassword", "oldPassword123");
+      formData.set("newPassword", "newPassword123");
+      formData.set("confirmNewPassword", "newPassword123");
+
+      await expect(changePassword(formData)).rejects.toThrow(
+        "NEXT_REDIRECT:/account?error=User%20email%20not%20found."
+      );
+
+      expect(mockSignInWithPassword).not.toHaveBeenCalled();
+      expect(mockUpdateUser).not.toHaveBeenCalled();
+    });
   });
 });
