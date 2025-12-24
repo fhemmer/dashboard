@@ -1,12 +1,12 @@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
-  AutoMarkAsRead,
-  fetchNews,
-  getNewsLastSeenAt,
-  MarkAsReadButton,
-  NewsItemComponent,
-  RefreshButton,
+    AutoMarkAsRead,
+    fetchNews,
+    getNewsLastSeenAt,
+    MarkAsReadButton,
+    NewsItemComponent,
+    RefreshButton,
 } from "@/modules/news";
 import { AlertTriangle, ArrowLeft } from "lucide-react";
 import Link from "next/link";

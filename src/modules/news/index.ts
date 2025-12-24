@@ -1,8 +1,8 @@
 export {
-  fetchNews,
-  getNewsLastSeenAt,
-  markNewsAsRead,
-  revalidateNews,
+    fetchNews,
+    getNewsLastSeenAt,
+    markNewsAsRead,
+    revalidateNews
 } from "./actions";
 export { AutoMarkAsRead } from "./components/auto-mark-as-read";
 export { MarkAsReadButton } from "./components/mark-as-read-button";
