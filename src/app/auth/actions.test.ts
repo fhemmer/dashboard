@@ -102,6 +102,7 @@ describe("auth actions", () => {
       const formData = new FormData();
       formData.set("email", "test@example.com");
       formData.set("password", "testSecret123");
+      formData.set("confirmPassword", "testSecret123");
 
       await expect(signUp(formData)).rejects.toThrow(
         "NEXT_REDIRECT:/login?message=Check%20your%20email%20to%20confirm%20your%20account."
@@ -116,6 +117,22 @@ describe("auth actions", () => {
       });
     });
 
+    it("redirects to signup with error when passwords do not match", async () => {
+      const formData = new FormData();
+      formData.set("email", "test@example.com");
+      formData.set("password", "testSecret123");
+      formData.set("confirmPassword", "differentPassword");
+
+      await expect(signUp(formData)).rejects.toThrow(
+        "NEXT_REDIRECT:/signup?error=Passwords%20do%20not%20match."
+      );
+
+      expect(mockRedirect).toHaveBeenCalledWith(
+        "/signup?error=Passwords%20do%20not%20match."
+      );
+      expect(mockSignUp).not.toHaveBeenCalled();
+    });
+
     it("redirects to signup with error on failed sign up", async () => {
       mockSignUp.mockResolvedValue({
         error: { message: "Some unknown error" },
@@ -124,6 +141,7 @@ describe("auth actions", () => {
       const formData = new FormData();
       formData.set("email", "test@example.com");
       formData.set("password", "testSecret123");
+      formData.set("confirmPassword", "testSecret123");
 
       await expect(signUp(formData)).rejects.toThrow(
         "NEXT_REDIRECT:/signup?error=Some%20unknown%20error"
@@ -142,6 +160,7 @@ describe("auth actions", () => {
       const formData = new FormData();
       formData.set("email", "test@example.com");
       formData.set("password", "testSecret123");
+      formData.set("confirmPassword", "testSecret123");
 
       await expect(signUp(formData)).rejects.toThrow(
         "NEXT_REDIRECT:/signup?error=Unable%20to%20send%20confirmation%20email.%20Please%20try%20again%20later%20or%20contact%20support."
@@ -156,6 +175,7 @@ describe("auth actions", () => {
       const formData = new FormData();
       formData.set("email", "test@example.com");
       formData.set("password", "testSecret123");
+      formData.set("confirmPassword", "testSecret123");
 
       await expect(signUp(formData)).rejects.toThrow(
         "NEXT_REDIRECT:/signup?error=This%20email%20is%20already%20registered.%20Try%20logging%20in%20instead."
@@ -170,6 +190,7 @@ describe("auth actions", () => {
       const formData = new FormData();
       formData.set("email", "test@example.com");
       formData.set("password", "123");
+      formData.set("confirmPassword", "123");
 
       await expect(signUp(formData)).rejects.toThrow(
         "NEXT_REDIRECT:/signup?error=Password%20is%20too%20weak.%20Use%20at%20least%206%20characters%20with%20a%20mix%20of%20letters%20and%20numbers."
@@ -184,6 +205,7 @@ describe("auth actions", () => {
       const formData = new FormData();
       formData.set("email", "notanemail");
       formData.set("password", "testSecret123");
+      formData.set("confirmPassword", "testSecret123");
 
       await expect(signUp(formData)).rejects.toThrow(
         "NEXT_REDIRECT:/signup?error=Please%20enter%20a%20valid%20email%20address."
@@ -198,6 +220,7 @@ describe("auth actions", () => {
       const formData = new FormData();
       formData.set("email", "test@example.com");
       formData.set("password", "testSecret123");
+      formData.set("confirmPassword", "testSecret123");
 
       await expect(signUp(formData)).rejects.toThrow(
         "NEXT_REDIRECT:/signup?error=Too%20many%20signup%20attempts.%20Please%20wait%20a%20few%20minutes%20and%20try%20again."

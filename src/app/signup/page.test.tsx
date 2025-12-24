@@ -21,6 +21,7 @@ describe("SignUpPage", () => {
     ).toBeDefined();
     expect(screen.getByLabelText("Email")).toBeDefined();
     expect(screen.getByLabelText("Password")).toBeDefined();
+    expect(screen.getByLabelText("Confirm Password")).toBeDefined();
     expect(screen.getByRole("button", { name: "Sign Up" })).toBeDefined();
     expect(screen.getByText("Login")).toBeDefined();
   });

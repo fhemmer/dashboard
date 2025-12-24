@@ -36,6 +36,10 @@ export default async function SignUpPage({
               <label htmlFor="password" className="text-sm font-medium">Password</label>
               <Input id="password" name="password" type="password" required />
             </div>
+            <div className="space-y-2">
+              <label htmlFor="confirmPassword" className="text-sm font-medium">Confirm Password</label>
+              <Input id="confirmPassword" name="confirmPassword" type="password" required />
+            </div>
           </CardContent>
           <CardFooter className="flex flex-col gap-4">
             <Button type="submit" className="w-full">Sign Up</Button>
