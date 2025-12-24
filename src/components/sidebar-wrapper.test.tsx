@@ -102,7 +102,8 @@ describe('SidebarWrapper', () => {
       />
     )
 
-    // Since adminNavigation is empty, Admin section should not render
-    expect(screen.queryByText('Admin')).toBeNull()
+    // Admin badge should be visible when isAdmin is true
+    const adminBadge = screen.getByText('Admin')
+    expect(adminBadge).toHaveAttribute('data-slot', 'badge')
   })
 })

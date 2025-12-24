@@ -1,6 +1,7 @@
 "use client";
 
 import { signOut } from "@/app/auth/actions";
+import { Badge } from "@/components/ui/badge";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -155,7 +156,14 @@ export function AppSidebar({
                     )}
                   </div>
                   <div className="flex-1 overflow-hidden">
-                    <p className="text-sm font-medium truncate">{displayName || "User"}</p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm font-medium truncate">{displayName || "User"}</p>
+                      {isAdmin && (
+                        <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
+                          Admin
+                        </Badge>
+                      )}
+                    </div>
                     <p className="text-xs text-muted-foreground truncate">
                       {userEmail || "user@example.com"}
                     </p>

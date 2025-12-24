@@ -158,12 +158,15 @@ describe('AppSidebar', () => {
   })
 
   describe('Admin navigation', () => {
-    it('does not render admin section when adminNavigation is empty', () => {
+    it('does not render admin section label when adminNavigation is empty but shows badge', () => {
       vi.mocked(usePathname).mockReturnValue('/')
       render(<AppSidebar userEmail="admin@example.com" isAdmin={true} />, { wrapper: TestWrapper })
 
-      // Admin section should not render since adminNavigation is now empty
-      expect(screen.queryByText('Admin')).toBeNull()
+      // Admin section label should not render since adminNavigation is now empty
+      // But Admin badge should still be visible
+      const adminElements = screen.getAllByText('Admin')
+      expect(adminElements.length).toBe(1) // Only the badge, not the section label
+      expect(adminElements[0]).toHaveAttribute('data-slot', 'badge')
     })
 
     it('renders Expenditures in main navigation', () => {
@@ -180,6 +183,29 @@ describe('AppSidebar', () => {
 
       const expendituresLink = screen.getByRole('link', { name: /expenditures/i })
       expect(expendituresLink).toHaveAttribute('data-active', 'true')
+    })
+  })
+
+  describe('Admin badge', () => {
+    it('renders Admin badge when isAdmin is true', () => {
+      vi.mocked(usePathname).mockReturnValue('/')
+      render(<AppSidebar userEmail="admin@example.com" displayName="Admin User" isAdmin={true} />, { wrapper: TestWrapper })
+
+      expect(screen.getByText('Admin')).toBeDefined()
+    })
+
+    it('does not render Admin badge when isAdmin is false', () => {
+      vi.mocked(usePathname).mockReturnValue('/')
+      render(<AppSidebar userEmail="user@example.com" displayName="Regular User" isAdmin={false} />, { wrapper: TestWrapper })
+
+      expect(screen.queryByText('Admin')).toBeNull()
+    })
+
+    it('does not render Admin badge when isAdmin is undefined', () => {
+      vi.mocked(usePathname).mockReturnValue('/')
+      render(<AppSidebar userEmail="user@example.com" displayName="Regular User" />, { wrapper: TestWrapper })
+
+      expect(screen.queryByText('Admin')).toBeNull()
     })
   })
 })
