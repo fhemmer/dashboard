@@ -10,13 +10,21 @@ export async function signIn(formData: FormData) {
   const password = formData.get("password") as string;
   const supabase = await createClient();
 
-  const { error } = await supabase.auth.signInWithPassword({
+  const { error, data } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
 
   if (error) {
     return redirect("/login?error=" + encodeURIComponent(error.message));
+  }
+
+  // Update last_login timestamp
+  if (data.user) {
+    await supabase
+      .from("profiles")
+      .update({ last_login: new Date().toISOString() })
+      .eq("id", data.user.id);
   }
 
   revalidatePath("/", "layout");

@@ -2,6 +2,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // Mock supabase client
 const mockExchangeCodeForSession = vi.fn();
+const mockUpdate = vi.fn();
+const mockEq = vi.fn(() => Promise.resolve({ error: null }));
 
 vi.mock("@/lib/supabase/server", () => ({
   createClient: vi.fn(() =>
@@ -9,6 +11,9 @@ vi.mock("@/lib/supabase/server", () => ({
       auth: {
         exchangeCodeForSession: mockExchangeCodeForSession,
       },
+      from: vi.fn(() => ({
+        update: mockUpdate.mockReturnValue({ eq: mockEq }),
+      })),
     })
   ),
 }));
@@ -21,7 +26,10 @@ describe("auth callback route", () => {
   });
 
   it("exchanges code for session and redirects to home", async () => {
-    mockExchangeCodeForSession.mockResolvedValue({ error: null });
+    mockExchangeCodeForSession.mockResolvedValue({ 
+      error: null,
+      data: { user: { id: "user-123" } }
+    });
 
     const request = new Request(
       "http://localhost:3000/auth/callback?code=test-code"
@@ -29,12 +37,17 @@ describe("auth callback route", () => {
     const response = await GET(request);
 
     expect(mockExchangeCodeForSession).toHaveBeenCalledWith("test-code");
+    expect(mockUpdate).toHaveBeenCalledWith({ last_login: expect.any(String) });
+    expect(mockEq).toHaveBeenCalledWith("id", "user-123");
     expect(response.status).toBe(307);
     expect(response.headers.get("location")).toBe("http://localhost:3000/");
   });
 
   it("redirects to custom next URL if provided", async () => {
-    mockExchangeCodeForSession.mockResolvedValue({ error: null });
+    mockExchangeCodeForSession.mockResolvedValue({ 
+      error: null,
+      data: { user: { id: "user-456" } }
+    });
 
     const request = new Request(
       "http://localhost:3000/auth/callback?code=test-code&next=/dashboard"
@@ -50,6 +63,7 @@ describe("auth callback route", () => {
   it("redirects to login with error when code exchange fails", async () => {
     mockExchangeCodeForSession.mockResolvedValue({
       error: { message: "Invalid code" },
+      data: { user: null }
     });
 
     const request = new Request(

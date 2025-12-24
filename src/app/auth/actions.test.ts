@@ -5,6 +5,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const mockSignInWithPassword = vi.fn();
 const mockSignUp = vi.fn();
 const mockSignOut = vi.fn();
+const mockUpdate = vi.fn();
+const mockEq = vi.fn(() => Promise.resolve({ error: null }));
 
 vi.mock("@/lib/supabase/server", () => ({
   createClient: vi.fn(() =>
@@ -14,6 +16,9 @@ vi.mock("@/lib/supabase/server", () => ({
         signUp: mockSignUp,
         signOut: mockSignOut,
       },
+      from: vi.fn(() => ({
+        update: mockUpdate.mockReturnValue({ eq: mockEq }),
+      })),
     })
   ),
 }));
@@ -49,7 +54,10 @@ describe("auth actions", () => {
 
   describe("signIn", () => {
     it("redirects to home on successful sign in", async () => {
-      mockSignInWithPassword.mockResolvedValue({ error: null });
+      mockSignInWithPassword.mockResolvedValue({ 
+        error: null,
+        data: { user: { id: "user-123" } }
+      });
 
       const formData = new FormData();
       formData.set("email", "test@example.com");
@@ -61,6 +69,8 @@ describe("auth actions", () => {
         email: "test@example.com",
         password: "testSecret123",
       });
+      expect(mockUpdate).toHaveBeenCalledWith({ last_login: expect.any(String) });
+      expect(mockEq).toHaveBeenCalledWith("id", "user-123");
       expect(mockRevalidatePath).toHaveBeenCalledWith("/", "layout");
       expect(mockRedirect).toHaveBeenCalledWith("/");
     });
@@ -68,6 +78,7 @@ describe("auth actions", () => {
     it("redirects to login with error on failed sign in", async () => {
       mockSignInWithPassword.mockResolvedValue({
         error: { message: "Invalid credentials" },
+        data: { user: null }
       });
 
       const formData = new FormData();

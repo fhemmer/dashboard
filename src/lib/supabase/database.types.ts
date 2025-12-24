@@ -245,6 +245,7 @@ export type Database = {
           email: string | null
           font: string | null
           id: string
+          last_login: string | null
           news_last_seen_at: string | null
           role: string | null
           sidebar_width: number | null
@@ -257,6 +258,7 @@ export type Database = {
           email?: string | null
           font?: string | null
           id: string
+          last_login?: string | null
           news_last_seen_at?: string | null
           role?: string | null
           sidebar_width?: number | null
@@ -269,6 +271,7 @@ export type Database = {
           email?: string | null
           font?: string | null
           id?: string
+          last_login?: string | null
           news_last_seen_at?: string | null
           role?: string | null
           sidebar_width?: number | null

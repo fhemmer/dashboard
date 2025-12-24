@@ -9,8 +9,15 @@ export async function GET(request: Request) {
 
   if (code) {
     const supabase = await createClient();
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    const { error, data } = await supabase.auth.exchangeCodeForSession(code);
     if (!error) {
+      // Update last_login timestamp
+      if (data.user) {
+        await supabase
+          .from("profiles")
+          .update({ last_login: new Date().toISOString() })
+          .eq("id", data.user.id);
+      }
       return NextResponse.redirect(`${origin}${next}`);
     }
   }
