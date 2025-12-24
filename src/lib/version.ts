@@ -1,2 +1,2 @@
-export const APP_VERSION = "0.2.10 - 12/24/2025";
+export const APP_VERSION = "0.2.11 - 12/24/2025";
 export const APP_NAME = "Dashboard";
