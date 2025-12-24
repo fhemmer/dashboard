@@ -123,20 +123,7 @@ export async function changePassword(formData: FormData) {
     );
   }
 
-  // Verify current password by attempting to sign in
-  const { error: signInError } = await supabase.auth.signInWithPassword({
-    email: user.email,
-    password: currentPassword,
-  });
-
-  if (signInError) {
-    return redirect(
-      "/account?error=" +
-        encodeURIComponent("Unable to change password. Please check your current password and try again.")
-    );
-  }
-
-  // Update password
+  // Update password using the existing authenticated session
   const { error: updateError } = await supabase.auth.updateUser({
     password: newPassword,
   });

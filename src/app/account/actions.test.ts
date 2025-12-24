@@ -7,7 +7,6 @@ const mockUpdate = vi.fn();
 const mockEq = vi.fn();
 const mockSingle = vi.fn();
 const mockGetUser = vi.fn();
-const mockSignInWithPassword = vi.fn();
 const mockUpdateUser = vi.fn();
 
 vi.mock("@/lib/supabase/server", () => ({
@@ -15,7 +14,6 @@ vi.mock("@/lib/supabase/server", () => ({
     Promise.resolve({
       auth: {
         getUser: mockGetUser,
-        signInWithPassword: mockSignInWithPassword,
         updateUser: mockUpdateUser,
       },
       from: vi.fn(() => ({
@@ -239,7 +237,6 @@ describe("account actions", () => {
         "NEXT_REDIRECT:/account?error=Current%20password%20is%20required."
       );
 
-      expect(mockSignInWithPassword).not.toHaveBeenCalled();
       expect(mockUpdateUser).not.toHaveBeenCalled();
     });
 
@@ -257,7 +254,6 @@ describe("account actions", () => {
         "NEXT_REDIRECT:/account?error=New%20passwords%20do%20not%20match."
       );
 
-      expect(mockSignInWithPassword).not.toHaveBeenCalled();
       expect(mockUpdateUser).not.toHaveBeenCalled();
     });
 
@@ -275,31 +271,6 @@ describe("account actions", () => {
         "NEXT_REDIRECT:/account?error=New%20password%20must%20be%20at%20least%206%20characters%20and%20include%20letters%20and%20numbers."
       );
 
-      expect(mockSignInWithPassword).not.toHaveBeenCalled();
-      expect(mockUpdateUser).not.toHaveBeenCalled();
-    });
-
-    it("redirects with error when current password is incorrect", async () => {
-      mockGetUser.mockResolvedValue({ 
-        data: { user: { id: "user-123", email: "test@example.com" } } 
-      });
-      mockSignInWithPassword.mockResolvedValue({ 
-        error: { message: "Invalid credentials" } 
-      });
-
-      const formData = new FormData();
-      formData.set("currentPassword", "wrongPassword1");
-      formData.set("newPassword", "newPassword1");
-      formData.set("confirmNewPassword", "newPassword1");
-
-      await expect(changePassword(formData)).rejects.toThrow(
-        "NEXT_REDIRECT:/account?error=Unable%20to%20change%20password.%20Please%20check%20your%20current%20password%20and%20try%20again."
-      );
-
-      expect(mockSignInWithPassword).toHaveBeenCalledWith({
-        email: "test@example.com",
-        password: "wrongPassword1",
-      });
       expect(mockUpdateUser).not.toHaveBeenCalled();
     });
 
@@ -307,7 +278,6 @@ describe("account actions", () => {
       mockGetUser.mockResolvedValue({ 
         data: { user: { id: "user-123", email: "test@example.com" } } 
       });
-      mockSignInWithPassword.mockResolvedValue({ error: null });
       mockUpdateUser.mockResolvedValue({ error: null });
 
       const formData = new FormData();
@@ -319,10 +289,6 @@ describe("account actions", () => {
         "NEXT_REDIRECT:/account?success=true"
       );
 
-      expect(mockSignInWithPassword).toHaveBeenCalledWith({
-        email: "test@example.com",
-        password: "oldPassword1",
-      });
       expect(mockUpdateUser).toHaveBeenCalledWith({
         password: "newPassword1",
       });
@@ -333,7 +299,6 @@ describe("account actions", () => {
       mockGetUser.mockResolvedValue({ 
         data: { user: { id: "user-123", email: "test@example.com" } } 
       });
-      mockSignInWithPassword.mockResolvedValue({ error: null });
       mockUpdateUser.mockResolvedValue({ 
         error: { message: "Password update failed" } 
       });
@@ -366,7 +331,6 @@ describe("account actions", () => {
         "NEXT_REDIRECT:/account?error=User%20email%20not%20found."
       );
 
-      expect(mockSignInWithPassword).not.toHaveBeenCalled();
       expect(mockUpdateUser).not.toHaveBeenCalled();
     });
   });
