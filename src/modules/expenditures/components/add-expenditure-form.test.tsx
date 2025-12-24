@@ -443,5 +443,46 @@ describe("AddExpenditureForm", () => {
         expect(screen.getByText("Failed to create")).toBeDefined();
       });
     });
+
+    it("shows validation error when name is empty", async () => {
+      render(<AddExpenditureForm />);
+
+      fireEvent.click(
+        screen.getByRole("button", { name: /add expenditure source/i })
+      );
+
+      // Leave name empty and submit the form
+      const form = screen.getByRole("button", { name: /add source/i }).closest("form")!;
+      fireEvent.submit(form);
+
+      await waitFor(() => {
+        expect(screen.getByText("Name is required")).toBeDefined();
+      });
+
+      // Should not call createExpenditureSource
+      expect(createExpenditureSource).not.toHaveBeenCalled();
+    });
+
+    it("shows validation error when name is whitespace only", async () => {
+      render(<AddExpenditureForm />);
+
+      fireEvent.click(
+        screen.getByRole("button", { name: /add expenditure source/i })
+      );
+
+      // Set name to whitespace only
+      fireEvent.change(screen.getByLabelText("Name *"), {
+        target: { value: "   " },
+      });
+
+      const form = screen.getByRole("button", { name: /add source/i }).closest("form")!;
+      fireEvent.submit(form);
+
+      await waitFor(() => {
+        expect(screen.getByText("Name is required")).toBeDefined();
+      });
+
+      expect(createExpenditureSource).not.toHaveBeenCalled();
+    });
   });
 });

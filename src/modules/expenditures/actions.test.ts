@@ -3,6 +3,7 @@ import {
     createExpenditureSource,
     deleteExpenditureSource,
     getExpenditures,
+    isCurrentUserAdmin,
     updateConsumptionCost,
     updateExpenditureSource,
 } from "./actions";
@@ -47,6 +48,33 @@ describe("expenditures actions", () => {
     mockGetUser.mockResolvedValue({
       data: { user: { id: "user-123", email: "test@example.com" } },
       error: null,
+    });
+  });
+
+  describe("isCurrentUserAdmin", () => {
+    it("returns true when user is admin", async () => {
+      mockRpc.mockResolvedValue({ data: true, error: null });
+
+      const result = await isCurrentUserAdmin();
+
+      expect(result).toBe(true);
+      expect(mockRpc).toHaveBeenCalledWith("is_admin");
+    });
+
+    it("returns false when user is not admin", async () => {
+      mockRpc.mockResolvedValue({ data: false, error: null });
+
+      const result = await isCurrentUserAdmin();
+
+      expect(result).toBe(false);
+    });
+
+    it("returns false when rpc returns null", async () => {
+      mockRpc.mockResolvedValue({ data: null, error: null });
+
+      const result = await isCurrentUserAdmin();
+
+      expect(result).toBe(false);
     });
   });
 
