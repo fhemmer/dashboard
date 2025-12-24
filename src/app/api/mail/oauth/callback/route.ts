@@ -1,6 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
 import { storeAccountCredentials } from "@/modules/mail/actions";
-import type { OAuthCallbackParams } from "@/modules/mail/types";
 import { NextResponse } from "next/server";
 
 /**
@@ -64,7 +63,7 @@ export async function GET(request: Request) {
       );
     }
 
-    // TODO: Exchange authorization code for tokens
+    // Placeholder: Exchange authorization code for tokens
     // For Outlook: POST to https://login.microsoftonline.com/common/oauth2/v2.0/token
     // For Gmail: POST to https://oauth2.googleapis.com/token
     

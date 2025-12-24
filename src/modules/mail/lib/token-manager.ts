@@ -5,7 +5,7 @@
 
 import { decrypt, encrypt } from "@/lib/crypto";
 import { createClient } from "@/lib/supabase/server";
-import type { DecryptedToken, EncryptedToken, TokenInput } from "../types";
+import type { DecryptedToken, TokenInput } from "../types";
 
 /**
  * Store encrypted tokens for a mail account

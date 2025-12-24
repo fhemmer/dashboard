@@ -191,7 +191,7 @@ export default function MailSettingsPage() {
         ) : accounts.length === 0 ? (
           <div className="text-center py-8">
             <p className="text-sm text-muted-foreground">
-              No accounts configured. Click "Add Account" to get started.
+              No accounts configured. Click &ldquo;Add Account&rdquo; to get started.
             </p>
           </div>
         ) : (

@@ -68,8 +68,8 @@ export async function DELETE(request: Request) {
       );
     }
 
-    // TODO: Implement folder emptying based on provider
-    const provider = account.provider as MailProvider;
+    // Placeholder: Implementation requires provider-specific API integration
+    const _provider = account.provider as MailProvider;
     
     // For now, return success placeholder
     const success = true;

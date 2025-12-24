@@ -7,7 +7,6 @@ import {
   getProviderColor,
   getProviderDisplayName,
   type MailAddress,
-  type MailProvider,
 } from "./types";
 
 describe("mail types", () => {

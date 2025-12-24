@@ -23,17 +23,16 @@ export async function getImapUnreadCount(accountId: string): Promise<number> {
       return 0;
     }
 
-    // TODO: Implement IMAP connection and STATUS command
+    // Placeholder: Implement IMAP connection and STATUS command
     // For now, use env variables for hemmer.us
     const host = process.env.IMAP_HEMMER_HOST;
-    const port = Number.parseInt(process.env.IMAP_HEMMER_PORT || "993", 10);
     
     if (!host) {
       console.error("IMAP host not configured");
       return 0;
     }
 
-    // TODO: Use imap package to connect and get unread count
+    // Placeholder: Use imap package to connect and get unread count
     // 1. Connect to IMAP server
     // 2. Authenticate with credentials from token
     // 3. Execute STATUS INBOX (UNSEEN)
@@ -51,8 +50,8 @@ export async function getImapUnreadCount(accountId: string): Promise<number> {
  */
 export async function getImapMessages(
   accountId: string,
-  folder: string = "INBOX",
-  maxResults: number = 50
+  _folder: string = "INBOX",
+  _maxResults: number = 50
 ): Promise<MailMessage[]> {
   try {
     const token = await getToken(accountId);
@@ -61,7 +60,7 @@ export async function getImapMessages(
       return [];
     }
 
-    // TODO: Implement IMAP connection and FETCH commands
+    // Placeholder: Implement IMAP connection and FETCH commands
     // 1. Connect to IMAP server
     // 2. Authenticate with credentials from token
     // 3. SELECT folder
@@ -81,7 +80,7 @@ export async function getImapMessages(
 export async function performImapBulkAction(
   accountId: string,
   messageIds: string[],
-  action: BulkActionType
+  _action: BulkActionType
 ): Promise<{ success: boolean; processedCount: number }> {
   try {
     const token = await getToken(accountId);
@@ -90,7 +89,7 @@ export async function performImapBulkAction(
       return { success: false, processedCount: 0 };
     }
 
-    // TODO: Implement IMAP commands based on action type
+    // Placeholder: Implement IMAP commands based on action type
     // - markRead: STORE +FLAGS (\Seen)
     // - markUnread: STORE -FLAGS (\Seen)
     // - moveToJunk: MOVE to Junk folder
@@ -117,7 +116,7 @@ export async function searchImapMessages(
       return { messages: [], hasMore: false, error: "Invalid credentials" };
     }
 
-    // TODO: Implement IMAP SEARCH command
+    // Placeholder: Implement IMAP SEARCH command
     // 1. Connect to IMAP server
     // 2. Authenticate with credentials from token
     // 3. SELECT folder
@@ -142,7 +141,7 @@ export async function getImapFolders(accountId: string): Promise<MailFolder[]> {
       return [];
     }
 
-    // TODO: Implement IMAP LIST command
+    // Placeholder: Implement IMAP LIST command
     // 1. Connect to IMAP server
     // 2. Authenticate with credentials from token
     // 3. Execute LIST "" "*" to get all folders

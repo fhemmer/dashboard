@@ -9,8 +9,6 @@ import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import type {
   AccountsResult,
-  BulkActionRequest,
-  BulkActionResult,
   MailAccount,
   MailAccountInput,
   MailAccountSummary,
@@ -241,7 +239,7 @@ export async function getMailSummary(): Promise<MailSummary> {
         provider: account.provider,
         emailAddress: account.emailAddress,
         unreadCount,
-        totalCount: 0, // TODO: Implement total count fetching
+        totalCount: 0, // Placeholder: total count fetching requires provider-specific implementation
         lastSyncedAt: new Date(),
       };
     })

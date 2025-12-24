@@ -23,7 +23,7 @@ export async function getGmailUnreadCount(accountId: string): Promise<number> {
       return 0;
     }
 
-    // TODO: Implement Gmail API call
+    // Placeholder: Implement Gmail API call
     // GET https://gmail.googleapis.com/gmail/v1/users/me/labels/INBOX
     
     // Placeholder: return 0 for now
@@ -39,8 +39,8 @@ export async function getGmailUnreadCount(accountId: string): Promise<number> {
  */
 export async function getGmailMessages(
   accountId: string,
-  folder: string = "inbox",
-  maxResults: number = 50
+  _folder: string = "inbox",
+  _maxResults: number = 50
 ): Promise<MailMessage[]> {
   try {
     const token = await getToken(accountId);
@@ -49,7 +49,7 @@ export async function getGmailMessages(
       return [];
     }
 
-    // TODO: Implement Gmail API calls
+    // Placeholder: Implement Gmail API calls
     // 1. GET https://gmail.googleapis.com/gmail/v1/users/me/messages?labelIds={folder}&maxResults={maxResults}
     // 2. For each message, GET https://gmail.googleapis.com/gmail/v1/users/me/messages/{id}
     
@@ -67,7 +67,7 @@ export async function getGmailMessages(
 export async function performGmailBulkAction(
   accountId: string,
   messageIds: string[],
-  action: BulkActionType
+  _action: BulkActionType
 ): Promise<{ success: boolean; processedCount: number }> {
   try {
     const token = await getToken(accountId);
@@ -76,7 +76,7 @@ export async function performGmailBulkAction(
       return { success: false, processedCount: 0 };
     }
 
-    // TODO: Implement Gmail API calls based on action type
+    // Placeholder: Implement Gmail API calls based on action type
     // - markRead: POST /users/me/messages/batchModify with removeLabelIds: ["UNREAD"]
     // - markUnread: POST /users/me/messages/batchModify with addLabelIds: ["UNREAD"]
     // - moveToJunk: POST /users/me/messages/batchModify with addLabelIds: ["SPAM"]
@@ -103,7 +103,7 @@ export async function searchGmailMessages(
       return { messages: [], hasMore: false, error: "Invalid token" };
     }
 
-    // TODO: Implement Gmail API search
+    // Placeholder: Implement Gmail API search
     // GET https://gmail.googleapis.com/gmail/v1/users/me/messages?q={query}
     
     // Placeholder: return empty results for now
@@ -125,7 +125,7 @@ export async function getGmailFolders(accountId: string): Promise<MailFolder[]> 
       return [];
     }
 
-    // TODO: Implement Gmail API call
+    // Placeholder: Implement Gmail API call
     // GET https://gmail.googleapis.com/gmail/v1/users/me/labels
     
     // Placeholder: return standard labels

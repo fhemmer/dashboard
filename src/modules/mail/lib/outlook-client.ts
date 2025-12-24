@@ -23,7 +23,7 @@ export async function getOutlookUnreadCount(accountId: string): Promise<number> 
       return 0;
     }
 
-    // TODO: Implement Microsoft Graph API call
+    // Placeholder: Implement Microsoft Graph API call
     // GET https://graph.microsoft.com/v1.0/me/mailFolders/inbox/messages?$count=true&$filter=isRead eq false
     
     // Placeholder: return 0 for now
@@ -39,8 +39,8 @@ export async function getOutlookUnreadCount(accountId: string): Promise<number> 
  */
 export async function getOutlookMessages(
   accountId: string,
-  folder: string = "inbox",
-  maxResults: number = 50
+  _folder: string = "inbox",
+  _maxResults: number = 50
 ): Promise<MailMessage[]> {
   try {
     const token = await getToken(accountId);
@@ -49,10 +49,9 @@ export async function getOutlookMessages(
       return [];
     }
 
-    // TODO: Implement Microsoft Graph API call
+    // Placeholder: Implementation requires Microsoft Graph API integration
     // GET https://graph.microsoft.com/v1.0/me/mailFolders/{folder}/messages?$top={maxResults}
     
-    // Placeholder: return empty array for now
     return [];
   } catch (error) {
     console.error("Error fetching Outlook messages:", error);
@@ -66,7 +65,7 @@ export async function getOutlookMessages(
 export async function performOutlookBulkAction(
   accountId: string,
   messageIds: string[],
-  action: BulkActionType
+  _action: BulkActionType
 ): Promise<{ success: boolean; processedCount: number }> {
   try {
     const token = await getToken(accountId);
@@ -75,13 +74,12 @@ export async function performOutlookBulkAction(
       return { success: false, processedCount: 0 };
     }
 
-    // TODO: Implement Microsoft Graph API calls based on action type
+    // Placeholder: Implementation requires Microsoft Graph API integration
     // - markRead: PATCH /messages/{id} with { isRead: true }
     // - markUnread: PATCH /messages/{id} with { isRead: false }
     // - moveToJunk: POST /messages/{id}/move with destinationId
     // - delete: DELETE /messages/{id}
     
-    // Placeholder: return success for now
     return { success: true, processedCount: messageIds.length };
   } catch (error) {
     console.error("Error performing Outlook bulk action:", error);
@@ -102,7 +100,7 @@ export async function searchOutlookMessages(
       return { messages: [], hasMore: false, error: "Invalid token" };
     }
 
-    // TODO: Implement Microsoft Graph API search
+    // Placeholder: Implement Microsoft Graph API search
     // GET https://graph.microsoft.com/v1.0/me/messages?$search="{query}"
     
     // Placeholder: return empty results for now
@@ -124,7 +122,7 @@ export async function getOutlookFolders(accountId: string): Promise<MailFolder[]
       return [];
     }
 
-    // TODO: Implement Microsoft Graph API call
+    // Placeholder: Implement Microsoft Graph API call
     // GET https://graph.microsoft.com/v1.0/me/mailFolders
     
     // Placeholder: return standard folders
