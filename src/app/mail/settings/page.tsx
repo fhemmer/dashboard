@@ -3,27 +3,27 @@
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select";
 import {
-  createMailAccount,
-  deleteMailAccount,
-  getMailAccounts,
-  updateMailAccount,
+    createMailAccount,
+    deleteMailAccount,
+    getMailAccounts,
+    updateMailAccount,
 } from "@/modules/mail/actions";
 import { AccountCard } from "@/modules/mail/components/account-card";
 import type { MailAccount, MailProvider } from "@/modules/mail/types";
@@ -171,7 +171,7 @@ export default function MailSettingsPage() {
                 <SelectContent>
                   <SelectItem value="gmail">Gmail</SelectItem>
                   <SelectItem value="outlook">Outlook</SelectItem>
-                  <SelectItem value="imap">IMAP (hemmer.us)</SelectItem>
+                  <SelectItem value="imap">IMAP (Custom)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
