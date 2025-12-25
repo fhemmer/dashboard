@@ -97,10 +97,16 @@ export async function cacheAccountSummary(
 }
 
 /**
- * Invalidate all caches for a user (use when accounts are added/removed)
+ * Invalidate all caches for a user's specific accounts (use when accounts are added/removed)
+ * @param userId - The user ID for invalidating the summary cache
+ * @param accountIds - Array of account IDs to invalidate caches for
  */
-export async function invalidateAllUserCaches(userId: string): Promise<void> {
+export async function invalidateAllUserCaches(userId: string, accountIds: string[]): Promise<void> {
   await invalidateSummaryCache(userId);
-  await deleteCachePattern(`mail:account:*`);
-  await deleteCachePattern(`mail:messages:*`);
+  
+  // Only invalidate caches for the specified user's accounts, not all users
+  for (const accountId of accountIds) {
+    await deleteCache(`mail:account:${accountId}`);
+    await deleteCachePattern(`mail:messages:${accountId}:*`);
+  }
 }

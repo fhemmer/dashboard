@@ -93,8 +93,8 @@ export async function createMailAccount(
     return { success: false, error: error.message };
   }
 
-  // Invalidate caches
-  await invalidateAllUserCaches(user.id);
+  // Invalidate caches for the newly created account
+  await invalidateAllUserCaches(user.id, [data.id]);
   
   revalidatePath("/mail");
   revalidatePath("/mail/settings");
@@ -176,8 +176,8 @@ export async function deleteMailAccount(id: string): Promise<UpdateResult> {
     return { success: false, error: error.message };
   }
 
-  // Invalidate caches
-  await invalidateAllUserCaches(user.id);
+  // Invalidate caches for the deleted account
+  await invalidateAllUserCaches(user.id, [id]);
   
   revalidatePath("/mail");
   revalidatePath("/mail/settings");
