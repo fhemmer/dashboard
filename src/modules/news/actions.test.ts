@@ -18,15 +18,15 @@ vi.mock("@/lib/supabase/server", () => ({
 }));
 
 import {
-  excludeSource,
-  getNewsItems,
-  getNewsLastSeenAt,
-  getSourcesWithExclusion,
-  getUserExcludedSources,
-  includeSource,
-  markNewsAsRead,
-  revalidateNews,
-  toggleSourceExclusion,
+    excludeSource,
+    getNewsItems,
+    getNewsLastSeenAt,
+    getSourcesWithExclusion,
+    getUserExcludedSources,
+    includeSource,
+    markNewsAsRead,
+    revalidateNews,
+    toggleSourceExclusion,
 } from "./actions";
 
 describe("News Actions", () => {
@@ -264,6 +264,70 @@ describe("News Actions", () => {
       expect(result.sources[0].name).toBe("Source 1");
       expect(result.sources[0].isExcluded).toBe(false);
     });
+
+    it("returns error when fetching sources fails", async () => {
+      mockGetUser.mockResolvedValueOnce({
+        data: { user: { id: "user-123" } },
+      });
+      mockFrom.mockReturnValueOnce({
+        select: vi.fn().mockReturnValue({
+          eq: vi.fn().mockReturnValue({
+            order: vi.fn().mockResolvedValue({
+              data: null,
+              error: { message: "Database error" },
+            }),
+          }),
+        }),
+      });
+
+      const result = await getSourcesWithExclusion();
+      expect(result.sources).toEqual([]);
+      expect(result.error).toBe("Database error");
+    });
+
+    it("marks sources as excluded when in user exclusions", async () => {
+      mockGetUser.mockResolvedValueOnce({
+        data: { user: { id: "user-123" } },
+      });
+      mockFrom
+        .mockReturnValueOnce({
+          select: vi.fn().mockReturnValue({
+            eq: vi.fn().mockReturnValue({
+              order: vi.fn().mockResolvedValue({
+                data: [
+                  {
+                    id: "source-1",
+                    name: "Source 1",
+                    icon_name: "rocket",
+                    brand_color: "orange",
+                    category: "dev",
+                  },
+                  {
+                    id: "source-2",
+                    name: "Source 2",
+                    icon_name: "star",
+                    brand_color: "blue",
+                    category: "news",
+                  },
+                ],
+                error: null,
+              }),
+            }),
+          }),
+        })
+        .mockReturnValueOnce({
+          select: vi.fn().mockReturnValue({
+            eq: vi.fn().mockResolvedValue({
+              data: [{ source_id: "source-1" }],
+            }),
+          }),
+        });
+
+      const result = await getSourcesWithExclusion();
+      expect(result.sources).toHaveLength(2);
+      expect(result.sources[0].isExcluded).toBe(true);
+      expect(result.sources[1].isExcluded).toBe(false);
+    });
   });
 
   describe("getUserExcludedSources", () => {
@@ -331,6 +395,32 @@ describe("News Actions", () => {
       expect(mockRevalidatePath).toHaveBeenCalledWith("/news");
     });
 
+    it("returns failure when delete fails during toggle", async () => {
+      mockGetUser.mockResolvedValueOnce({
+        data: { user: { id: "user-123" } },
+      });
+      mockFrom
+        .mockReturnValueOnce({
+          select: vi.fn().mockReturnValue({
+            eq: vi.fn().mockReturnValue({
+              eq: vi.fn().mockReturnValue({
+                single: vi.fn().mockResolvedValue({ data: { source_id: "source-1" } }),
+              }),
+            }),
+          }),
+        })
+        .mockReturnValueOnce({
+          delete: vi.fn().mockReturnValue({
+            eq: vi.fn().mockReturnValue({
+              eq: vi.fn().mockResolvedValue({ error: { message: "Delete failed" } }),
+            }),
+          }),
+        });
+
+      const result = await toggleSourceExclusion("source-1");
+      expect(result).toEqual({ success: false, isExcluded: true });
+    });
+
     it("adds exclusion when source is not excluded", async () => {
       mockGetUser.mockResolvedValueOnce({
         data: { user: { id: "user-123" } },
@@ -352,6 +442,28 @@ describe("News Actions", () => {
 
       const result = await toggleSourceExclusion("source-1");
       expect(result).toEqual({ success: true, isExcluded: true });
+    });
+
+    it("returns failure when insert fails during toggle", async () => {
+      mockGetUser.mockResolvedValueOnce({
+        data: { user: { id: "user-123" } },
+      });
+      mockFrom
+        .mockReturnValueOnce({
+          select: vi.fn().mockReturnValue({
+            eq: vi.fn().mockReturnValue({
+              eq: vi.fn().mockReturnValue({
+                single: vi.fn().mockResolvedValue({ data: null }),
+              }),
+            }),
+          }),
+        })
+        .mockReturnValueOnce({
+          insert: vi.fn().mockResolvedValue({ error: { message: "Insert failed" } }),
+        });
+
+      const result = await toggleSourceExclusion("source-1");
+      expect(result).toEqual({ success: false, isExcluded: false });
     });
   });
 
@@ -376,6 +488,18 @@ describe("News Actions", () => {
 
       const result = await excludeSource("source-1");
       expect(result).toEqual({ success: true });
+    });
+
+    it("returns failure when upsert fails", async () => {
+      mockGetUser.mockResolvedValueOnce({
+        data: { user: { id: "user-123" } },
+      });
+      mockFrom.mockReturnValueOnce({
+        upsert: vi.fn().mockResolvedValue({ error: { message: "Upsert failed" } }),
+      });
+
+      const result = await excludeSource("source-1");
+      expect(result).toEqual({ success: false });
     });
   });
 
@@ -404,6 +528,22 @@ describe("News Actions", () => {
 
       const result = await includeSource("source-1");
       expect(result).toEqual({ success: true });
+    });
+
+    it("returns failure when delete fails", async () => {
+      mockGetUser.mockResolvedValueOnce({
+        data: { user: { id: "user-123" } },
+      });
+      mockFrom.mockReturnValueOnce({
+        delete: vi.fn().mockReturnValue({
+          eq: vi.fn().mockReturnValue({
+            eq: vi.fn().mockResolvedValue({ error: { message: "Delete failed" } }),
+          }),
+        }),
+      });
+
+      const result = await includeSource("source-1");
+      expect(result).toEqual({ success: false });
     });
   });
 });

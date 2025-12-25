@@ -1,10 +1,10 @@
 import { Badge } from "@/components/ui/badge";
 import {
-  defaultSourceIcon,
-  getBrandColorClasses,
-  sourceIconComponents,
+    defaultSourceIcon,
+    getBrandColorClasses,
+    sourceIconComponents,
 } from "@/modules/news-sources";
-import type { NewsItem as NewsItemType, NewsItemSource } from "../types";
+import type { NewsItemSource, NewsItem as NewsItemType } from "../types";
 
 interface NewsItemProps {
   readonly item: NewsItemType;

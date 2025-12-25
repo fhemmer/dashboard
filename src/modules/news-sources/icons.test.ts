@@ -1,24 +1,24 @@
 import {
-  Binary,
-  Blocks,
-  Brain,
-  Code2,
-  Globe,
-  Mic,
-  Newspaper,
-  Radio,
-  Rocket,
-  Rss,
-  Tv,
+    Binary,
+    Blocks,
+    Brain,
+    Code2,
+    Globe,
+    Mic,
+    Newspaper,
+    Radio,
+    Rocket,
+    Rss,
+    Tv,
 } from "lucide-react";
 import { describe, expect, it } from "vitest";
 import {
-  brandColorClasses,
-  defaultBrandColorClasses,
-  defaultSourceIcon,
-  getBrandColorClasses,
-  getSourceIcon,
-  sourceIconComponents,
+    brandColorClasses,
+    defaultBrandColorClasses,
+    defaultSourceIcon,
+    getBrandColorClasses,
+    getSourceIcon,
+    sourceIconComponents,
 } from "./icons";
 
 describe("icons", () => {

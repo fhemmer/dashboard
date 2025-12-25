@@ -2,18 +2,18 @@
 
 import { Button } from "@/components/ui/button";
 import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
+    Sheet,
+    SheetContent,
+    SheetDescription,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
 } from "@/components/ui/sheet";
 import { Switch } from "@/components/ui/switch";
 import {
-  defaultSourceIcon,
-  getBrandColorClasses,
-  sourceIconComponents,
+    defaultSourceIcon,
+    getBrandColorClasses,
+    sourceIconComponents,
 } from "@/modules/news-sources";
 import { Settings2 } from "lucide-react";
 import type React from "react";

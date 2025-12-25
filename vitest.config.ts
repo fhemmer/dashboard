@@ -24,6 +24,7 @@ export default defineConfig({
         "src/lib/supabase/database.types.ts",
         "src/**/index.ts", // Barrel files only re-export
         "src/modules/**/types.ts", // Type-only files
+        "src/lib/**/types.ts", // Type-only files in lib
       ],
       thresholds: {
         lines: 98,

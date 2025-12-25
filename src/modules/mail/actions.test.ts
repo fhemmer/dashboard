@@ -1,11 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
-  createMailAccount,
-  deleteMailAccount,
-  getMailAccounts,
-  getMailSummary,
-  storeAccountCredentials,
-  updateMailAccount,
+    createMailAccount,
+    deleteMailAccount,
+    getMailAccounts,
+    getMailSummary,
+    storeAccountCredentials,
+    updateMailAccount,
 } from "./actions";
 
 vi.mock("next/cache", () => ({
@@ -252,6 +252,201 @@ describe("mail actions", () => {
       expect(result.accounts).toEqual([]);
       expect(result.totalUnread).toBe(0);
     });
+
+    it("should return error when getMailAccounts fails", async () => {
+      mockFrom.mockReturnValue(
+        createChainMock({ data: null, error: { message: "DB error" } })
+      );
+
+      const result = await getMailSummary();
+
+      expect(result.accounts).toEqual([]);
+      expect(result.totalUnread).toBe(0);
+      expect(result.error).toBe("DB error");
+    });
+
+    it("should fetch unread counts for enabled outlook accounts", async () => {
+      const mockAccounts = [
+        {
+          id: "acc-1",
+          user_id: "user-123",
+          provider: "outlook",
+          account_name: "Work Outlook",
+          email_address: "test@outlook.com",
+          is_enabled: true,
+          sync_frequency_minutes: 5,
+          created_at: "2024-01-01T00:00:00Z",
+          updated_at: "2024-01-01T00:00:00Z",
+        },
+      ];
+
+      mockFrom.mockReturnValue(
+        createChainMock({ data: mockAccounts, error: null })
+      );
+
+      const { getOutlookUnreadCount } = await import("./lib/outlook-client");
+      vi.mocked(getOutlookUnreadCount).mockResolvedValue(5);
+
+      const result = await getMailSummary();
+
+      expect(result.accounts).toHaveLength(1);
+      expect(result.accounts[0].unreadCount).toBe(5);
+      expect(result.totalUnread).toBe(5);
+    });
+
+    it("should fetch unread counts for enabled gmail accounts", async () => {
+      const mockAccounts = [
+        {
+          id: "acc-2",
+          user_id: "user-123",
+          provider: "gmail",
+          account_name: "Personal Gmail",
+          email_address: "test@gmail.com",
+          is_enabled: true,
+          sync_frequency_minutes: 5,
+          created_at: "2024-01-01T00:00:00Z",
+          updated_at: "2024-01-01T00:00:00Z",
+        },
+      ];
+
+      mockFrom.mockReturnValue(
+        createChainMock({ data: mockAccounts, error: null })
+      );
+
+      const { getGmailUnreadCount } = await import("./lib/gmail-client");
+      vi.mocked(getGmailUnreadCount).mockResolvedValue(10);
+
+      const result = await getMailSummary();
+
+      expect(result.accounts).toHaveLength(1);
+      expect(result.accounts[0].unreadCount).toBe(10);
+      expect(result.totalUnread).toBe(10);
+    });
+
+    it("should fetch unread counts for enabled imap accounts", async () => {
+      const mockAccounts = [
+        {
+          id: "acc-3",
+          user_id: "user-123",
+          provider: "imap",
+          account_name: "Custom IMAP",
+          email_address: "test@custom.com",
+          is_enabled: true,
+          sync_frequency_minutes: 5,
+          created_at: "2024-01-01T00:00:00Z",
+          updated_at: "2024-01-01T00:00:00Z",
+        },
+      ];
+
+      mockFrom.mockReturnValue(
+        createChainMock({ data: mockAccounts, error: null })
+      );
+
+      const { getImapUnreadCount } = await import("./lib/imap-client");
+      vi.mocked(getImapUnreadCount).mockResolvedValue(3);
+
+      const result = await getMailSummary();
+
+      expect(result.accounts).toHaveLength(1);
+      expect(result.accounts[0].unreadCount).toBe(3);
+      expect(result.totalUnread).toBe(3);
+    });
+
+    it("should handle errors when fetching unread counts", async () => {
+      const mockAccounts = [
+        {
+          id: "acc-1",
+          user_id: "user-123",
+          provider: "outlook",
+          account_name: "Work Outlook",
+          email_address: "test@outlook.com",
+          is_enabled: true,
+          sync_frequency_minutes: 5,
+          created_at: "2024-01-01T00:00:00Z",
+          updated_at: "2024-01-01T00:00:00Z",
+        },
+      ];
+
+      mockFrom.mockReturnValue(
+        createChainMock({ data: mockAccounts, error: null })
+      );
+
+      const { getOutlookUnreadCount } = await import("./lib/outlook-client");
+      vi.mocked(getOutlookUnreadCount).mockRejectedValue(new Error("API error"));
+
+      const result = await getMailSummary();
+
+      // Should handle error gracefully and return 0 unread
+      expect(result.accounts).toHaveLength(1);
+      expect(result.accounts[0].unreadCount).toBe(0);
+      expect(result.totalUnread).toBe(0);
+    });
+
+    it("should skip disabled accounts", async () => {
+      const mockAccounts = [
+        {
+          id: "acc-1",
+          user_id: "user-123",
+          provider: "gmail",
+          account_name: "Disabled Account",
+          email_address: "test@gmail.com",
+          is_enabled: false,
+          sync_frequency_minutes: 5,
+          created_at: "2024-01-01T00:00:00Z",
+          updated_at: "2024-01-01T00:00:00Z",
+        },
+      ];
+
+      mockFrom.mockReturnValue(
+        createChainMock({ data: mockAccounts, error: null })
+      );
+
+      const result = await getMailSummary();
+
+      expect(result.accounts).toEqual([]);
+      expect(result.totalUnread).toBe(0);
+    });
+
+    it("should aggregate unread counts from multiple accounts", async () => {
+      const mockAccounts = [
+        {
+          id: "acc-1",
+          user_id: "user-123",
+          provider: "outlook",
+          account_name: "Work",
+          email_address: "work@outlook.com",
+          is_enabled: true,
+          sync_frequency_minutes: 5,
+          created_at: "2024-01-01T00:00:00Z",
+          updated_at: "2024-01-01T00:00:00Z",
+        },
+        {
+          id: "acc-2",
+          user_id: "user-123",
+          provider: "gmail",
+          account_name: "Personal",
+          email_address: "personal@gmail.com",
+          is_enabled: true,
+          sync_frequency_minutes: 5,
+          created_at: "2024-01-01T00:00:00Z",
+          updated_at: "2024-01-01T00:00:00Z",
+        },
+      ];
+
+      mockFrom.mockReturnValue(
+        createChainMock({ data: mockAccounts, error: null })
+      );
+
+      const { getOutlookUnreadCount } = await import("./lib/outlook-client");
+      const { getGmailUnreadCount } = await import("./lib/gmail-client");
+      vi.mocked(getOutlookUnreadCount).mockResolvedValue(5);
+      vi.mocked(getGmailUnreadCount).mockResolvedValue(10);
+
+      const result = await getMailSummary();
+
+      expect(result.accounts).toHaveLength(2);
+      expect(result.totalUnread).toBe(15);
+    });
   });
 
   describe("storeAccountCredentials", () => {
@@ -266,6 +461,40 @@ describe("mail actions", () => {
       );
 
       expect(result.success).toBe(true);
+    });
+
+    it("should store credentials with expiry date", async () => {
+      const { storeToken } = await import("./lib/token-manager");
+      vi.mocked(storeToken).mockResolvedValue({ success: true });
+      const expiresAt = new Date("2025-01-01");
+
+      const result = await storeAccountCredentials(
+        "acc-1",
+        "access-token",
+        "refresh-token",
+        expiresAt
+      );
+
+      expect(result.success).toBe(true);
+      expect(storeToken).toHaveBeenCalledWith({
+        accountId: "acc-1",
+        accessToken: "access-token",
+        refreshToken: "refresh-token",
+        expiresAt,
+      });
+    });
+
+    it("should return error when storeToken fails", async () => {
+      const { storeToken } = await import("./lib/token-manager");
+      vi.mocked(storeToken).mockResolvedValue({ success: false, error: "Storage failed" });
+
+      const result = await storeAccountCredentials(
+        "acc-1",
+        "access-token"
+      );
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("Storage failed");
     });
   });
 });
