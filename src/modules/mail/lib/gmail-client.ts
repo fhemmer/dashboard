@@ -1,6 +1,15 @@
 /**
  * Gmail Client (Gmail API)
  * Handles OAuth authentication and mail operations for Gmail accounts
+ *
+ * STATUS: PLACEHOLDER IMPLEMENTATION
+ * All functions return empty/default data. Full Gmail API integration is pending.
+ * To check if the provider is implemented, use: isProviderImplemented("gmail")
+ *
+ * Required for implementation:
+ * - Google Cloud Console project with Gmail API enabled
+ * - OAuth 2.0 credentials (client ID and secret)
+ * - Scopes: https://www.googleapis.com/auth/gmail.readonly (at minimum)
  */
 
 import type {
@@ -11,6 +20,13 @@ import type {
   SearchResult,
 } from "../types";
 import { getToken, isTokenExpired } from "./token-manager";
+
+/**
+ * Check if this provider is fully implemented
+ */
+export function isGmailImplemented(): boolean {
+  return false; // Placeholder - return true when API integration is complete
+}
 
 /**
  * Fetch unread count for a Gmail account

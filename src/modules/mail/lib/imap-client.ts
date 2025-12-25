@@ -1,6 +1,15 @@
 /**
  * IMAP Client (for hemmer.us)
  * Handles IMAP connections and mail operations
+ *
+ * STATUS: PLACEHOLDER IMPLEMENTATION
+ * All functions return empty/default data. Full IMAP integration is pending.
+ * To check if the provider is implemented, use: isProviderImplemented("imap")
+ *
+ * Required for implementation:
+ * - IMAP server credentials (host, port, user, password)
+ * - The `imap` npm package for IMAP protocol handling
+ * - Environment variables: IMAP_HEMMER_HOST, IMAP_HEMMER_PORT
  */
 
 import type {
@@ -11,6 +20,13 @@ import type {
   SearchResult,
 } from "../types";
 import { getToken } from "./token-manager";
+
+/**
+ * Check if this provider is fully implemented
+ */
+export function isImapImplemented(): boolean {
+  return false; // Placeholder - return true when IMAP integration is complete
+}
 
 /**
  * Fetch unread count for an IMAP account

@@ -44,7 +44,7 @@ describe("crypto", () => {
     it("should throw error when MAIL_ENCRYPTION_KEY is invalid length", () => {
       process.env.MAIL_ENCRYPTION_KEY = "tooshort";
 
-      expect(() => encrypt("test")).toThrow("MAIL_ENCRYPTION_KEY must be a 64-character hex string");
+      expect(() => encrypt("test")).toThrow("MAIL_ENCRYPTION_KEY must be a valid 64-character hexadecimal string");
     });
   });
 

@@ -3,14 +3,15 @@ import { MailItem } from "./mail-item";
 
 interface MailListProps {
   messages: MailMessage[];
-  onSelectMessage?: (message: MailMessage) => void;
+  selectedIds?: string[];
+  onSelectMessage?: (messageId: string) => void;
 }
 
 /**
  * Mail List Component
- * Displays a list of email messages
+ * Displays a list of email messages with selection support
  */
-export function MailList({ messages, onSelectMessage }: MailListProps) {
+export function MailList({ messages, selectedIds = [], onSelectMessage }: MailListProps) {
   if (messages.length === 0) {
     return (
       <div className="text-center py-8">
@@ -25,6 +26,7 @@ export function MailList({ messages, onSelectMessage }: MailListProps) {
         <MailItem
           key={message.id}
           message={message}
+          isSelected={selectedIds.includes(message.id)}
           onSelect={onSelectMessage}
         />
       ))}

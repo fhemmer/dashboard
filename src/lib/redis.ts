@@ -75,18 +75,33 @@ export async function deleteCache(key: string): Promise<boolean> {
 }
 
 /**
- * Delete multiple cached values matching a pattern
+ * Delete multiple cached values matching a pattern using SCAN
+ * Uses cursor-based iteration to avoid blocking (production-safe)
  */
 export async function deleteCachePattern(pattern: string): Promise<number> {
   const client = getRedisClient();
   if (!client) return 0;
 
   try {
-    const keys = await client.keys(pattern);
-    if (keys.length === 0) return 0;
+    let cursor = "0";
+    let deletedCount = 0;
+    const batchSize = 100;
 
-    await client.del(...keys);
-    return keys.length;
+    // Use cursor-based SCAN to iterate keys without blocking
+    do {
+      const [newCursor, keys] = await client.scan(cursor, {
+        match: pattern,
+        count: batchSize,
+      });
+      cursor = String(newCursor);
+
+      if (keys.length > 0) {
+        await client.del(...keys);
+        deletedCount += keys.length;
+      }
+    } while (cursor !== "0");
+
+    return deletedCount;
   } catch (error) {
     console.error("Redis delete pattern error:", error);
     return 0;

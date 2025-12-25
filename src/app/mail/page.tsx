@@ -1,14 +1,15 @@
 "use client";
 
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { getMailAccounts } from "@/modules/mail/actions";
 import { MailList } from "@/modules/mail/components/mail-list";
 import { AccountTabs } from "@/modules/mail/components/account-tabs";
 import { BulkActionBar } from "@/modules/mail/components/bulk-action-bar";
 import type { MailMessage, MailAccount, BulkActionType } from "@/modules/mail/types";
-import { Mail, Settings } from "lucide-react";
+import { AlertCircle, Loader2, Mail, Settings } from "lucide-react";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 /**
  * Mail Page (Client Component)
@@ -20,45 +21,110 @@ export default function MailPageClient() {
   const [messages, setMessages] = useState<MailMessage[]>([]);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [actionLoading, setActionLoading] = useState(false);
 
-  // Load accounts on mount
+  // Load accounts on mount with proper cleanup
   useEffect(() => {
+    let isCancelled = false;
+
     async function loadAccounts() {
-      const result = await getMailAccounts();
-      if (result.accounts && result.accounts.length > 0) {
-        setAccounts(result.accounts);
-        setActiveAccountId(result.accounts[0].id);
+      try {
+        const result = await getMailAccounts();
+        if (isCancelled) return;
+
+        if (result.accounts && result.accounts.length > 0) {
+          setAccounts(result.accounts);
+          setActiveAccountId(result.accounts[0].id);
+        }
+      } catch (err) {
+        if (isCancelled) return;
+        console.error("Error loading accounts:", err);
+        setError("Failed to load mail accounts.");
+      } finally {
+        if (!isCancelled) {
+          setLoading(false);
+        }
       }
-      setLoading(false);
     }
+
     loadAccounts();
+
+    return () => {
+      isCancelled = true;
+    };
   }, []);
 
-  // Load messages when account changes
+  // Load messages when account changes with abort controller
   useEffect(() => {
+    let cancelled = false;
+    const controller = new AbortController();
+
     async function loadMessages() {
       if (!activeAccountId) {
-        setMessages([]);
+        if (!cancelled) {
+          setMessages([]);
+          setLoading(false);
+        }
         return;
       }
 
-      setLoading(true);
+      if (!cancelled) {
+        setLoading(true);
+        setError(null);
+      }
+
       try {
-        const response = await fetch(`/api/mail/messages?accountId=${activeAccountId}`);
+        const response = await fetch(
+          `/api/mail/messages?accountId=${activeAccountId}`,
+          { signal: controller.signal }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch messages");
+        }
+
         const data = await response.json();
-        setMessages(data.messages || []);
-      } catch (error) {
-        console.error("Error loading messages:", error);
-        setMessages([]);
+
+        if (!cancelled) {
+          setMessages(data.messages || []);
+        }
+      } catch (err) {
+        if (controller.signal.aborted) return;
+        console.error("Error loading messages:", err);
+        if (!cancelled) {
+          setError("Failed to load messages. Please try again.");
+          setMessages([]);
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled) {
+          setLoading(false);
+        }
       }
     }
+
     loadMessages();
+
+    return () => {
+      cancelled = true;
+      controller.abort();
+    };
   }, [activeAccountId]);
+
+  // Handle message selection toggle
+  const handleSelectMessage = useCallback((messageId: string) => {
+    setSelectedIds((prev) =>
+      prev.includes(messageId)
+        ? prev.filter((id) => id !== messageId)
+        : [...prev, messageId]
+    );
+  }, []);
 
   const handleBulkAction = async (action: BulkActionType) => {
     if (!activeAccountId || selectedIds.length === 0) return;
+
+    setActionLoading(true);
+    setError(null);
 
     try {
       const response = await fetch("/api/mail/bulk-action", {
@@ -71,15 +137,22 @@ export default function MailPageClient() {
         }),
       });
 
-      if (response.ok) {
-        // Reload messages
-        const messagesResponse = await fetch(`/api/mail/messages?accountId=${activeAccountId}`);
-        const data = await messagesResponse.json();
-        setMessages(data.messages || []);
-        setSelectedIds([]);
+      if (!response.ok) {
+        throw new Error("Failed to perform action");
       }
-    } catch (error) {
-      console.error("Error performing bulk action:", error);
+
+      // Reload messages
+      const messagesResponse = await fetch(
+        `/api/mail/messages?accountId=${activeAccountId}`
+      );
+      const data = await messagesResponse.json();
+      setMessages(data.messages || []);
+      setSelectedIds([]);
+    } catch (err) {
+      console.error("Error performing bulk action:", err);
+      setError("Failed to perform action. Please try again.");
+    } finally {
+      setActionLoading(false);
     }
   };
 
@@ -141,6 +214,13 @@ export default function MailPageClient() {
         </Button>
       </div>
 
+      {error && (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
+
       <AccountTabs
         accounts={accounts}
         activeAccountId={activeAccountId}
@@ -150,10 +230,15 @@ export default function MailPageClient() {
       <div className="space-y-4">
         {loading ? (
           <div className="text-center py-8">
+            <Loader2 className="h-6 w-6 animate-spin mx-auto mb-2 text-muted-foreground" />
             <p className="text-sm text-muted-foreground">Loading messages...</p>
           </div>
         ) : (
-          <MailList messages={messages} />
+          <MailList
+            messages={messages}
+            selectedIds={selectedIds}
+            onSelectMessage={handleSelectMessage}
+          />
         )}
       </div>
 
@@ -161,6 +246,7 @@ export default function MailPageClient() {
         selectedCount={selectedIds.length}
         onAction={handleBulkAction}
         onClearSelection={() => setSelectedIds([])}
+        loading={actionLoading}
       />
     </div>
   );

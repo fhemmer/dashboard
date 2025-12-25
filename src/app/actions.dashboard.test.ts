@@ -59,8 +59,8 @@ describe("getWidgetSettings", () => {
 
     expect(result.error).toBeUndefined();
     expect(result.isAdmin).toBe(false);
-    // Non-admin gets 2 widgets (no expenditures)
-    expect(result.settings.widgets).toHaveLength(2);
+    // Non-admin gets 3 widgets (pull-requests, news, mail - no expenditures)
+    expect(result.settings.widgets).toHaveLength(3);
     expect(result.settings.widgets.every((w) => w.enabled)).toBe(true);
   });
 
@@ -79,7 +79,7 @@ describe("getWidgetSettings", () => {
     const result = await getWidgetSettings();
 
     expect(result.isAdmin).toBe(true);
-    expect(result.settings.widgets).toHaveLength(3);
+    expect(result.settings.widgets).toHaveLength(4);
   });
 
   it("merges stored settings with available widgets", async () => {
@@ -106,7 +106,7 @@ describe("getWidgetSettings", () => {
 
     const result = await getWidgetSettings();
 
-    expect(result.settings.widgets).toHaveLength(3);
+    expect(result.settings.widgets).toHaveLength(4);
     const prWidget = result.settings.widgets.find((w) => w.id === "pull-requests");
     expect(prWidget?.enabled).toBe(false);
   });

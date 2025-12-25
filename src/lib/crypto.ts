@@ -17,9 +17,9 @@ function getEncryptionKey(): Buffer {
     throw new Error("MAIL_ENCRYPTION_KEY environment variable is not set");
   }
 
-  // Expect a 64-character hex string (32 bytes)
-  if (key.length !== 64) {
-    throw new Error("MAIL_ENCRYPTION_KEY must be a 64-character hex string (32 bytes)");
+  // Validate that the key is a valid 64-character hexadecimal string (32 bytes)
+  if (!/^[0-9a-fA-F]{64}$/.test(key)) {
+    throw new Error("MAIL_ENCRYPTION_KEY must be a valid 64-character hexadecimal string");
   }
 
   return Buffer.from(key, "hex");

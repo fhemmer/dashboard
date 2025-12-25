@@ -1,6 +1,8 @@
 /**
- * Simple in-memory rate limiter
+ * Simple in-memory rate limiter with on-demand cleanup
  * Tracks request counts per account to prevent API abuse
+ * NOTE: In serverless environments, state may not persist across invocations.
+ * For production, consider using Redis-based rate limiting.
  */
 
 interface RateLimitEntry {
@@ -13,12 +15,33 @@ const rateLimits = new Map<string, RateLimitEntry>();
 // Limits
 const MAX_REQUESTS_PER_MINUTE = 30;
 const WINDOW_MS = 60 * 1000; // 1 minute
+const MAX_ENTRIES = 10000; // Maximum entries to prevent unbounded growth
+
+/**
+ * Cleanup expired entries from the rate limit map
+ * Called on-demand during rate limit checks
+ */
+function cleanupExpiredEntries(): void {
+  const now = Date.now();
+  for (const [key, entry] of rateLimits.entries()) {
+    if (entry.resetAt.getTime() <= now) {
+      rateLimits.delete(key);
+    }
+  }
+}
 
 /**
  * Check if a request is allowed for the given key
+ * Performs on-demand cleanup if the map is too large
  */
 export function checkRateLimit(key: string): { allowed: boolean; remaining: number } {
   const now = Date.now();
+
+  // Cleanup if map is getting too large
+  if (rateLimits.size > MAX_ENTRIES) {
+    cleanupExpiredEntries();
+  }
+
   const entry = rateLimits.get(key);
 
   // No entry or expired window - allow and create new entry
@@ -50,18 +73,8 @@ export function resetRateLimit(key: string): void {
 }
 
 /**
- * Clean up expired entries (call periodically)
+ * Clean up expired entries (can be called manually if needed)
  */
 export function cleanupRateLimits(): void {
-  const now = Date.now();
-  for (const [key, entry] of rateLimits.entries()) {
-    if (entry.resetAt.getTime() <= now) {
-      rateLimits.delete(key);
-    }
-  }
-}
-
-// Auto-cleanup every 5 minutes
-if (typeof setInterval !== "undefined") {
-  setInterval(cleanupRateLimits, 5 * 60 * 1000);
+  cleanupExpiredEntries();
 }

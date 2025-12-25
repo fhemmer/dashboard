@@ -2,6 +2,16 @@ import { createClient } from "@/lib/supabase/server";
 import { storeAccountCredentials } from "@/modules/mail/actions";
 import { NextResponse } from "next/server";
 
+interface OAuthTokenResponse {
+  access_token?: string;
+  refresh_token?: string;
+  expires_in?: number;
+  token_type?: string;
+  scope?: string;
+  error?: string;
+  error_description?: string;
+}
+
 /**
  * GET /api/mail/oauth/callback?code={code}&state={state}&provider={provider}
  * Handles OAuth callback from Gmail/Outlook
@@ -63,16 +73,76 @@ export async function GET(request: Request) {
       );
     }
 
-    // Placeholder: Exchange authorization code for tokens
-    // For Outlook: POST to https://login.microsoftonline.com/common/oauth2/v2.0/token
-    // For Gmail: POST to https://oauth2.googleapis.com/token
-    
-    // Placeholder: Store dummy token for now
+    // Exchange authorization code for tokens
+    const callbackBaseUrl = new URL(request.url).origin;
+    let tokenEndpoint: string;
+    let tokenParams: URLSearchParams;
+
+    if (provider === "gmail") {
+      tokenEndpoint = "https://oauth2.googleapis.com/token";
+      tokenParams = new URLSearchParams({
+        code,
+        client_id: process.env.GOOGLE_CLIENT_ID ?? "",
+        client_secret: process.env.GOOGLE_CLIENT_SECRET ?? "",
+        redirect_uri:
+          process.env.GOOGLE_REDIRECT_URI ??
+          `${callbackBaseUrl}/api/mail/oauth/callback?provider=gmail`,
+        grant_type: "authorization_code",
+      });
+    } else {
+      tokenEndpoint =
+        "https://login.microsoftonline.com/common/oauth2/v2.0/token";
+      tokenParams = new URLSearchParams({
+        code,
+        client_id: process.env.OUTLOOK_CLIENT_ID ?? "",
+        client_secret: process.env.OUTLOOK_CLIENT_SECRET ?? "",
+        redirect_uri:
+          process.env.OUTLOOK_REDIRECT_URI ??
+          `${callbackBaseUrl}/api/mail/oauth/callback?provider=outlook`,
+        grant_type: "authorization_code",
+      });
+    }
+
+    // Perform token exchange with the provider
+    const tokenResponse = await fetch(tokenEndpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: tokenParams.toString(),
+    });
+
+    if (!tokenResponse.ok) {
+      return NextResponse.redirect(
+        new URL(
+          `/mail/settings?error=${encodeURIComponent("token_exchange_failed")}`,
+          request.url
+        )
+      );
+    }
+
+    const tokenData = (await tokenResponse.json()) as OAuthTokenResponse;
+
+    if (!tokenData.access_token || !tokenData.refresh_token) {
+      return NextResponse.redirect(
+        new URL(
+          `/mail/settings?error=${encodeURIComponent("invalid_token_response")}`,
+          request.url
+        )
+      );
+    }
+
+    const expiresInSeconds =
+      typeof tokenData.expires_in === "number" && tokenData.expires_in > 0
+        ? tokenData.expires_in
+        : 3600;
+    const expiresAt = new Date(Date.now() + expiresInSeconds * 1000);
+
     const result = await storeAccountCredentials(
       accountId,
-      "placeholder_access_token",
-      "placeholder_refresh_token",
-      new Date(Date.now() + 3600 * 1000) // 1 hour from now
+      tokenData.access_token,
+      tokenData.refresh_token,
+      expiresAt
     );
 
     if (!result.success) {

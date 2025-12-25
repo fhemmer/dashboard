@@ -48,16 +48,19 @@ vi.mock("@/lib/supabase/server", () => ({
 }));
 
 function createChainMock(finalResult: { data: unknown; error: unknown }) {
-  return {
+  const mock = {
     select: vi.fn().mockReturnThis(),
-    eq: vi.fn().mockReturnThis(),
+    eq: vi.fn().mockImplementation(function(this: typeof mock) { return this; }),
     order: vi.fn().mockResolvedValue(finalResult),
     single: vi.fn().mockResolvedValue(finalResult),
     insert: vi.fn().mockReturnThis(),
     update: vi.fn().mockReturnThis(),
     delete: vi.fn().mockReturnThis(),
     filter: vi.fn().mockReturnThis(),
+    // Make the mock thenable so await works on it
+    then: vi.fn((resolve) => resolve(finalResult)),
   };
+  return mock;
 }
 
 describe("mail actions", () => {

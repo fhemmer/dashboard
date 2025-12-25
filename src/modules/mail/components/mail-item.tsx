@@ -1,20 +1,21 @@
 import type { MailMessage } from "../types";
 import { formatMailAddress } from "../types";
-import { Mail, Paperclip } from "lucide-react";
+import { Mail, Paperclip, Check } from "lucide-react";
 
 interface MailItemProps {
   message: MailMessage;
-  onSelect?: (message: MailMessage) => void;
+  isSelected?: boolean;
+  onSelect?: (messageId: string) => void;
 }
 
 /**
  * Mail Item Component
- * Displays a single email message in a list
+ * Displays a single email message in a list with selection support
  */
-export function MailItem({ message, onSelect }: MailItemProps) {
+export function MailItem({ message, isSelected = false, onSelect }: MailItemProps) {
   const handleClick = () => {
     if (onSelect) {
-      onSelect(message);
+      onSelect(message.id);
     }
   };
 
@@ -24,6 +25,7 @@ export function MailItem({ message, onSelect }: MailItemProps) {
         flex items-start gap-3 p-3 rounded-md border transition-colors cursor-pointer
         hover:bg-accent
         ${message.isRead ? "bg-background" : "bg-muted/30"}
+        ${isSelected ? "ring-2 ring-primary" : ""}
       `}
       onClick={handleClick}
       onKeyDown={(e) => {
@@ -35,9 +37,15 @@ export function MailItem({ message, onSelect }: MailItemProps) {
       tabIndex={0}
     >
       <div className="flex-shrink-0 pt-1">
-        <Mail
-          className={`h-4 w-4 ${message.isRead ? "text-muted-foreground" : "text-primary"}`}
-        />
+        {isSelected ? (
+          <div className="h-4 w-4 rounded-full bg-primary flex items-center justify-center">
+            <Check className="h-3 w-3 text-primary-foreground" />
+          </div>
+        ) : (
+          <Mail
+            className={`h-4 w-4 ${message.isRead ? "text-muted-foreground" : "text-primary"}`}
+          />
+        )}
       </div>
       
       <div className="flex-grow min-w-0">

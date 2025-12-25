@@ -1,6 +1,15 @@
 /**
  * Outlook Client (Microsoft Graph API)
  * Handles OAuth authentication and mail operations for Outlook accounts
+ *
+ * STATUS: PLACEHOLDER IMPLEMENTATION
+ * All functions return empty/default data. Full Microsoft Graph API integration is pending.
+ * To check if the provider is implemented, use: isProviderImplemented("outlook")
+ *
+ * Required for implementation:
+ * - Azure AD app registration with Microsoft Graph API permissions
+ * - OAuth 2.0 credentials (client ID and secret)
+ * - Scopes: Mail.Read, Mail.ReadWrite (at minimum)
  */
 
 import type {
@@ -11,6 +20,13 @@ import type {
   SearchResult,
 } from "../types";
 import { getToken, isTokenExpired } from "./token-manager";
+
+/**
+ * Check if this provider is fully implemented
+ */
+export function isOutlookImplemented(): boolean {
+  return false; // Placeholder - return true when API integration is complete
+}
 
 /**
  * Fetch unread count for an Outlook account

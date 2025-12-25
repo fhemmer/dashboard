@@ -1,6 +1,15 @@
 "use client";
 
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -18,9 +27,9 @@ import {
 } from "@/modules/mail/actions";
 import { AccountCard } from "@/modules/mail/components/account-card";
 import type { MailAccount, MailProvider } from "@/modules/mail/types";
-import { ArrowLeft, Plus } from "lucide-react";
+import { AlertCircle, ArrowLeft, Plus } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 /**
  * Mail Settings Page
@@ -30,34 +39,41 @@ export default function MailSettingsPage() {
   const [accounts, setAccounts] = useState<MailAccount[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
-  
+  const [error, setError] = useState<string | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<MailAccount | null>(null);
+
   // Add form state
   const [provider, setProvider] = useState<MailProvider>("gmail");
   const [accountName, setAccountName] = useState("");
   const [emailAddress, setEmailAddress] = useState("");
   const [syncFrequency, setSyncFrequency] = useState("5");
 
-  // Load accounts
-  async function loadAccounts() {
+  // Load accounts - wrapped in useCallback to prevent infinite loops
+  const loadAccounts = useCallback(async () => {
     setLoading(true);
-    const result = await getMailAccounts();
-    setAccounts(result.accounts || []);
-    setLoading(false);
-  }
+    setError(null);
+    try {
+      const result = await getMailAccounts();
+      setAccounts(result.accounts || []);
+    } catch (err) {
+      console.error("Failed to load mail accounts:", err);
+      setError("Failed to load mail accounts. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    async function fetchAccounts() {
-      await loadAccounts();
-    }
-    void fetchAccounts();
-  }, []);
+    loadAccounts();
+  }, [loadAccounts]);
 
   async function handleAddAccount() {
     if (!accountName || !emailAddress) {
-      alert("Please fill in all required fields");
+      setError("Please fill in all required fields");
       return;
     }
 
+    setError(null);
     const result = await createMailAccount({
       provider,
       accountName,
@@ -72,11 +88,12 @@ export default function MailSettingsPage() {
       setSyncFrequency("5");
       loadAccounts();
     } else {
-      alert(`Error: ${result.error}`);
+      setError(result.error || "Failed to create account");
     }
   }
 
   async function handleToggleAccount(account: MailAccount) {
+    setError(null);
     const result = await updateMailAccount(account.id, {
       isEnabled: !account.isEnabled,
     });
@@ -84,21 +101,26 @@ export default function MailSettingsPage() {
     if (result.success) {
       loadAccounts();
     } else {
-      alert(`Error: ${result.error}`);
+      setError(result.error || "Failed to update account");
     }
   }
 
   async function handleDeleteAccount(account: MailAccount) {
-    if (!confirm(`Delete account "${account.accountName}"?`)) {
-      return;
-    }
+    setDeleteConfirm(account);
+  }
 
-    const result = await deleteMailAccount(account.id);
+  async function confirmDelete() {
+    if (!deleteConfirm) return;
+
+    setError(null);
+    const result = await deleteMailAccount(deleteConfirm.id);
 
     if (result.success) {
+      setDeleteConfirm(null);
       loadAccounts();
     } else {
-      alert(`Error: ${result.error}`);
+      setError(result.error || "Failed to delete account");
+      setDeleteConfirm(null);
     }
   }
 
@@ -125,14 +147,24 @@ export default function MailSettingsPage() {
         </Button>
       </div>
 
+      {error && (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
+
       {showAddForm && (
         <div className="border rounded-lg p-6 space-y-4">
           <h2 className="text-lg font-semibold">Add Mail Account</h2>
-          
+
           <div className="grid gap-4">
             <div className="space-y-2">
               <Label htmlFor="provider">Provider</Label>
-              <Select value={provider} onValueChange={(v) => setProvider(v as MailProvider)}>
+              <Select
+                value={provider}
+                onValueChange={(v) => setProvider(v as MailProvider)}
+              >
                 <SelectTrigger id="provider">
                   <SelectValue />
                 </SelectTrigger>
@@ -196,7 +228,8 @@ export default function MailSettingsPage() {
             {accounts.length === 0 ? (
               <div className="text-center py-8">
                 <p className="text-sm text-muted-foreground">
-                  No accounts configured. Click &ldquo;Add Account&rdquo; to get started.
+                  No accounts configured. Click &ldquo;Add Account&rdquo; to get
+                  started.
                 </p>
               </div>
             ) : (
@@ -212,6 +245,27 @@ export default function MailSettingsPage() {
           </>
         )}
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={!!deleteConfirm} onOpenChange={() => setDeleteConfirm(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Account</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete &quot;{deleteConfirm?.accountName}
+              &quot;? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDeleteConfirm(null)}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={confirmDelete}>
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
