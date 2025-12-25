@@ -405,4 +405,47 @@ describe("SourceList", () => {
     const inactiveButton = screen.getByText("Inactive");
     expect(inactiveButton.className).toContain("cursor-not-allowed");
   });
+
+  it("does not update state when toggle fails", async () => {
+    mockToggleNewsSourceActive.mockResolvedValue({ success: false, error: "Failed" });
+
+    render(
+      <SourceList
+        initialSources={mockSources}
+        userRole="admin"
+        userId="user-123"
+      />
+    );
+
+    const activeButton = screen.getByText("Active");
+    fireEvent.click(activeButton);
+
+    await waitFor(() => {
+      expect(mockToggleNewsSourceActive).toHaveBeenCalled();
+    });
+
+    // State should not change - still one Active
+    expect(screen.getByText("Active")).toBeInTheDocument();
+  });
+
+  it("does not remove source when delete fails", async () => {
+    mockDeleteNewsSource.mockResolvedValue({ success: false, error: "Delete failed" });
+
+    render(
+      <SourceList
+        initialSources={mockSources}
+        userRole="admin"
+        userId="user-123"
+      />
+    );
+
+    fireEvent.click(screen.getByLabelText("Delete Example News"));
+
+    await waitFor(() => {
+      expect(mockDeleteNewsSource).toHaveBeenCalled();
+    });
+
+    // Source should still be present
+    expect(screen.getByText("Example News")).toBeInTheDocument();
+  });
 });

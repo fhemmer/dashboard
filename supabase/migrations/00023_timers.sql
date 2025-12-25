@@ -28,6 +28,12 @@ CREATE INDEX IF NOT EXISTS timers_display_order_idx ON public.timers(user_id, di
 ALTER TABLE public.timers ENABLE ROW LEVEL SECURITY;
 
 -- RLS policies: Users can only access their own timers
+-- Drop existing policies to make migration idempotent
+DROP POLICY IF EXISTS "Users can view own timers" ON public.timers;
+DROP POLICY IF EXISTS "Users can insert own timers" ON public.timers;
+DROP POLICY IF EXISTS "Users can update own timers" ON public.timers;
+DROP POLICY IF EXISTS "Users can delete own timers" ON public.timers;
+
 CREATE POLICY "Users can view own timers" ON public.timers
   FOR SELECT USING (auth.uid() = user_id);
 
@@ -50,6 +56,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS on_timers_updated ON public.timers;
 CREATE TRIGGER on_timers_updated
   BEFORE UPDATE ON public.timers
   FOR EACH ROW EXECUTE FUNCTION public.handle_timers_updated_at();

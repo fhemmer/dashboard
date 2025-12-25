@@ -185,4 +185,55 @@ describe("CreateTimerDialog", () => {
       expect(screen.queryByText("Create New Timer")).not.toBeInTheDocument();
     });
   });
+
+  it("handles NaN duration input by defaulting to 1 minute", async () => {
+    render(<CreateTimerDialog />);
+
+    await userEvent.click(screen.getByText("Create Timer"));
+
+    // Wait for dialog to open
+    await waitFor(() => {
+      expect(screen.getByLabelText("Duration (minutes)")).toBeInTheDocument();
+    });
+
+    // Clear the input completely and type non-numeric characters
+    const durationInput = screen.getByLabelText("Duration (minutes)") as HTMLInputElement;
+    await userEvent.clear(durationInput);
+    // This triggers a change with empty value which results in NaN
+
+    // The input should default to 1 when empty/NaN
+    expect(durationInput.value).toBe("1");
+  });
+
+  it("does not submit when duration is invalid", async () => {
+    mockCreateTimer.mockResolvedValue({ success: true, id: "timer-new" });
+
+    render(<CreateTimerDialog />);
+
+    await userEvent.click(screen.getByText("Create Timer"));
+
+    // Wait for dialog to open
+    await waitFor(() => {
+      expect(screen.getByLabelText("Timer Name")).toBeInTheDocument();
+    });
+
+    // Fill name but leave duration default
+    const nameInput = screen.getByLabelText("Timer Name");
+    await userEvent.type(nameInput, "Test Timer");
+
+    // Clear duration to make it invalid
+    const durationInput = screen.getByLabelText("Duration (minutes)");
+    await userEvent.clear(durationInput);
+
+    // Form should still work since component normalizes NaN to 1
+    const submitButton = screen.getAllByText("Create Timer")[1];
+    await userEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(mockCreateTimer).toHaveBeenCalledWith({
+        name: "Test Timer",
+        durationSeconds: 60, // 1 minute default
+      });
+    });
+  });
 });

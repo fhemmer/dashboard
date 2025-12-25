@@ -277,6 +277,18 @@ describe("AdminSettingsForm", () => {
     expect(input).toHaveAttribute("max", "365");
   });
 
+  it("displays Never when lastFetchAt is invalid date string", () => {
+    render(
+      <AdminSettingsForm
+        fetchIntervalMinutes={30}
+        notificationRetentionDays={30}
+        lastFetchAt="invalid-date-format"
+      />
+    );
+
+    expect(screen.getByText(/Never/)).toBeInTheDocument();
+  });
+
   it("clears error state on new submission", async () => {
     mockUpdateSystemSetting
       .mockResolvedValueOnce({ success: false, error: "First error" })

@@ -330,6 +330,62 @@ describe("timers actions", () => {
       });
     });
 
+    it("updates timer with all optional fields", async () => {
+      const chain = {
+        update: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockReturnThis(),
+      };
+      // Second eq call returns the final result
+      chain.eq.mockReturnValueOnce(chain).mockResolvedValueOnce({ data: null, error: null });
+      mockFrom.mockReturnValue(chain);
+
+      const endTime = new Date("2025-01-15T12:00:00Z");
+      const result = await updateTimer("timer-1", {
+        name: "Updated Timer",
+        durationSeconds: 600,
+        remainingSeconds: 300,
+        state: "running",
+        endTime,
+        enableCompletionColor: false,
+        completionColor: "#FF0000",
+        enableAlarm: false,
+        alarmSound: "bell",
+        displayOrder: 5,
+      });
+
+      expect(result.success).toBe(true);
+      expect(chain.update).toHaveBeenCalledWith({
+        name: "Updated Timer",
+        duration_seconds: 600,
+        remaining_seconds: 300,
+        state: "running",
+        end_time: endTime.toISOString(),
+        enable_completion_color: false,
+        completion_color: "#FF0000",
+        enable_alarm: false,
+        alarm_sound: "bell",
+        display_order: 5,
+      });
+    });
+
+    it("updates timer with null endTime", async () => {
+      const chain = {
+        update: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockReturnThis(),
+      };
+      chain.eq.mockReturnValueOnce(chain).mockResolvedValueOnce({ data: null, error: null });
+      mockFrom.mockReturnValue(chain);
+
+      const result = await updateTimer("timer-1", {
+        endTime: null,
+      });
+
+      expect(result.success).toBe(true);
+      expect(chain.update).toHaveBeenCalledWith({
+        end_time: null,
+      });
+    });
+
     it("handles database error on update", async () => {
       const chain = {
         update: vi.fn().mockReturnThis(),

@@ -47,7 +47,9 @@ export function AdminSettingsForm({
   const formatLastFetch = (timestamp: string | null) => {
     if (!timestamp || timestamp === "null") return "Never";
     try {
-      return new Date(timestamp).toLocaleString();
+      const date = new Date(timestamp);
+      if (isNaN(date.getTime())) return "Never";
+      return date.toLocaleString();
     } catch {
       return "Never";
     }

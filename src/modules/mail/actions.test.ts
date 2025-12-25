@@ -267,5 +267,76 @@ describe("mail actions", () => {
 
       expect(result.success).toBe(true);
     });
+
+    it("should store credentials with optional params", async () => {
+      const { storeToken } = await import("./lib/token-manager");
+      vi.mocked(storeToken).mockResolvedValue({ success: true });
+
+      const result = await storeAccountCredentials(
+        "acc-1",
+        "access-token"
+      );
+
+      expect(result.success).toBe(true);
+      expect(storeToken).toHaveBeenCalledWith({
+        accountId: "acc-1",
+        accessToken: "access-token",
+        refreshToken: null,
+        expiresAt: null,
+      });
+    });
+
+    it("should store credentials with expiresAt date", async () => {
+      const { storeToken } = await import("./lib/token-manager");
+      vi.mocked(storeToken).mockResolvedValue({ success: true });
+      const expiresAt = new Date("2025-12-31T00:00:00Z");
+
+      const result = await storeAccountCredentials(
+        "acc-1",
+        "access-token",
+        "refresh-token",
+        expiresAt
+      );
+
+      expect(result.success).toBe(true);
+      expect(storeToken).toHaveBeenCalledWith({
+        accountId: "acc-1",
+        accessToken: "access-token",
+        refreshToken: "refresh-token",
+        expiresAt,
+      });
+    });
+
+    it("should invalidate caches after successful store", async () => {
+      const { storeToken } = await import("./lib/token-manager");
+      const { invalidateSummaryCache, invalidateMessagesCache } = await import("./lib/cache");
+      vi.mocked(storeToken).mockResolvedValue({ success: true });
+
+      await storeAccountCredentials("acc-1", "access-token");
+
+      expect(invalidateSummaryCache).toHaveBeenCalledWith("user-123");
+      expect(invalidateMessagesCache).toHaveBeenCalledWith("acc-1");
+    });
+
+    it("should not invalidate caches when user not found", async () => {
+      const { storeToken } = await import("./lib/token-manager");
+      const { invalidateSummaryCache } = await import("./lib/cache");
+      vi.mocked(storeToken).mockResolvedValue({ success: true });
+      mockGetUser.mockResolvedValue({ data: { user: null }, error: null });
+
+      await storeAccountCredentials("acc-1", "access-token");
+
+      expect(invalidateSummaryCache).not.toHaveBeenCalled();
+    });
+
+    it("should return failure when storeToken fails", async () => {
+      const { storeToken } = await import("./lib/token-manager");
+      vi.mocked(storeToken).mockResolvedValue({ success: false, error: "Token error" });
+
+      const result = await storeAccountCredentials("acc-1", "access-token");
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("Token error");
+    });
   });
 });

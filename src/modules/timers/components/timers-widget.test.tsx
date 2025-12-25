@@ -130,4 +130,33 @@ describe("TimerWidget", () => {
     const links = container.querySelectorAll('a[href="/timers"]');
     expect(links.length).toBeGreaterThan(0);
   });
+
+  it("renders singular timer ready text", async () => {
+    mockGetTimers.mockResolvedValue({
+      timers: [
+        {
+          id: "timer-1",
+          userId: "user-1",
+          name: "Single Timer",
+          durationSeconds: 300,
+          remainingSeconds: 300,
+          state: "stopped",
+          endTime: null,
+          enableCompletionColor: true,
+          completionColor: "#4CAF50",
+          enableAlarm: true,
+          alarmSound: "default",
+          displayOrder: 0,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ],
+      error: undefined,
+    });
+
+    const component = await TimerWidget();
+    render(component);
+
+    expect(screen.getByText("1 timer ready")).toBeInTheDocument();
+  });
 });

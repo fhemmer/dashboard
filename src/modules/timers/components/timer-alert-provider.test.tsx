@@ -288,4 +288,63 @@ describe("TimerAlertProvider", () => {
     // Should not throw
     expect(() => unmount()).not.toThrow();
   });
+
+  it("handles error in playAlarmSound gracefully", () => {
+    Object.defineProperty(globalThis.Notification, "permission", {
+      value: "granted",
+      configurable: true,
+    });
+
+    const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
+    // Make createOscillator throw
+    mockCreateOscillator.mockImplementation(() => {
+      throw new Error("Audio error");
+    });
+
+    render(<TimerAlertProvider />);
+
+    act(() => {
+      window.dispatchEvent(
+        new CustomEvent("timer-complete", {
+          detail: { timer: mockTimer },
+        })
+      );
+    });
+
+    expect(consoleError).toHaveBeenCalledWith(
+      "Error playing alarm sound:",
+      expect.any(Error)
+    );
+
+    consoleError.mockRestore();
+  });
+
+  it("handles missing AudioContext gracefully", () => {
+    Object.defineProperty(globalThis.Notification, "permission", {
+      value: "granted",
+      configurable: true,
+    });
+
+    // Remove AudioContext
+    const savedAudioContext = globalThis.AudioContext;
+    // @ts-expect-error - Intentionally removing for test
+    delete globalThis.AudioContext;
+
+    const { container } = render(<TimerAlertProvider />);
+
+    // Should not throw when timer-complete is dispatched
+    act(() => {
+      window.dispatchEvent(
+        new CustomEvent("timer-complete", {
+          detail: { timer: mockTimer },
+        })
+      );
+    });
+
+    // Verify the component rendered without crashing
+    expect(container).toBeEmptyDOMElement();
+
+    // Restore
+    globalThis.AudioContext = savedAudioContext;
+  });
 });
