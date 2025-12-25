@@ -39,8 +39,8 @@ describe("MailSettingsPage", () => {
   const mockDeleteMailAccount = vi.mocked(mailActionsModule.deleteMailAccount);
 
   const mockAccounts = [
-    { id: "acc-1", accountName: "Gmail", provider: "gmail", isEnabled: true, emailAddress: "test@gmail.com" },
-    { id: "acc-2", accountName: "Outlook", provider: "outlook", isEnabled: false, emailAddress: "test@outlook.com" },
+    { id: "acc-1", userId: "user-1", accountName: "Gmail", provider: "gmail" as const, isEnabled: true, emailAddress: "test@gmail.com", syncFrequencyMinutes: 5, createdAt: new Date(), updatedAt: new Date() },
+    { id: "acc-2", userId: "user-1", accountName: "Outlook", provider: "outlook" as const, isEnabled: false, emailAddress: "test@outlook.com", syncFrequencyMinutes: 5, createdAt: new Date(), updatedAt: new Date() },
   ];
 
   beforeEach(() => {

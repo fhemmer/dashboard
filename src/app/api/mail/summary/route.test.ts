@@ -47,9 +47,15 @@ describe("mail summary route", () => {
     it("should return cached summary when available", async () => {
       const mockUser = { id: "user-1" };
       const cachedData = {
-        accounts: [{ id: "acc-1", name: "Test", unreadCount: 5 }],
+        accounts: [{
+          accountId: "acc-1",
+          accountName: "Test",
+          provider: "outlook" as const,
+          emailAddress: "test@outlook.com",
+          unreadCount: 5,
+          totalCount: 10
+        }],
         totalUnread: 5,
-        error: null,
       };
 
       mockCreateClient.mockResolvedValue({
@@ -71,9 +77,15 @@ describe("mail summary route", () => {
     it("should fetch fresh data when cache is empty", async () => {
       const mockUser = { id: "user-1" };
       const freshData = {
-        accounts: [{ id: "acc-1", name: "Test", unreadCount: 10 }],
+        accounts: [{
+          accountId: "acc-1",
+          accountName: "Test",
+          provider: "outlook" as const,
+          emailAddress: "test@outlook.com",
+          unreadCount: 10,
+          totalCount: 20
+        }],
         totalUnread: 10,
-        error: null,
       };
 
       mockCreateClient.mockResolvedValue({

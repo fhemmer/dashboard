@@ -124,7 +124,21 @@ describe("mail search route", () => {
 
     it("should search outlook messages for outlook provider", async () => {
       mockSupabaseClient({ id: "user-1" }, { provider: "outlook" });
-      const searchResult = { messages: [{ id: "msg-1", subject: "Found" }], totalCount: 1 };
+      const searchResult = {
+        messages: [{
+          id: "msg-1",
+          subject: "Found",
+          accountId: "acc-1",
+          provider: "outlook" as const,
+          from: { email: "sender@test.com" },
+          to: [{ email: "recipient@test.com" }],
+          receivedAt: new Date(),
+          isRead: false,
+          hasAttachments: false,
+          preview: "Preview"
+        }],
+        hasMore: false
+      };
       mockSearchOutlookMessages.mockResolvedValue(searchResult);
 
       const response = await POST(createRequest({
@@ -136,7 +150,10 @@ describe("mail search route", () => {
       const data = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data).toEqual(searchResult);
+      expect(data.messages).toHaveLength(1);
+      expect(data.messages[0].id).toBe("msg-1");
+      expect(data.messages[0].subject).toBe("Found");
+      expect(data.hasMore).toBe(false);
       expect(mockSearchOutlookMessages).toHaveBeenCalledWith({
         accountId: "acc-1",
         query: "test",
@@ -147,27 +164,61 @@ describe("mail search route", () => {
 
     it("should search gmail messages for gmail provider", async () => {
       mockSupabaseClient({ id: "user-1" }, { provider: "gmail" });
-      const searchResult = { messages: [{ id: "msg-1", subject: "Gmail Found" }], totalCount: 1 };
+      const searchResult = {
+        messages: [{
+          id: "msg-1",
+          subject: "Gmail Found",
+          accountId: "acc-1",
+          provider: "gmail" as const,
+          from: { email: "sender@test.com" },
+          to: [{ email: "recipient@test.com" }],
+          receivedAt: new Date(),
+          isRead: false,
+          hasAttachments: false,
+          preview: "Preview"
+        }],
+        hasMore: false
+      };
       mockSearchGmailMessages.mockResolvedValue(searchResult);
 
       const response = await POST(createRequest({ accountId: "acc-1", query: "test" }));
       const data = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data).toEqual(searchResult);
+      expect(data.messages).toHaveLength(1);
+      expect(data.messages[0].id).toBe("msg-1");
+      expect(data.messages[0].subject).toBe("Gmail Found");
+      expect(data.hasMore).toBe(false);
       expect(mockSearchGmailMessages).toHaveBeenCalled();
     });
 
     it("should search imap messages for imap provider", async () => {
       mockSupabaseClient({ id: "user-1" }, { provider: "imap" });
-      const searchResult = { messages: [{ id: "msg-1", subject: "IMAP Found" }], totalCount: 1 };
+      const searchResult = {
+        messages: [{
+          id: "msg-1",
+          subject: "IMAP Found",
+          accountId: "acc-1",
+          provider: "imap" as const,
+          from: { email: "sender@test.com" },
+          to: [{ email: "recipient@test.com" }],
+          receivedAt: new Date(),
+          isRead: false,
+          hasAttachments: false,
+          preview: "Preview"
+        }],
+        hasMore: false
+      };
       mockSearchImapMessages.mockResolvedValue(searchResult);
 
       const response = await POST(createRequest({ accountId: "acc-1", query: "test" }));
       const data = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data).toEqual(searchResult);
+      expect(data.messages).toHaveLength(1);
+      expect(data.messages[0].id).toBe("msg-1");
+      expect(data.messages[0].subject).toBe("IMAP Found");
+      expect(data.hasMore).toBe(false);
       expect(mockSearchImapMessages).toHaveBeenCalled();
     });
 

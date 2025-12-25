@@ -124,14 +124,27 @@ describe("mail messages route", () => {
 
     it("should return cached messages when available", async () => {
       mockSupabaseClient({ id: "user-1" }, { provider: "outlook" });
-      const cachedMessages = [{ id: "msg-1", subject: "Test" }];
+      const cachedMessages = [{
+        id: "msg-1",
+        subject: "Test",
+        accountId: "acc-1",
+        provider: "outlook" as const,
+        from: { email: "sender@test.com" },
+        to: [{ email: "recipient@test.com" }],
+        receivedAt: new Date(),
+        isRead: false,
+        hasAttachments: false,
+        preview: "Preview text"
+      }];
       mockGetCachedMessages.mockResolvedValue(cachedMessages);
 
       const response = await GET(createRequest({ accountId: "acc-1" }));
       const data = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data.messages).toEqual(cachedMessages);
+      expect(data.messages).toHaveLength(1);
+      expect(data.messages[0].id).toBe("msg-1");
+      expect(data.messages[0].subject).toBe("Test");
       expect(data.hasMore).toBe(false);
       expect(mockGetOutlookMessages).not.toHaveBeenCalled();
     });
@@ -139,14 +152,27 @@ describe("mail messages route", () => {
     it("should fetch outlook messages when cache is empty", async () => {
       mockSupabaseClient({ id: "user-1" }, { provider: "outlook" });
       mockGetCachedMessages.mockResolvedValue(null);
-      const messages = [{ id: "msg-1", subject: "Outlook" }];
+      const messages = [{
+        id: "msg-1",
+        subject: "Outlook",
+        accountId: "acc-1",
+        provider: "outlook" as const,
+        from: { email: "sender@test.com" },
+        to: [{ email: "recipient@test.com" }],
+        receivedAt: new Date(),
+        isRead: false,
+        hasAttachments: false,
+        preview: "Preview"
+      }];
       mockGetOutlookMessages.mockResolvedValue(messages);
 
       const response = await GET(createRequest({ accountId: "acc-1" }));
       const data = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data.messages).toEqual(messages);
+      expect(data.messages).toHaveLength(1);
+      expect(data.messages[0].id).toBe("msg-1");
+      expect(data.messages[0].subject).toBe("Outlook");
       expect(mockGetOutlookMessages).toHaveBeenCalledWith("acc-1", "inbox", 50);
       expect(mockCacheMessages).toHaveBeenCalled();
     });
@@ -154,28 +180,54 @@ describe("mail messages route", () => {
     it("should fetch gmail messages for gmail provider", async () => {
       mockSupabaseClient({ id: "user-1" }, { provider: "gmail" });
       mockGetCachedMessages.mockResolvedValue(null);
-      const messages = [{ id: "msg-1", subject: "Gmail" }];
+      const messages = [{
+        id: "msg-1",
+        subject: "Gmail",
+        accountId: "acc-1",
+        provider: "gmail" as const,
+        from: { email: "sender@test.com" },
+        to: [{ email: "recipient@test.com" }],
+        receivedAt: new Date(),
+        isRead: false,
+        hasAttachments: false,
+        preview: "Preview"
+      }];
       mockGetGmailMessages.mockResolvedValue(messages);
 
       const response = await GET(createRequest({ accountId: "acc-1" }));
       const data = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data.messages).toEqual(messages);
+      expect(data.messages).toHaveLength(1);
+      expect(data.messages[0].id).toBe("msg-1");
+      expect(data.messages[0].subject).toBe("Gmail");
       expect(mockGetGmailMessages).toHaveBeenCalledWith("acc-1", "inbox", 50);
     });
 
     it("should fetch imap messages for imap provider", async () => {
       mockSupabaseClient({ id: "user-1" }, { provider: "imap" });
       mockGetCachedMessages.mockResolvedValue(null);
-      const messages = [{ id: "msg-1", subject: "IMAP" }];
+      const messages = [{
+        id: "msg-1",
+        subject: "IMAP",
+        accountId: "acc-1",
+        provider: "imap" as const,
+        from: { email: "sender@test.com" },
+        to: [{ email: "recipient@test.com" }],
+        receivedAt: new Date(),
+        isRead: false,
+        hasAttachments: false,
+        preview: "Preview"
+      }];
       mockGetImapMessages.mockResolvedValue(messages);
 
       const response = await GET(createRequest({ accountId: "acc-1" }));
       const data = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data.messages).toEqual(messages);
+      expect(data.messages).toHaveLength(1);
+      expect(data.messages[0].id).toBe("msg-1");
+      expect(data.messages[0].subject).toBe("IMAP");
       expect(mockGetImapMessages).toHaveBeenCalledWith("acc-1", "inbox", 50);
     });
 

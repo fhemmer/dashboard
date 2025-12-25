@@ -112,8 +112,8 @@ describe("MailPageClient", () => {
 
   describe("With accounts", () => {
     const mockAccounts = [
-      { id: "acc-1", accountName: "Gmail", provider: "gmail", isEnabled: true, emailAddress: "test@gmail.com" },
-      { id: "acc-2", accountName: "Outlook", provider: "outlook", isEnabled: true, emailAddress: "test@outlook.com" },
+      { id: "acc-1", userId: "user-1", accountName: "Gmail", provider: "gmail" as const, isEnabled: true, emailAddress: "test@gmail.com", syncFrequencyMinutes: 5, createdAt: new Date(), updatedAt: new Date() },
+      { id: "acc-2", userId: "user-1", accountName: "Outlook", provider: "outlook" as const, isEnabled: true, emailAddress: "test@outlook.com", syncFrequencyMinutes: 5, createdAt: new Date(), updatedAt: new Date() },
     ];
 
     const mockMessages = [
@@ -311,7 +311,7 @@ describe("MailPageClient", () => {
     });
 
     it("shows error when loading messages fails", async () => {
-      const mockAccounts = [{ id: "acc-1", accountName: "Gmail" }];
+      const mockAccounts = [{ id: "acc-1", userId: "user-1", accountName: "Gmail", provider: "gmail" as const, emailAddress: "test@gmail.com", isEnabled: true, syncFrequencyMinutes: 5, createdAt: new Date(), updatedAt: new Date() }];
       mockGetMailAccounts.mockResolvedValue({ accounts: mockAccounts });
       mockFetch.mockResolvedValueOnce({
         ok: false,
@@ -326,7 +326,7 @@ describe("MailPageClient", () => {
     });
 
     it("shows error when bulk action fails", async () => {
-      const mockAccounts = [{ id: "acc-1", accountName: "Gmail" }];
+      const mockAccounts = [{ id: "acc-1", userId: "user-1", accountName: "Gmail", provider: "gmail" as const, emailAddress: "test@gmail.com", isEnabled: true, syncFrequencyMinutes: 5, createdAt: new Date(), updatedAt: new Date() }];
       const mockMessages = [{ id: "msg-1", subject: "Test" }];
       mockGetMailAccounts.mockResolvedValue({ accounts: mockAccounts });
       mockFetch
@@ -356,7 +356,7 @@ describe("MailPageClient", () => {
 
   describe("Account changes cleanup", () => {
     it("clears messages when active account becomes null", async () => {
-      const mockAccounts = [{ id: "acc-1", accountName: "Gmail" }];
+      const mockAccounts = [{ id: "acc-1", userId: "user-1", accountName: "Gmail", provider: "gmail" as const, emailAddress: "test@gmail.com", isEnabled: true, syncFrequencyMinutes: 5, createdAt: new Date(), updatedAt: new Date() }];
       mockGetMailAccounts.mockResolvedValue({ accounts: mockAccounts });
       mockFetch.mockResolvedValueOnce({
         ok: true,
