@@ -65,13 +65,18 @@ describe("CreateTimerDialog", () => {
 
     await userEvent.click(screen.getByText("Create Timer"));
 
-    await waitFor(async () => {
-      const preset15m = screen.getByText("15m");
-      await userEvent.click(preset15m);
-
-      const durationInput = screen.getByLabelText("Duration (minutes)") as HTMLInputElement;
-      expect(durationInput.value).toBe("15");
+    // Wait for dialog to open
+    await waitFor(() => {
+      expect(screen.getByText("15m")).toBeInTheDocument();
     });
+
+    // Click preset (action outside waitFor)
+    const preset15m = screen.getByText("15m");
+    await userEvent.click(preset15m);
+
+    // Assert duration updated
+    const durationInput = screen.getByLabelText("Duration (minutes)") as HTMLInputElement;
+    expect(durationInput.value).toBe("15");
   });
 
   it("creates timer on form submit", async () => {
@@ -82,14 +87,19 @@ describe("CreateTimerDialog", () => {
 
     await userEvent.click(screen.getByText("Create Timer"));
 
-    await waitFor(async () => {
-      const nameInput = screen.getByLabelText("Timer Name");
-      await userEvent.type(nameInput, "New Timer");
-
-      const submitButton = screen.getAllByText("Create Timer")[1];
-      await userEvent.click(submitButton);
+    // Wait for dialog to open
+    await waitFor(() => {
+      expect(screen.getByLabelText("Timer Name")).toBeInTheDocument();
     });
 
+    // Fill and submit (actions outside waitFor)
+    const nameInput = screen.getByLabelText("Timer Name");
+    await userEvent.type(nameInput, "New Timer");
+
+    const submitButton = screen.getAllByText("Create Timer")[1];
+    await userEvent.click(submitButton);
+
+    // Assert
     await waitFor(() => {
       expect(mockCreateTimer).toHaveBeenCalledWith({
         name: "New Timer",
@@ -104,16 +114,22 @@ describe("CreateTimerDialog", () => {
 
     render(<CreateTimerDialog />);
 
+    // Open dialog
     await userEvent.click(screen.getByText("Create Timer"));
 
-    await waitFor(async () => {
-      const nameInput = screen.getByLabelText("Timer Name");
-      await userEvent.type(nameInput, "Test Timer");
-
-      const submitButton = screen.getAllByText("Create Timer")[1];
-      await userEvent.click(submitButton);
+    // Wait for dialog to open
+    await waitFor(() => {
+      expect(screen.getByLabelText("Timer Name")).toBeInTheDocument();
     });
 
+    // Fill form and submit (actions outside waitFor)
+    const nameInput = screen.getByLabelText("Timer Name");
+    await userEvent.type(nameInput, "Test Timer");
+
+    const submitButton = screen.getAllByText("Create Timer")[1];
+    await userEvent.click(submitButton);
+
+    // Assert dialog closes
     await waitFor(() => {
       expect(screen.queryByText("Create New Timer")).not.toBeInTheDocument();
     });
@@ -135,15 +151,19 @@ describe("CreateTimerDialog", () => {
 
     await userEvent.click(screen.getByText("Create Timer"));
 
-    await waitFor(async () => {
-      const durationInput = screen.getByLabelText("Duration (minutes)");
-      await userEvent.clear(durationInput);
-      await userEvent.type(durationInput, "20");
-
-      // The input will show "120" because userEvent types one character at a time
-      // and the component multiplies by 60, so "1" becomes 60, then "2" becomes 120
-      expect((durationInput as HTMLInputElement).value).toBe("120");
+    // Wait for dialog to open
+    await waitFor(() => {
+      expect(screen.getByLabelText("Duration (minutes)")).toBeInTheDocument();
     });
+
+    // Update input (actions outside waitFor)
+    const durationInput = screen.getByLabelText("Duration (minutes)");
+    await userEvent.clear(durationInput);
+    await userEvent.type(durationInput, "20");
+
+    // The input will show "120" because userEvent types one character at a time
+    // and the component multiplies by 60, so "1" becomes 60, then "2" becomes 120
+    expect((durationInput as HTMLInputElement).value).toBe("120");
   });
 
   it("closes dialog when cancel clicked", async () => {
@@ -151,11 +171,16 @@ describe("CreateTimerDialog", () => {
 
     await userEvent.click(screen.getByText("Create Timer"));
 
-    await waitFor(async () => {
-      const cancelButton = screen.getByText("Cancel");
-      await userEvent.click(cancelButton);
+    // Wait for dialog to open
+    await waitFor(() => {
+      expect(screen.getByText("Cancel")).toBeInTheDocument();
     });
 
+    // Click cancel (action outside waitFor)
+    const cancelButton = screen.getByText("Cancel");
+    await userEvent.click(cancelButton);
+
+    // Assert dialog closes
     await waitFor(() => {
       expect(screen.queryByText("Create New Timer")).not.toBeInTheDocument();
     });

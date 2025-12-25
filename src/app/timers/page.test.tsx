@@ -230,4 +230,26 @@ describe("TimersPage", () => {
       expect(mockGetTimers).toHaveBeenCalled();
     });
   });
+
+  it("clears error state on successful reload", async () => {
+    // First call fails
+    mockGetTimers.mockResolvedValueOnce({ timers: [], error: "Database error" });
+
+    render(<TimersPage />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Database error")).toBeInTheDocument();
+    });
+
+    // Second call succeeds
+    mockGetTimers.mockResolvedValueOnce({ timers: [], error: undefined });
+
+    // Click create button to trigger handleUpdate -> loadTimers
+    const createButton = screen.getByTestId("create-timer-dialog");
+    createButton.click();
+
+    await waitFor(() => {
+      expect(screen.queryByText("Database error")).not.toBeInTheDocument();
+    });
+  });
 });

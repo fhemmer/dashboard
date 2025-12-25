@@ -79,8 +79,14 @@ export function TimerCard({ timer: initialTimer, onUpdate }: TimerCardProps) {
   const handleDelete = async () => {
     if (!confirm(`Delete timer "${timer.name}"?`)) return;
     setIsDeleting(true);
-    await deleteTimer(timer.id);
-    onUpdate?.();
+    try {
+      await deleteTimer(timer.id);
+      onUpdate?.();
+    } catch {
+      // Error is handled by resetting isDeleting state
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   const progress = getProgress({

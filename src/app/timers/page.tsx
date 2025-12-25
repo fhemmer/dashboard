@@ -1,13 +1,13 @@
 "use client";
 
-import { Timer as TimerIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import type { Timer } from "@/modules/timers";
+import { getTimers } from "@/modules/timers";
 import { CreateTimerDialog } from "@/modules/timers/components/create-timer-dialog";
 import { TimerAlertProvider } from "@/modules/timers/components/timer-alert-provider";
 import { TimerCard } from "@/modules/timers/components/timer-card";
-import { getTimers } from "@/modules/timers";
-import type { Timer } from "@/modules/timers";
+import { Timer as TimerIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
 
 export default function TimersPage() {
   const [timers, setTimers] = useState<Timer[]>([]);
@@ -20,6 +20,7 @@ export default function TimersPage() {
     if (result.error) {
       setError(result.error);
     } else {
+      setError(undefined); // Clear error on success
       setTimers(result.timers);
     }
     setLoading(false);

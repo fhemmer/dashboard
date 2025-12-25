@@ -1,7 +1,7 @@
-import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
-import { MailItem } from "./mail-item";
+import { fireEvent, render, screen } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
 import type { MailMessage } from "../types";
+import { MailItem } from "./mail-item";
 
 describe("MailItem", () => {
   const mockMessage: MailMessage = {
@@ -64,12 +64,76 @@ describe("MailItem", () => {
     const { container: readContainer } = render(
       <MailItem message={{ ...mockMessage, isRead: true }} />
     );
-    
+
     const { container: unreadContainer } = render(
       <MailItem message={{ ...mockMessage, isRead: false }} />
     );
 
     // Check that they have different styling classes
     expect(readContainer.innerHTML).not.toBe(unreadContainer.innerHTML);
+  });
+
+  it("should call onSelect with message id when clicked", () => {
+    const onSelect = vi.fn();
+    render(<MailItem message={mockMessage} onSelect={onSelect} />);
+
+    fireEvent.click(screen.getByRole("button"));
+
+    expect(onSelect).toHaveBeenCalledWith("msg-1");
+  });
+
+  it("should call onSelect when pressing Enter key", () => {
+    const onSelect = vi.fn();
+    render(<MailItem message={mockMessage} onSelect={onSelect} />);
+
+    fireEvent.keyDown(screen.getByRole("button"), { key: "Enter" });
+
+    expect(onSelect).toHaveBeenCalledWith("msg-1");
+  });
+
+  it("should call onSelect when pressing Space key", () => {
+    const onSelect = vi.fn();
+    render(<MailItem message={mockMessage} onSelect={onSelect} />);
+
+    fireEvent.keyDown(screen.getByRole("button"), { key: " " });
+
+    expect(onSelect).toHaveBeenCalledWith("msg-1");
+  });
+
+  it("should not call onSelect for other keys", () => {
+    const onSelect = vi.fn();
+    render(<MailItem message={mockMessage} onSelect={onSelect} />);
+
+    fireEvent.keyDown(screen.getByRole("button"), { key: "Tab" });
+
+    expect(onSelect).not.toHaveBeenCalled();
+  });
+
+  it("should handle click without onSelect callback", () => {
+    render(<MailItem message={mockMessage} />);
+
+    // Should not throw when clicking without onSelect
+    expect(() => {
+      fireEvent.click(screen.getByRole("button"));
+    }).not.toThrow();
+  });
+
+  it("should show selected state with ring styling", () => {
+    render(<MailItem message={mockMessage} isSelected={true} />);
+
+    const button = screen.getByRole("button");
+    expect(button.className).toContain("ring-2");
+    expect(button.className).toContain("ring-primary");
+  });
+
+  it("should render from address without name", () => {
+    const messageWithoutName = {
+      ...mockMessage,
+      from: { email: "noreply@example.com" },
+    };
+
+    render(<MailItem message={messageWithoutName} />);
+
+    expect(screen.getByText("noreply@example.com")).toBeInTheDocument();
   });
 });
