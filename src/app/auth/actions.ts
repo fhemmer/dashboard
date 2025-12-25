@@ -81,7 +81,7 @@ function getSignUpErrorMessage(errorMessage: string): string {
   return errorMessage;
 }
 
-export async function signInWithGoogle() {
+export async function signInWithGoogle(redirectPath: "/login" | "/signup" = "/login") {
   const supabase = await createClient();
 
   const { data, error } = await supabase.auth.signInWithOAuth({
@@ -92,15 +92,15 @@ export async function signInWithGoogle() {
   });
 
   if (error) {
-    return redirect("/login?error=" + encodeURIComponent(error.message));
+    return redirect(`${redirectPath}?error=` + encodeURIComponent(error.message));
   }
 
   if (data.url) {
     redirect(data.url);
   }
 
-  // If no URL is provided, redirect to login with error
-  return redirect("/login?error=" + encodeURIComponent("Failed to initiate OAuth flow"));
+  // If no URL is provided, redirect with error
+  return redirect(`${redirectPath}?error=` + encodeURIComponent("Failed to initiate OAuth flow"));
 }
 
 export async function signOut() {

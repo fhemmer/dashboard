@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { signInWithGoogle, signUp } from "../auth/actions";
 
+const signInWithGoogleFromSignup = signInWithGoogle.bind(null, "/signup");
+
 export default async function SignUpPage({
   searchParams,
 }: {
@@ -53,7 +55,7 @@ export default async function SignUpPage({
               </span>
             </div>
           </div>
-          <form action={signInWithGoogle}>
+          <form action={signInWithGoogleFromSignup}>
             <Button type="submit" variant="outline" className="w-full">
               <GoogleIcon className="mr-2 h-4 w-4" />
               Sign up with Google
