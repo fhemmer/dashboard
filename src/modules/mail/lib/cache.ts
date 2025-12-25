@@ -5,14 +5,14 @@
 
 import { deleteCache, deleteCachePattern, getCache, setCache } from "@/lib/redis";
 import type {
-  MailAccountSummary,
-  MailMessage,
-  MailSummary,
+    MailAccountSummary,
+    MailMessage,
+    MailSummary,
 } from "../types";
 import {
-  getMailAccountCacheKey,
-  getMailMessagesCacheKey,
-  getMailSummaryCacheKey,
+    getMailAccountCacheKey,
+    getMailMessagesCacheKey,
+    getMailSummaryCacheKey,
 } from "../types";
 
 // Cache TTLs (in seconds)
@@ -103,7 +103,7 @@ export async function cacheAccountSummary(
  */
 export async function invalidateAllUserCaches(userId: string, accountIds: string[]): Promise<void> {
   await invalidateSummaryCache(userId);
-  
+
   // Only invalidate caches for the specified user's accounts, not all users
   for (const accountId of accountIds) {
     await deleteCache(`mail:account:${accountId}`);

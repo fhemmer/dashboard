@@ -7,19 +7,19 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
-import type {
-  AccountsResult,
-  MailAccount,
-  MailAccountInput,
-  MailAccountSummary,
-  MailSummary,
-  UpdateResult,
-} from "./types";
 import { invalidateAllUserCaches, invalidateMessagesCache, invalidateSummaryCache } from "./lib/cache";
-import { deleteToken, storeToken } from "./lib/token-manager";
 import { getGmailUnreadCount } from "./lib/gmail-client";
 import { getImapUnreadCount } from "./lib/imap-client";
 import { getOutlookUnreadCount } from "./lib/outlook-client";
+import { deleteToken, storeToken } from "./lib/token-manager";
+import type {
+    AccountsResult,
+    MailAccount,
+    MailAccountInput,
+    MailAccountSummary,
+    MailSummary,
+    UpdateResult,
+} from "./types";
 
 /**
  * Get all mail accounts for the current user
@@ -95,11 +95,11 @@ export async function createMailAccount(
 
   // Invalidate caches for the newly created account
   await invalidateAllUserCaches(user.id, [data.id]);
-  
+
   revalidatePath("/mail");
   revalidatePath("/mail/settings");
   revalidatePath("/");
-  
+
   return { success: true, id: data.id };
 }
 
@@ -140,11 +140,11 @@ export async function updateMailAccount(
   // Invalidate caches
   await invalidateSummaryCache(user.id);
   await invalidateMessagesCache(id);
-  
+
   revalidatePath("/mail");
   revalidatePath("/mail/settings");
   revalidatePath("/");
-  
+
   return { success: true };
 }
 
@@ -178,11 +178,11 @@ export async function deleteMailAccount(id: string): Promise<UpdateResult> {
 
   // Invalidate caches for the deleted account
   await invalidateAllUserCaches(user.id, [id]);
-  
+
   revalidatePath("/mail");
   revalidatePath("/mail/settings");
   revalidatePath("/");
-  
+
   return { success: true };
 }
 
@@ -201,13 +201,13 @@ export async function getMailSummary(): Promise<MailSummary> {
 
   // Get all enabled accounts
   const { accounts, error } = await getMailAccounts();
-  
+
   if (error) {
     return { accounts: [], totalUnread: 0, error };
   }
 
   const enabledAccounts = accounts.filter((a) => a.isEnabled);
-  
+
   if (enabledAccounts.length === 0) {
     return { accounts: [], totalUnread: 0 };
   }
@@ -216,7 +216,7 @@ export async function getMailSummary(): Promise<MailSummary> {
   const summaries: MailAccountSummary[] = await Promise.all(
     enabledAccounts.map(async (account) => {
       let unreadCount = 0;
-      
+
       try {
         switch (account.provider) {
           case "outlook":
@@ -272,12 +272,12 @@ export async function storeAccountCredentials(
     const {
       data: { user },
     } = await supabase.auth.getUser();
-    
+
     if (user) {
       await invalidateSummaryCache(user.id);
       await invalidateMessagesCache(accountId);
     }
-    
+
     revalidatePath("/mail");
     revalidatePath("/");
   }

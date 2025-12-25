@@ -14,10 +14,10 @@ import type { DecryptedToken, TokenInput } from "../types";
 export async function storeToken(input: TokenInput): Promise<{ success: boolean; error?: string }> {
   try {
     const supabase = await createClient();
-    
+
     // Encrypt access token
     const accessTokenEncrypted = encrypt(input.accessToken);
-    
+
     // Encrypt refresh token if provided (with its own IV and auth_tag)
     let refreshTokenEncrypted: { encrypted: string; iv: string; authTag: string } | null = null;
     if (input.refreshToken) {
@@ -84,7 +84,7 @@ export async function storeToken(input: TokenInput): Promise<{ success: boolean;
 export async function getToken(accountId: string): Promise<DecryptedToken | null> {
   try {
     const supabase = await createClient();
-    
+
     const { data, error } = await supabase
       .from("mail_oauth_tokens")
       .select("*")
@@ -130,7 +130,7 @@ export async function getToken(accountId: string): Promise<DecryptedToken | null
 export async function deleteToken(accountId: string): Promise<{ success: boolean; error?: string }> {
   try {
     const supabase = await createClient();
-    
+
     const { error } = await supabase
       .from("mail_oauth_tokens")
       .delete()
@@ -155,10 +155,10 @@ export function isTokenExpired(token: DecryptedToken): boolean {
   if (!token.expiresAt) {
     return false; // No expiration set (e.g., IMAP credentials)
   }
-  
+
   // Consider token expired if it expires in less than 5 minutes
   const now = new Date();
   const expiryBuffer = new Date(token.expiresAt.getTime() - 5 * 60 * 1000);
-  
+
   return now >= expiryBuffer;
 }
