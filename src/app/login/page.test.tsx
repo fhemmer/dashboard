@@ -5,6 +5,7 @@ import LoginPage from "./page";
 // Mock the signIn action
 vi.mock("../auth/actions", () => ({
   signIn: vi.fn(),
+  signInWithGoogle: vi.fn(),
 }));
 
 // Mock framer-motion to avoid animation issues in tests
@@ -31,6 +32,7 @@ describe("LoginPage", () => {
     expect(screen.getByLabelText("Email")).toBeDefined();
     expect(screen.getByLabelText("Password")).toBeDefined();
     expect(screen.getByRole("button", { name: "Sign In" })).toBeDefined();
+    expect(screen.getByRole("button", { name: "Sign in with Google" })).toBeDefined();
     expect(screen.getByText("Sign up")).toBeDefined();
   });
 

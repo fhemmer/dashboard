@@ -5,6 +5,16 @@ import SignUpPage from "./page";
 // Mock the signUp action
 vi.mock("../auth/actions", () => ({
   signUp: vi.fn(),
+  signInWithGoogle: vi.fn(),
+}));
+
+// Mock framer-motion to avoid animation issues in tests
+vi.mock("framer-motion", () => ({
+  motion: {
+    div: ({ children, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+      <div {...props}>{children}</div>
+    ),
+  },
 }));
 
 describe("SignUpPage", () => {
@@ -23,6 +33,7 @@ describe("SignUpPage", () => {
     expect(screen.getByLabelText("Password")).toBeDefined();
     expect(screen.getByLabelText("Confirm Password")).toBeDefined();
     expect(screen.getByRole("button", { name: "Sign Up" })).toBeDefined();
+    expect(screen.getByRole("button", { name: "Sign up with Google" })).toBeDefined();
     expect(screen.getByText("Login")).toBeDefined();
   });
 

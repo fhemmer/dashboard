@@ -4,7 +4,7 @@ import { type LucideIcon } from "lucide-react";
  * Unique identifier for each widget in the dashboard.
  * Add new widget IDs here as the dashboard grows.
  */
-export type WidgetId = "pull-requests" | "news" | "expenditures" | "timers";
+export type WidgetId = "pull-requests" | "news" | "expenditures" | "timers" | "mail";
 
 /**
  * Widget metadata for the registry.

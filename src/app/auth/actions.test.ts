@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // Mock supabase client first (before imports that use it)
 const mockSignInWithPassword = vi.fn();
+const mockSignInWithOAuth = vi.fn();
 const mockSignUp = vi.fn();
 const mockSignOut = vi.fn();
 const mockUpdate = vi.fn();
@@ -13,6 +14,7 @@ vi.mock("@/lib/supabase/server", () => ({
     Promise.resolve({
       auth: {
         signInWithPassword: mockSignInWithPassword,
+        signInWithOAuth: mockSignInWithOAuth,
         signUp: mockSignUp,
         signOut: mockSignOut,
       },
@@ -45,7 +47,7 @@ vi.mock("@/lib/env", () => ({
   },
 }));
 
-import { signIn, signOut, signUp } from "./actions";
+import { signIn, signInWithGoogle, signOut, signUp } from "./actions";
 
 describe("auth actions", () => {
   beforeEach(() => {
@@ -237,6 +239,89 @@ describe("auth actions", () => {
       expect(mockSignOut).toHaveBeenCalled();
       expect(mockRevalidatePath).toHaveBeenCalledWith("/", "layout");
       expect(mockRedirect).toHaveBeenCalledWith("/login");
+    });
+  });
+
+  describe("signInWithGoogle", () => {
+    it("redirects to Google OAuth URL on success", async () => {
+      mockSignInWithOAuth.mockResolvedValue({
+        error: null,
+        data: { url: "https://accounts.google.com/o/oauth2/v2/auth?..." },
+      });
+
+      await expect(signInWithGoogle()).rejects.toThrow(
+        "NEXT_REDIRECT:https://accounts.google.com/o/oauth2/v2/auth?..."
+      );
+
+      expect(mockSignInWithOAuth).toHaveBeenCalledWith({
+        provider: "google",
+        options: {
+          redirectTo: "http://localhost:3000/auth/callback",
+        },
+      });
+      expect(mockRedirect).toHaveBeenCalledWith(
+        "https://accounts.google.com/o/oauth2/v2/auth?..."
+      );
+    });
+
+    it("redirects to login with error on OAuth failure (default)", async () => {
+      mockSignInWithOAuth.mockResolvedValue({
+        error: { message: "OAuth provider not enabled" },
+        data: { url: null },
+      });
+
+      await expect(signInWithGoogle()).rejects.toThrow(
+        "NEXT_REDIRECT:/login?error=OAuth%20provider%20not%20enabled"
+      );
+
+      expect(mockRedirect).toHaveBeenCalledWith(
+        "/login?error=OAuth%20provider%20not%20enabled"
+      );
+    });
+
+    it("redirects to signup with error on OAuth failure when called from signup", async () => {
+      mockSignInWithOAuth.mockResolvedValue({
+        error: { message: "OAuth provider not enabled" },
+        data: { url: null },
+      });
+
+      await expect(signInWithGoogle("/signup")).rejects.toThrow(
+        "NEXT_REDIRECT:/signup?error=OAuth%20provider%20not%20enabled"
+      );
+
+      expect(mockRedirect).toHaveBeenCalledWith(
+        "/signup?error=OAuth%20provider%20not%20enabled"
+      );
+    });
+
+    it("redirects to login with error when OAuth returns no URL (default)", async () => {
+      mockSignInWithOAuth.mockResolvedValue({
+        error: null,
+        data: { url: null },
+      });
+
+      await expect(signInWithGoogle()).rejects.toThrow(
+        "NEXT_REDIRECT:/login?error=Failed%20to%20initiate%20OAuth%20flow"
+      );
+
+      expect(mockRedirect).toHaveBeenCalledWith(
+        "/login?error=Failed%20to%20initiate%20OAuth%20flow"
+      );
+    });
+
+    it("redirects to signup with error when OAuth returns no URL from signup", async () => {
+      mockSignInWithOAuth.mockResolvedValue({
+        error: null,
+        data: { url: null },
+      });
+
+      await expect(signInWithGoogle("/signup")).rejects.toThrow(
+        "NEXT_REDIRECT:/signup?error=Failed%20to%20initiate%20OAuth%20flow"
+      );
+
+      expect(mockRedirect).toHaveBeenCalledWith(
+        "/signup?error=Failed%20to%20initiate%20OAuth%20flow"
+      );
     });
   });
 });

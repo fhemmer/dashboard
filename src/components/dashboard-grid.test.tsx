@@ -72,6 +72,7 @@ const mockSettings: WidgetSettings = {
     { id: "pull-requests", enabled: true, order: 0 },
     { id: "news", enabled: true, order: 1 },
     { id: "expenditures", enabled: false, order: 2 },
+    { id: "mail", enabled: false, order: 3 },
   ],
 };
 
@@ -82,6 +83,7 @@ const mockWidgetComponents: Record<WidgetId, ReactNode> = {
     <div data-testid="expenditures-widget">Expenditures Widget</div>
   ),
   timers: <div data-testid="timers-widget">Timers Widget</div>,
+  mail: <div data-testid="mail-widget">Mail Widget</div>,
 };
 
 describe("DashboardGrid", () => {
@@ -151,6 +153,7 @@ describe("DashboardGrid", () => {
       news: null,
       expenditures: null,
       timers: null,
+      mail: null,
     };
 
     const settings: WidgetSettings = {

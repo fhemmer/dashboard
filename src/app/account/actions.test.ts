@@ -224,8 +224,8 @@ describe("account actions", () => {
     });
 
     it("redirects with error when current password is not provided", async () => {
-      mockGetUser.mockResolvedValue({ 
-        data: { user: { id: "user-123", email: "test@example.com" } } 
+      mockGetUser.mockResolvedValue({
+        data: { user: { id: "user-123", email: "test@example.com" } }
       });
 
       const formData = new FormData();
@@ -241,8 +241,8 @@ describe("account actions", () => {
     });
 
     it("redirects with error when new passwords do not match", async () => {
-      mockGetUser.mockResolvedValue({ 
-        data: { user: { id: "user-123", email: "test@example.com" } } 
+      mockGetUser.mockResolvedValue({
+        data: { user: { id: "user-123", email: "test@example.com" } }
       });
 
       const formData = new FormData();
@@ -258,8 +258,8 @@ describe("account actions", () => {
     });
 
     it("redirects with error when new password does not meet strength requirements", async () => {
-      mockGetUser.mockResolvedValue({ 
-        data: { user: { id: "user-123", email: "test@example.com" } } 
+      mockGetUser.mockResolvedValue({
+        data: { user: { id: "user-123", email: "test@example.com" } }
       });
 
       const formData = new FormData();
@@ -275,8 +275,8 @@ describe("account actions", () => {
     });
 
     it("changes password successfully and redirects with success", async () => {
-      mockGetUser.mockResolvedValue({ 
-        data: { user: { id: "user-123", email: "test@example.com" } } 
+      mockGetUser.mockResolvedValue({
+        data: { user: { id: "user-123", email: "test@example.com" } }
       });
       mockUpdateUser.mockResolvedValue({ error: null });
 
@@ -296,11 +296,11 @@ describe("account actions", () => {
     });
 
     it("redirects with error when password update fails", async () => {
-      mockGetUser.mockResolvedValue({ 
-        data: { user: { id: "user-123", email: "test@example.com" } } 
+      mockGetUser.mockResolvedValue({
+        data: { user: { id: "user-123", email: "test@example.com" } }
       });
-      mockUpdateUser.mockResolvedValue({ 
-        error: { message: "Password update failed" } 
+      mockUpdateUser.mockResolvedValue({
+        error: { message: "Password update failed" }
       });
 
       const formData = new FormData();
@@ -318,8 +318,8 @@ describe("account actions", () => {
     });
 
     it("redirects with error when user email is not found", async () => {
-      mockGetUser.mockResolvedValue({ 
-        data: { user: { id: "user-123", email: null } } 
+      mockGetUser.mockResolvedValue({
+        data: { user: { id: "user-123", email: null } }
       });
 
       const formData = new FormData();

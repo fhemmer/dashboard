@@ -7,6 +7,7 @@ describe("WIDGET_REGISTRY", () => {
     expect(WIDGET_REGISTRY["news"]).toBeDefined();
     expect(WIDGET_REGISTRY["expenditures"]).toBeDefined();
     expect(WIDGET_REGISTRY["timers"]).toBeDefined();
+    expect(WIDGET_REGISTRY["mail"]).toBeDefined();
   });
 
   it("has correct structure for each widget", () => {
@@ -27,31 +28,35 @@ describe("WIDGET_REGISTRY", () => {
     expect(WIDGET_REGISTRY["pull-requests"].requiresAdmin).toBeUndefined();
     expect(WIDGET_REGISTRY["news"].requiresAdmin).toBeUndefined();
     expect(WIDGET_REGISTRY["timers"].requiresAdmin).toBeUndefined();
+    expect(WIDGET_REGISTRY["mail"].requiresAdmin).toBeUndefined();
   });
 });
 
 describe("getAllWidgets", () => {
   it("returns all widgets as an array", () => {
     const widgets = getAllWidgets();
-    expect(widgets).toHaveLength(4);
+    expect(widgets).toHaveLength(5);
     expect(widgets.map((w) => w.id)).toContain("pull-requests");
     expect(widgets.map((w) => w.id)).toContain("news");
     expect(widgets.map((w) => w.id)).toContain("expenditures");
     expect(widgets.map((w) => w.id)).toContain("timers");
+    expect(widgets.map((w) => w.id)).toContain("mail");
   });
 });
 
 describe("getAvailableWidgets", () => {
   it("returns all widgets for admin users", () => {
     const widgets = getAvailableWidgets(true);
-    expect(widgets).toHaveLength(4);
+    expect(widgets).toHaveLength(5);
     expect(widgets.map((w) => w.id)).toContain("expenditures");
+    expect(widgets.map((w) => w.id)).toContain("mail");
   });
 
   it("excludes admin-only widgets for non-admin users", () => {
     const widgets = getAvailableWidgets(false);
-    expect(widgets).toHaveLength(3);
+    expect(widgets).toHaveLength(4);
     expect(widgets.map((w) => w.id)).not.toContain("expenditures");
+    expect(widgets.map((w) => w.id)).toContain("mail");
   });
 });
 

@@ -1,4 +1,4 @@
-import { GitPullRequest, Newspaper, Timer, Wallet } from "lucide-react";
+import { GitPullRequest, Mail, Newspaper, Timer, Wallet } from "lucide-react";
 import type { WidgetDefinition, WidgetId } from "./types";
 
 /**
@@ -33,6 +33,13 @@ export const WIDGET_REGISTRY: Record<WidgetId, WidgetDefinition> = {
     name: "Timers",
     description: "Countdown timers with alerts",
     icon: Timer,
+    defaultEnabled: true,
+  },
+  mail: {
+    id: "mail",
+    name: "Mail",
+    description: "Email summaries from Outlook, Gmail, and IMAP accounts",
+    icon: Mail,
     defaultEnabled: true,
   },
 };
