@@ -81,12 +81,12 @@ describe("News Actions", () => {
             }),
           }),
         })
-        // Second call: get news items (already filtered by DB)
+        // Second call: get news items with .not() before .order().limit()
         .mockReturnValueOnce({
           select: vi.fn().mockReturnValue({
-            order: vi.fn().mockReturnValue({
-              limit: vi.fn().mockReturnValue({
-                not: vi.fn().mockResolvedValue({
+            not: vi.fn().mockReturnValue({
+              order: vi.fn().mockReturnValue({
+                limit: vi.fn().mockResolvedValue({
                   data: [], // Already filtered at DB level
                   error: null,
                 }),

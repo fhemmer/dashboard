@@ -16,7 +16,6 @@ import {
   sourceIconComponents,
 } from "@/modules/news-sources";
 import { Settings2 } from "lucide-react";
-import type React from "react";
 import { useState, useTransition } from "react";
 import { toggleSourceExclusion } from "../actions";
 import type { NewsSourceWithExclusion } from "../types";
@@ -25,26 +24,15 @@ interface SourceExclusionSettingsProps {
   readonly sources: NewsSourceWithExclusion[];
 }
 
-/** Update sources state after successful toggle */
-function updateSourcesState(
+/** Update a source's exclusion status in the sources array */
+function updateSourceExclusionStatus(
+  sources: NewsSourceWithExclusion[],
   sourceId: string,
-  isExcluded: boolean,
-  setSources: React.Dispatch<React.SetStateAction<NewsSourceWithExclusion[]>>
-) {
-  setSources((prev) =>
-    prev.map((s) => (s.id === sourceId ? { ...s, isExcluded } : s))
+  isExcluded: boolean
+): NewsSourceWithExclusion[] {
+  return sources.map((s) =>
+    s.id === sourceId ? { ...s, isExcluded } : s
   );
-}
-
-/** Perform the toggle action and update state */
-async function performToggle(
-  sourceId: string,
-  setSources: React.Dispatch<React.SetStateAction<NewsSourceWithExclusion[]>>
-) {
-  const result = await toggleSourceExclusion(sourceId);
-  if (result.success) {
-    updateSourcesState(sourceId, result.isExcluded, setSources);
-  }
 }
 
 export function SourceExclusionSettings({
@@ -55,7 +43,12 @@ export function SourceExclusionSettings({
   const [isOpen, setIsOpen] = useState(false);
 
   const handleToggle = (sourceId: string) => {
-    startTransition(() => performToggle(sourceId, setSources));
+    startTransition(async () => {
+      const result = await toggleSourceExclusion(sourceId);
+      if (result.success) {
+        setSources((prev) => updateSourceExclusionStatus(prev, sourceId, result.isExcluded));
+      }
+    });
   };
 
   const enabledCount = sources.filter((s) => !s.isExcluded).length;

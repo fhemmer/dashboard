@@ -64,7 +64,18 @@ export async function getNewsItems(): Promise<FetchNewsItemsResult> {
         .eq("user_id", user.id)
     : Promise.resolve({ data: null });
 
-  const newsQueryBase = supabase
+  // Wait for exclusions first since we need them before building the query
+  const { data: exclusions } = await exclusionsPromise;
+  const excludedSourceIds = exclusions?.map((e) => e.source_id) ?? [];
+
+  // Build exclusion filter string outside template literal
+  const exclusionFilter =
+    excludedSourceIds.length > 0
+      ? "(" + excludedSourceIds.map((id) => `"${id}"`).join(",") + ")"
+      : null;
+
+  // Build query with filter BEFORE order/limit (filter methods must precede transformation methods)
+  const baseQuery = supabase
     .from("news_items")
     .select(
       `
@@ -83,24 +94,17 @@ export async function getNewsItems(): Promise<FetchNewsItemsResult> {
         category
       )
     `
-    )
+    );
+
+  // Apply exclusion filter before transformation methods
+  const filteredQuery = exclusionFilter
+    ? baseQuery.not("source_id", "in", exclusionFilter)
+    : baseQuery;
+
+  // Apply transformations (order, limit) after filtering
+  const finalQuery = filteredQuery
     .order("published_at", { ascending: false })
     .limit(100);
-
-  // Wait for exclusions to determine final query
-  const { data: exclusions } = await exclusionsPromise;
-  const excludedSourceIds = exclusions?.map((e) => e.source_id) ?? [];
-
-  // Build exclusion filter string outside template literal
-  const exclusionFilter =
-    excludedSourceIds.length > 0
-      ? "(" + excludedSourceIds.map((id) => `"${id}"`).join(",") + ")"
-      : null;
-
-  // Build final query with exclusions applied functionally
-  const finalQuery = exclusionFilter
-    ? newsQueryBase.not("source_id", "in", exclusionFilter)
-    : newsQueryBase;
 
   const { data: newsData, error: newsError } = await finalQuery;
 
