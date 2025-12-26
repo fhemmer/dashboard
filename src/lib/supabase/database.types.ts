@@ -113,6 +113,92 @@ export type Database = {
         }
         Relationships: []
       }
+      mail_account_settings: {
+        Row: {
+          account_name: string
+          created_at: string
+          email_address: string
+          id: string
+          is_enabled: boolean
+          provider: string
+          sync_frequency_minutes: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          account_name: string
+          created_at?: string
+          email_address: string
+          id?: string
+          is_enabled?: boolean
+          provider: string
+          sync_frequency_minutes?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          account_name?: string
+          created_at?: string
+          email_address?: string
+          id?: string
+          is_enabled?: boolean
+          provider?: string
+          sync_frequency_minutes?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      mail_oauth_tokens: {
+        Row: {
+          account_id: string
+          auth_tag: string
+          created_at: string
+          encrypted_access_token: string
+          encrypted_refresh_token: string | null
+          id: string
+          iv: string
+          refresh_token_auth_tag: string | null
+          refresh_token_iv: string | null
+          token_expires_at: string | null
+          updated_at: string
+        }
+        Insert: {
+          account_id: string
+          auth_tag: string
+          created_at?: string
+          encrypted_access_token: string
+          encrypted_refresh_token?: string | null
+          id?: string
+          iv: string
+          refresh_token_auth_tag?: string | null
+          refresh_token_iv?: string | null
+          token_expires_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          account_id?: string
+          auth_tag?: string
+          created_at?: string
+          encrypted_access_token?: string
+          encrypted_refresh_token?: string | null
+          id?: string
+          iv?: string
+          refresh_token_auth_tag?: string | null
+          refresh_token_iv?: string | null
+          token_expires_at?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mail_oauth_tokens_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: true
+            referencedRelation: "mail_account_settings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       news_items: {
         Row: {
           created_at: string
@@ -241,8 +327,12 @@ export type Database = {
       }
       profiles: {
         Row: {
+          bg_brightness_dark: number | null
+          bg_brightness_light: number | null
           display_name: string | null
           email: string | null
+          fg_brightness_dark: number | null
+          fg_brightness_light: number | null
           font: string | null
           id: string
           last_login: string | null
@@ -254,8 +344,12 @@ export type Database = {
           widget_settings: Json | null
         }
         Insert: {
+          bg_brightness_dark?: number | null
+          bg_brightness_light?: number | null
           display_name?: string | null
           email?: string | null
+          fg_brightness_dark?: number | null
+          fg_brightness_light?: number | null
           font?: string | null
           id: string
           last_login?: string | null
@@ -267,8 +361,12 @@ export type Database = {
           widget_settings?: Json | null
         }
         Update: {
+          bg_brightness_dark?: number | null
+          bg_brightness_light?: number | null
           display_name?: string | null
           email?: string | null
+          fg_brightness_dark?: number | null
+          fg_brightness_light?: number | null
           font?: string | null
           id?: string
           last_login?: string | null
@@ -299,6 +397,65 @@ export type Database = {
         }
         Relationships: []
       }
+      timers: {
+        Row: {
+          alarm_sound: string
+          completion_color: string
+          created_at: string
+          display_order: number
+          duration_seconds: number
+          enable_alarm: boolean
+          enable_completion_color: boolean
+          end_time: string | null
+          id: string
+          name: string
+          remaining_seconds: number
+          state: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          alarm_sound?: string
+          completion_color?: string
+          created_at?: string
+          display_order?: number
+          duration_seconds?: number
+          enable_alarm?: boolean
+          enable_completion_color?: boolean
+          end_time?: string | null
+          id?: string
+          name?: string
+          remaining_seconds?: number
+          state?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          alarm_sound?: string
+          completion_color?: string
+          created_at?: string
+          display_order?: number
+          duration_seconds?: number
+          enable_alarm?: boolean
+          enable_completion_color?: boolean
+          end_time?: string | null
+          id?: string
+          name?: string
+          remaining_seconds?: number
+          state?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "timers_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_news_source_exclusions: {
         Row: {
           created_at: string
@@ -328,100 +485,6 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      mail_account_settings: {
-        Row: {
-          id: string
-          user_id: string
-          provider: string
-          account_name: string
-          email_address: string
-          is_enabled: boolean
-          sync_frequency_minutes: number
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          user_id: string
-          provider: string
-          account_name: string
-          email_address: string
-          is_enabled?: boolean
-          sync_frequency_minutes?: number
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          user_id?: string
-          provider?: string
-          account_name?: string
-          email_address?: string
-          is_enabled?: boolean
-          sync_frequency_minutes?: number
-          created_at?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "mail_account_settings_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      mail_oauth_tokens: {
-        Row: {
-          id: string
-          account_id: string
-          encrypted_access_token: string
-          encrypted_refresh_token: string | null
-          token_expires_at: string | null
-          iv: string
-          auth_tag: string
-          refresh_token_iv: string | null
-          refresh_token_auth_tag: string | null
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          account_id: string
-          encrypted_access_token: string
-          encrypted_refresh_token?: string | null
-          token_expires_at?: string | null
-          iv: string
-          auth_tag: string
-          refresh_token_iv?: string | null
-          refresh_token_auth_tag?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          account_id?: string
-          encrypted_access_token?: string
-          encrypted_refresh_token?: string | null
-          token_expires_at?: string | null
-          iv?: string
-          auth_tag?: string
-          refresh_token_iv?: string | null
-          refresh_token_auth_tag?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "mail_oauth_tokens_account_id_fkey"
-            columns: ["account_id"]
-            isOneToOne: true
-            referencedRelation: "mail_account_settings"
             referencedColumns: ["id"]
           },
         ]

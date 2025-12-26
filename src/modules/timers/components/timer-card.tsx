@@ -144,7 +144,7 @@ export function TimerCard({ timer: initialTimer, onUpdate }: TimerCardProps) {
       // Update the timer with new remaining time
       await updateTimer(timer.id, {
         remainingSeconds: newSeconds,
-        state: "idle",
+        state: "stopped",
         endTime: null,
       });
       onUpdate?.();

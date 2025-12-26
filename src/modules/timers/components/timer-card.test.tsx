@@ -372,7 +372,7 @@ describe("TimerCard", () => {
       await waitFor(() => {
         expect(mockUpdateTimer).toHaveBeenCalledWith("timer-1", {
           remainingSeconds: 69060,
-          state: "idle",
+          state: "stopped",
           endTime: null,
         });
       });
@@ -410,7 +410,7 @@ describe("TimerCard", () => {
       await waitFor(() => {
         expect(mockUpdateTimer).toHaveBeenCalledWith("timer-1", {
           remainingSeconds: 150,
-          state: "idle",
+          state: "stopped",
           endTime: null,
         });
       });

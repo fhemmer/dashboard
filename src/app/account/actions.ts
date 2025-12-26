@@ -30,6 +30,10 @@ export async function updateProfile(formData: FormData) {
   const displayName = formData.get("displayName") as string;
   const theme = formData.get("theme") as string;
   const font = formData.get("font") as string;
+  const fgBrightnessLight = formData.get("fgBrightnessLight") as string;
+  const bgBrightnessLight = formData.get("bgBrightnessLight") as string;
+  const fgBrightnessDark = formData.get("fgBrightnessDark") as string;
+  const bgBrightnessDark = formData.get("bgBrightnessDark") as string;
 
   const supabase = await createClient();
   const {
@@ -46,6 +50,10 @@ export async function updateProfile(formData: FormData) {
       display_name: displayName || null,
       theme: theme || "default",
       font: font || "geist",
+      fg_brightness_light: fgBrightnessLight ? parseFloat(fgBrightnessLight) : 100,
+      bg_brightness_light: bgBrightnessLight ? parseFloat(bgBrightnessLight) : 100,
+      fg_brightness_dark: fgBrightnessDark ? parseFloat(fgBrightnessDark) : 100,
+      bg_brightness_dark: bgBrightnessDark ? parseFloat(bgBrightnessDark) : 100,
       updated_at: new Date().toISOString(),
     })
     .eq("id", user.id);

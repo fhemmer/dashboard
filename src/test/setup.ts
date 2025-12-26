@@ -16,6 +16,15 @@ vi.mock("@/lib/env", () => ({
   })),
 }));
 
+// Polyfill ResizeObserver for Radix UI components (required by @radix-ui/react-slider)
+if (typeof ResizeObserver === "undefined") {
+  global.ResizeObserver = class ResizeObserver {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  } as unknown as typeof globalThis.ResizeObserver;
+}
+
 // Polyfill scrollIntoView for Radix UI components (not available in JSDOM)
 // Guard for Node environment tests that don't have Element
 if (typeof Element !== "undefined") {

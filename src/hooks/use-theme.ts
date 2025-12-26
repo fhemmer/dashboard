@@ -1,5 +1,6 @@
 "use client";
 
+import { applyBrightnessToDocument, getStoredBrightness } from "@/lib/brightness";
 import {
     type ThemeName,
     applyThemeToDocument,
@@ -42,12 +43,23 @@ export function useTheme() {
 
   useEffect(() => {
     applyThemeToDocument(theme);
+
+    // Apply brightness adjustments after theme is applied
+    const brightness = getStoredBrightness();
+    const isDark = document.documentElement.classList.contains("dark");
+    applyBrightnessToDocument(brightness, isDark);
   }, [theme]);
 
   const setTheme = useCallback((newTheme: ThemeName) => {
     if (!isValidTheme(newTheme)) return;
     setStoredThemeName(newTheme);
     applyThemeToDocument(newTheme);
+
+    // Reapply brightness after theme change
+    const brightness = getStoredBrightness();
+    const isDark = document.documentElement.classList.contains("dark");
+    applyBrightnessToDocument(brightness, isDark);
+
     emitThemeChange();
   }, []);
 
@@ -64,15 +76,30 @@ export function useThemeInit(serverTheme?: string | null) {
     const stored = getStoredThemeName();
     if (stored !== "default") {
       applyThemeToDocument(stored);
+
+      // Apply brightness adjustments
+      const brightness = getStoredBrightness();
+      const isDark = document.documentElement.classList.contains("dark");
+      applyBrightnessToDocument(brightness, isDark);
       return;
     }
 
     if (serverTheme && isValidTheme(serverTheme)) {
       setStoredThemeName(serverTheme);
       applyThemeToDocument(serverTheme);
+
+      // Apply brightness adjustments
+      const brightness = getStoredBrightness();
+      const isDark = document.documentElement.classList.contains("dark");
+      applyBrightnessToDocument(brightness, isDark);
       return;
     }
 
     applyThemeToDocument("default");
+
+    // Apply brightness adjustments
+    const brightness = getStoredBrightness();
+    const isDark = document.documentElement.classList.contains("dark");
+    applyBrightnessToDocument(brightness, isDark);
   }, [serverTheme]);
 }

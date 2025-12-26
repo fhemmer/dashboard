@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { applyBrightnessToDocument, getStoredBrightness } from "@/lib/brightness";
 import { createClient } from "@/lib/supabase/client";
 import type { User } from "@supabase/supabase-js";
 import { LogOut, Moon, Search, Sun } from "lucide-react";
@@ -32,6 +33,10 @@ export function applyTheme(theme: Theme) {
   } else {
     root.classList.remove("dark");
   }
+
+  // Reapply brightness adjustments when theme mode changes
+  const brightness = getStoredBrightness();
+  applyBrightnessToDocument(brightness, theme === "dark");
 }
 
 export function getSnapshot(): Theme {

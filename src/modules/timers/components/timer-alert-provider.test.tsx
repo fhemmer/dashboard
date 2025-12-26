@@ -75,25 +75,32 @@ describe("TimerAlertProvider", () => {
 
     // Mock Notification API
     mockRequestPermission = vi.fn().mockResolvedValue("granted");
-    globalThis.Notification = vi.fn() as unknown as typeof Notification;
-    Object.defineProperty(globalThis.Notification, "permission", {
+    const NotificationMock = vi.fn() as unknown as typeof Notification;
+    Object.defineProperty(NotificationMock, "permission", {
       value: "default",
       configurable: true,
+      writable: true,
     });
-    Object.defineProperty(globalThis.Notification, "requestPermission", {
+    Object.defineProperty(NotificationMock, "requestPermission", {
       value: mockRequestPermission,
       configurable: true,
+      writable: true,
     });
+    globalThis.Notification = NotificationMock;
 
-    // Mock AudioContext as a proper class
-    globalThis.AudioContext = class MockAudioContext {
+    // Mock AudioContext - must be a proper constructor function
+    // Define it as a proper class that can be instantiated with 'new'
+    class MockAudioContext {
       createOscillator = mockCreateOscillator;
       createGain = mockCreateGain;
       destination = {};
       currentTime = 0;
       state = "running";
       close = mockClose;
-    } as unknown as typeof AudioContext;
+    }
+
+    // Ensure the mock works with instanceof and is properly constructible
+    globalThis.AudioContext = MockAudioContext as unknown as typeof AudioContext;
   });
 
   afterEach(() => {
@@ -177,6 +184,17 @@ describe("TimerAlertProvider", () => {
   });
 
   it("does not play alarm sound when enableAlarm is false", async () => {
+    // Re-establish AudioContext mock in case it was overwritten by other tests
+    class MockAudioContext {
+      createOscillator = mockCreateOscillator;
+      createGain = mockCreateGain;
+      destination = {};
+      currentTime = 0;
+      state = "running";
+      close = mockClose;
+    }
+    globalThis.AudioContext = MockAudioContext as unknown as typeof AudioContext;
+
     Object.defineProperty(globalThis.Notification, "permission", {
       value: "granted",
       configurable: true,
@@ -201,6 +219,17 @@ describe("TimerAlertProvider", () => {
   });
 
   it("shows browser notification when permission is granted", async () => {
+    // Re-establish AudioContext mock in case it was overwritten by other tests
+    class MockAudioContext {
+      createOscillator = mockCreateOscillator;
+      createGain = mockCreateGain;
+      destination = {};
+      currentTime = 0;
+      state = "running";
+      close = mockClose;
+    }
+    globalThis.AudioContext = MockAudioContext as unknown as typeof AudioContext;
+
     Object.defineProperty(globalThis.Notification, "permission", {
       value: "granted",
       configurable: true,
@@ -231,6 +260,17 @@ describe("TimerAlertProvider", () => {
   });
 
   it("shows browser notification even when audio is disabled", async () => {
+    // Re-establish AudioContext mock in case it was overwritten by other tests
+    class MockAudioContext {
+      createOscillator = mockCreateOscillator;
+      createGain = mockCreateGain;
+      destination = {};
+      currentTime = 0;
+      state = "running";
+      close = mockClose;
+    }
+    globalThis.AudioContext = MockAudioContext as unknown as typeof AudioContext;
+
     Object.defineProperty(globalThis.Notification, "permission", {
       value: "granted",
       configurable: true,

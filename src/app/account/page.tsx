@@ -1,3 +1,4 @@
+import { BrightnessControls } from "@/components/brightness-controls";
 import { FontPicker } from "@/components/font-picker";
 import { ThemePicker } from "@/components/theme-picker";
 import { Button } from "@/components/ui/button";
@@ -121,6 +122,23 @@ export default async function AccountPage({
               <FontPicker defaultValue={profile?.font} />
               <p className="text-xs text-muted-foreground">
                 Choose your preferred typeface for the interface.
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium">
+                Color Brightness
+              </label>
+              <BrightnessControls
+                defaultValues={{
+                  fgLight: profile?.fg_brightness_light ?? 100,
+                  bgLight: profile?.bg_brightness_light ?? 100,
+                  fgDark: profile?.fg_brightness_dark ?? 100,
+                  bgDark: profile?.bg_brightness_dark ?? 100,
+                }}
+              />
+              <p className="text-xs text-muted-foreground">
+                Adjust foreground and background brightness for light and dark modes.
               </p>
             </div>
 
