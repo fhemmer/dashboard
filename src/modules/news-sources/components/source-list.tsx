@@ -19,7 +19,7 @@ import {
 import { ExternalLink, Pencil, Plus, Trash2 } from "lucide-react";
 import { useState, useTransition } from "react";
 import { deleteNewsSource, toggleNewsSourceActive } from "../actions";
-import { sourceIconComponents } from "../icons";
+import { defaultSourceIcon, sourceIconComponents } from "../icons";
 import type { NewsSource, UserRole } from "../types";
 import { getBrandColorClass } from "../types";
 import { CategoryBadge } from "./category-badge";
@@ -230,7 +230,7 @@ function SourceTableRow({
   onEdit,
   onDelete,
 }: SourceTableRowProps) {
-  const IconComponent = sourceIconComponents[source.iconName];
+  const IconComponent = sourceIconComponents[source.iconName] ?? defaultSourceIcon;
   const colorClass = getBrandColorClass(source.brandColor);
 
   return (

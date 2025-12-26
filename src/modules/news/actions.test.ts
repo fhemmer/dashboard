@@ -68,48 +68,35 @@ describe("News Actions", () => {
       expect(result.error).toBeNull();
     });
 
-    it("filters out excluded sources for authenticated users", async () => {
+    it("filters out excluded sources at database level for authenticated users", async () => {
       mockGetUser.mockResolvedValueOnce({
         data: { user: { id: "user-123" } },
       });
+      // First call: get user exclusions
       mockFrom
-        .mockReturnValueOnce({
-          select: vi.fn().mockReturnValue({
-            order: vi.fn().mockReturnValue({
-              limit: vi.fn().mockResolvedValue({
-                data: [
-                  {
-                    id: "1",
-                    title: "Test News",
-                    summary: "Test summary",
-                    link: "https://example.com",
-                    image_url: null,
-                    published_at: "2025-12-20T10:00:00Z",
-                    source_id: "source-1",
-                    news_sources: {
-                      id: "source-1",
-                      name: "Test Source",
-                      icon_name: "rocket",
-                      brand_color: "orange",
-                      category: "dev",
-                    },
-                  },
-                ],
-                error: null,
-              }),
-            }),
-          }),
-        })
         .mockReturnValueOnce({
           select: vi.fn().mockReturnValue({
             eq: vi.fn().mockResolvedValue({
               data: [{ source_id: "source-1" }],
             }),
           }),
+        })
+        // Second call: get news items (already filtered by DB)
+        .mockReturnValueOnce({
+          select: vi.fn().mockReturnValue({
+            order: vi.fn().mockReturnValue({
+              limit: vi.fn().mockReturnValue({
+                not: vi.fn().mockResolvedValue({
+                  data: [], // Already filtered at DB level
+                  error: null,
+                }),
+              }),
+            }),
+          }),
         });
 
       const result = await getNewsItems();
-      expect(result.items).toHaveLength(0); // Filtered out
+      expect(result.items).toHaveLength(0); // Filtered out at DB level
     });
 
     it("returns empty array and error on database error", async () => {

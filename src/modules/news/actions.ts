@@ -20,10 +20,22 @@ export async function getNewsItems(): Promise<FetchNewsItemsResult> {
     data: { user },
   } = await supabase.auth.getUser();
 
+  // Get user's excluded sources first to filter at database level
+  let excludedSourceIds: string[] = [];
+  if (user) {
+    const { data: exclusions } = await supabase
+      .from("user_news_source_exclusions")
+      .select("source_id")
+      .eq("user_id", user.id);
+
+    if (exclusions) {
+      excludedSourceIds = exclusions.map((e) => e.source_id);
+    }
+  }
+
   // Build the query to get news items with source info
-  // We'll filter out excluded sources at the application level since
-  // Supabase doesn't support LEFT JOIN with null check in RLS easily
-  const { data: newsData, error: newsError } = await supabase
+  // Filter out excluded sources at database level for correct pagination
+  let query = supabase
     .from("news_items")
     .select(
       `
@@ -46,30 +58,20 @@ export async function getNewsItems(): Promise<FetchNewsItemsResult> {
     .order("published_at", { ascending: false })
     .limit(100);
 
+  // Apply source exclusions at database level if user has any
+  if (excludedSourceIds.length > 0) {
+    query = query.not("source_id", "in", `(${excludedSourceIds.join(",")})`);
+  }
+
+  const { data: newsData, error: newsError } = await query;
+
   if (newsError) {
     console.error("Failed to fetch news items:", newsError);
     return { items: [], error: newsError.message };
   }
 
-  // Get user's excluded sources if authenticated
-  let excludedSourceIds: Set<string> = new Set();
-  if (user) {
-    const { data: exclusions } = await supabase
-      .from("user_news_source_exclusions")
-      .select("source_id")
-      .eq("user_id", user.id);
-
-    if (exclusions) {
-      excludedSourceIds = new Set(exclusions.map((e) => e.source_id));
-    }
-  }
-
-  // Transform and filter the results
+  // Transform and filter items without valid source data
   const items: NewsItem[] = (newsData ?? [])
-    .filter((item) => {
-      // Filter out items from excluded sources
-      return !excludedSourceIds.has(item.source_id);
-    })
     .filter((item) => {
       // Filter out items without valid source data
       return item.news_sources !== null;
