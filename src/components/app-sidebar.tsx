@@ -29,6 +29,7 @@ import {
     Clock,
     GitPullRequest,
     LayoutDashboard,
+    Mail,
     Newspaper,
     User,
     Wallet,
@@ -42,6 +43,7 @@ const navigation = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
   { name: "Pull Requests", href: "/prs", icon: GitPullRequest },
   { name: "News", href: "/news", icon: Newspaper },
+  { name: "Mail", href: "/mail", icon: Mail },
   { name: "Expenditures", href: "/expenditures", icon: Wallet },
   { name: "Timers", href: "/timers", icon: Clock },
 ];
