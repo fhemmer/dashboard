@@ -1,0 +1,51 @@
+/**
+ * OpenRouter Client Configuration
+ * Provides access to various AI models via OpenRouter API
+ */
+
+import { createOpenRouter } from "@openrouter/ai-sdk-provider";
+
+function getOpenRouterClient() {
+  const apiKey = process.env.OPENROUTER_API_KEY;
+  if (!apiKey) {
+    throw new Error("OPENROUTER_API_KEY environment variable is not set");
+  }
+
+  return createOpenRouter({
+    apiKey,
+  });
+}
+
+let _openrouter: ReturnType<typeof createOpenRouter> | null = null;
+
+export function getOpenRouter() {
+  if (!_openrouter) {
+    _openrouter = getOpenRouterClient();
+  }
+  return _openrouter;
+}
+
+export const DEFAULT_MODEL = "anthropic/claude-sonnet-4-20250514";
+
+export const MODEL_PRICES: Record<string, { input: number; output: number }> = {
+  "anthropic/claude-sonnet-4-20250514": { input: 0.003, output: 0.015 },
+  "anthropic/claude-opus-4-20250514": { input: 0.015, output: 0.075 },
+  "openai/gpt-4o": { input: 0.005, output: 0.015 },
+  "openai/gpt-4o-mini": { input: 0.00015, output: 0.0006 },
+  "google/gemini-2.0-flash-001": { input: 0.0001, output: 0.0004 },
+};
+
+export function calculateCost(model: string, inputTokens: number, outputTokens: number): number {
+  const prices = MODEL_PRICES[model] ?? { input: 0.001, output: 0.002 };
+  return (inputTokens * prices.input + outputTokens * prices.output) / 1000;
+}
+
+export function getAvailableModels(): Array<{ id: string; name: string }> {
+  return [
+    { id: "anthropic/claude-sonnet-4-20250514", name: "Claude Sonnet 4" },
+    { id: "anthropic/claude-opus-4-20250514", name: "Claude Opus 4" },
+    { id: "openai/gpt-4o", name: "GPT-4o" },
+    { id: "openai/gpt-4o-mini", name: "GPT-4o Mini" },
+    { id: "google/gemini-2.0-flash-001", name: "Gemini 2.0 Flash" },
+  ];
+}

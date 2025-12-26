@@ -1,16 +1,225 @@
+$ vitest run --coverage
 
 [1m[46m RUN [49m[22m [36mv4.0.16 [39m[90mF:/github/HemSoft/dashboard[39m
       [2mCoverage enabled with [22m[33mv8[39m
 
- [32mΓ£ô[39m src/components/header.server.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 672[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m getStoredTheme returns null when window is undefined [33m 668[2mms[22m[39m
-stderr | src/app/page.test.tsx > Home Page > renders the dashboard with widgets
-<Home> is an async Client Component. Only Server Components can be async at the moment. This error is often caused by accidentally adding `'use client'` to a module that was originally written for the server.
+ [32mΓ£ô[39m src/components/header.server.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 1285[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m getStoredTheme returns null when window is undefined [33m 1282[2mms[22m[39m
+stderr | src/components/ui/sheet.test.tsx > Sheet > renders SheetContent with data-slot attribute
+`DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
 
-stderr | src/app/page.test.tsx > Home Page > renders the dashboard with widgets
-A component suspended inside an `act` scope, but the `act` call was not awaited. When testing React components that depend on asynchronous data, you must await the result:
+If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
 
-await act(() => ...)
+For more information, see https://radix-ui.com/primitives/docs/components/dialog
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+stderr | src/components/ui/sheet.test.tsx > Sheet > renders SheetClose with data-slot attribute
+`DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
+
+If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
+
+For more information, see https://radix-ui.com/primitives/docs/components/dialog
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+stderr | src/components/ui/sheet.test.tsx > Sheet > renders SheetHeader with data-slot attribute
+`DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
+
+If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
+
+For more information, see https://radix-ui.com/primitives/docs/components/dialog
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+stderr | src/components/ui/sheet.test.tsx > Sheet > renders SheetFooter with data-slot attribute
+`DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
+
+If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
+
+For more information, see https://radix-ui.com/primitives/docs/components/dialog
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+stderr | src/components/ui/sheet.test.tsx > Sheet > renders SheetTitle with data-slot attribute
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+stderr | src/components/ui/sheet.test.tsx > Sheet > renders SheetDescription with data-slot attribute
+`DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
+
+If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
+
+For more information, see https://radix-ui.com/primitives/docs/components/dialog
+
+stderr | src/components/ui/sheet.test.tsx > Sheet > renders content on left side
+`DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
+
+If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
+
+For more information, see https://radix-ui.com/primitives/docs/components/dialog
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+stderr | src/components/ui/sheet.test.tsx > Sheet > renders content on top side
+`DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
+
+If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
+
+For more information, see https://radix-ui.com/primitives/docs/components/dialog
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+stderr | src/components/ui/sheet.test.tsx > Sheet > renders content on bottom side
+`DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
+
+If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
+
+For more information, see https://radix-ui.com/primitives/docs/components/dialog
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+stderr | src/components/ui/sheet.test.tsx > Sheet > applies custom className to SheetContent
+`DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
+
+If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
+
+For more information, see https://radix-ui.com/primitives/docs/components/dialog
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+stderr | src/components/ui/sheet.test.tsx > Sheet > applies custom className to SheetHeader
+`DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
+
+If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
+
+For more information, see https://radix-ui.com/primitives/docs/components/dialog
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+stderr | src/components/ui/sheet.test.tsx > Sheet > applies custom className to SheetFooter
+`DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
+
+If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
+
+For more information, see https://radix-ui.com/primitives/docs/components/dialog
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+stderr | src/components/ui/sheet.test.tsx > Sheet > applies custom className to SheetTitle
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+stderr | src/components/ui/sheet.test.tsx > Sheet > applies custom className to SheetDescription
+`DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
+
+If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
+
+For more information, see https://radix-ui.com/primitives/docs/components/dialog
+
+stderr | src/components/ui/sheet.test.tsx > Sheet > closes when close button is clicked
+`DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
+
+If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
+
+For more information, see https://radix-ui.com/primitives/docs/components/dialog
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+ [32mΓ£ô[39m src/modules/timers/components/timer-alert-provider.test.tsx [2m([22m[2m13 tests[22m[2m)[22m[33m 499[2mms[22m[39m
+stderr | src/components/ui/sheet.test.tsx > Sheet > renders SheetOverlay with data-slot attribute
+`DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
+
+If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
+
+For more information, see https://radix-ui.com/primitives/docs/components/dialog
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+ [32mΓ£ô[39m src/components/ui/sheet.test.tsx [2m([22m[2m18 tests[22m[2m)[22m[33m 2611[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders Sheet with trigger and content [33m 333[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m closes when close button is clicked [33m 1148[2mms[22m[39m
+ [32mΓ£ô[39m src/components/app-sidebar.test.tsx [2m([22m[2m18 tests[22m[2m)[22m[33m 3905[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m highlights active link [33m 545[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m opens dropdown menu when user section is clicked [33m 534[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m has account settings link pointing to /account [33m 619[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m highlights active Expenditures link [33m 503[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/expenditures/components/expenditure-item.test.tsx [2m([22m[2m20 tests[22m[2m)[22m[33m 4285[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m shows billing month field when yearly cycle is selected [33m 487[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m hides billing month field when switching back to monthly [33m 584[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m saves yearly billing with billing month [33m 1444[2mms[22m[39m
+ [32mΓ£ô[39m src/components/font-picker.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 3591[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders select with all font options [33m 885[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders font preview buttons [33m 1937[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m calls setFont when preview button is clicked [33m 487[2mms[22m[39m
+stderr | src/components/landing/cta-section.test.tsx > CTASection > renders the section heading
+React does not recognize the `whileInView` prop on a DOM element. If you intentionally want it to appear in the DOM as a custom attribute, spell it as lowercase `whileinview` instead. If you accidentally passed it from a parent component, remove it from the DOM element.
+
+stderr | src/app/mail/settings/page.test.tsx > MailSettingsPage > Initial render > renders page title and back button
+An update to MailSettingsPage inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to MailSettingsPage inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+ [32mΓ£ô[39m src/app/prs/page.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 1841[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders page with PR tree [33m 1084[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m shows manage accounts button [33m 574[2mms[22m[39m
+stderr | src/components/landing/hero-section.test.tsx > HeroSection > renders the main headline
+React does not recognize the `whileHover` prop on a DOM element. If you intentionally want it to appear in the DOM as a custom attribute, spell it as lowercase `whilehover` instead. If you accidentally passed it from a parent component, remove it from the DOM element.
+
+ [32mΓ£ô[39m src/modules/news-sources/components/source-form.test.tsx [2m([22m[2m18 tests[22m[2m)[22m[33m 2881[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders Add Source button when creating [33m 418[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m calls onCancel when Cancel button is clicked [33m 310[2mms[22m[39m
+ [32mΓ£ô[39m src/app/account/github/page.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 1423[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders page with accounts list [33m 829[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m has connect button with OAuth URL [33m 519[2mms[22m[39m
+ [32mΓ£ô[39m src/components/theme-picker.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[33m 2991[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders select with all theme options [33m 846[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders theme preview buttons [33m 1300[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m calls setTheme when preview button is clicked [33m 537[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/github-prs/components/pr-widget.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 2077[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders widget with accounts [33m 1686[2mms[22m[39m
+stderr | src/app/mail/page.test.tsx > MailPageClient > Error handling > shows error when loading messages fails
+Error loading messages: Error: Failed to fetch messages
+    at loadMessages (F:/github/HemSoft/dashboard/src/app/mail/page.tsx:84:17)
+
+ [32mΓ£ô[39m src/components/landing/cta-section.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[33m 1228[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders Create Account button with correct link [33m 548[2mms[22m[39m
+stderr | src/modules/news-sources/components/source-list.test.tsx > SourceList > opens add dialog when Add Source is clicked
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+stderr | src/app/mail/page.test.tsx > MailPageClient > Error handling > shows error when bulk action fails
+Error performing bulk action: Error: Failed to perform action
+    at handleBulkAction (F:/github/HemSoft/dashboard/src/app/mail/page.tsx:141:15)
+
+stderr | src/components/landing/feature-section.test.tsx > FeatureSection > renders the section heading
+React does not recognize the `whileInView` prop on a DOM element. If you intentionally want it to appear in the DOM as a custom attribute, spell it as lowercase `whileinview` instead. If you accidentally passed it from a parent component, remove it from the DOM element.
+
+ [32mΓ£ô[39m src/components/ui/switch.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[33m 912[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders correctly [33m 476[2mms[22m[39m
+ [32mΓ£ô[39m src/components/ui/button.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 756[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders correctly [33m 472[2mms[22m[39m
+ [32mΓ£ô[39m src/app/mail/page.test.tsx [2m([22m[2m14 tests[22m[2m)[22m[33m 1589[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m shows empty state when no accounts exist [33m 562[2mms[22m[39m
+ [32mΓ£ô[39m src/components/ui/input.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 635[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m handles value changes [33m 433[2mms[22m[39m
+ [32mΓ£ô[39m src/components/dashboard-config-sheet.test.tsx [2m([22m[2m17 tests[22m[2m)[22m[33m 6209[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders the configure button [33m 303[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m toggles widget visibility when switch is clicked [33m 454[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m toggles disabled widget to enabled [33m 441[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m reverts toggle on server error [33m 590[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m resets local settings when sheet is reopened [33m 593[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m updates enabled count after toggle [33m 435[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m handles widget with invalid id gracefully [33m 355[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m calls updateWidgetOrder when drag ends with reorder [33m 507[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m does not call updateWidgetOrder when drag ends with no over target [32m 300[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m reverts order on server error during drag [33m 547[2mms[22m[39m
+ [32mΓ£ô[39m src/components/datetime-display.test.tsx [2m([22m[2m25 tests[22m[2m)[22m[33m 600[2mms[22m[39m
+ [32mΓ£ô[39m src/app/news/page.test.tsx [2m([22m[2m11 tests[22m[2m)[22m[33m 1461[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders back button [33m 578[2mms[22m[39m
+stderr | src/modules/news/components/mark-as-read-button.test.tsx > MarkAsReadButton > calls markNewsAsRead when clicked
 A suspended resource finished loading inside a test, but the event was not wrapped in act(...).
 
 When testing, code that resolves suspended data should be wrapped into act(...):
@@ -22,292 +231,1202 @@ act(() => {
 
 This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
 
- [31mΓ¥»[39m src/app/page.test.tsx [2m([22m[2m1 test[22m[2m | [22m[31m1 failed[39m[2m)[22m[32m 60[2mms[22m[39m
-[31m     [31m├ù[31m renders the dashboard with widgets[39m[32m 57[2mms[22m[39m
- [32mΓ£ô[39m src/components/font-picker.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 1829[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders select with all font options [33m 621[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders font preview buttons [33m 765[2mms[22m[39m
- [32mΓ£ô[39m src/components/ui/dropdown-menu.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 2115[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders correctly when triggered [33m 784[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders DropdownMenuGroup with data-slot attribute [33m 321[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders destructive variant correctly [33m 322[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders inset label correctly [33m 367[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders submenu with sub trigger and content [33m 317[2mms[22m[39m
- [31mΓ¥»[39m src/app/login/page.test.tsx [2m([22m[2m4 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 539[2mms[22m[39m
-[31m     [31m├ù[31m renders login form correctly[39m[32m 272[2mms[22m[39m
-     [32mΓ£ô[39m displays error message when error param is present[32m 99[2mms[22m[39m
-     [32mΓ£ô[39m displays success message when message param is present[32m 80[2mms[22m[39m
-     [32mΓ£ô[39m displays both error and message when both are present[32m 83[2mms[22m[39m
- [32mΓ£ô[39m src/components/theme-picker.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[33m 2162[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders select with all theme options [33m 586[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders theme preview buttons [33m 876[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m calls setTheme when preview button is clicked [33m 442[2mms[22m[39m
- [32mΓ£ô[39m src/lib/env.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 217[2mms[22m[39m
- [32mΓ£ô[39m src/app/prs/page.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 1449[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders page with PR tree [33m 803[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m shows manage accounts button [33m 438[2mms[22m[39m
- [32mΓ£ô[39m src/components/ui/alert.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 553[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders with default variant [33m 399[2mms[22m[39m
- [32mΓ£ô[39m src/modules/news/components/refresh-button.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[33m 957[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders with default state [33m 524[2mms[22m[39m
- [32mΓ£ô[39m src/modules/news/components/news-item.test.tsx [2m([22m[2m21 tests[22m[2m)[22m[33m 813[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m renders link with correct href [33m 404[2mms[22m[39m
- [32mΓ£ô[39m src/modules/github-prs/components/pr-widget.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 1748[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders widget with accounts [33m 1439[2mms[22m[39m
- [32mΓ£ô[39m src/modules/news/components/news-widget.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 1273[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders View All link [33m 1028[2mms[22m[39m
- [32mΓ£ô[39m src/modules/news/data.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 127[2mms[22m[39m
- [32mΓ£ô[39m src/components/ui/input.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 523[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m handles value changes [33m 376[2mms[22m[39m
- [32mΓ£ô[39m src/components/ui/button.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 734[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders correctly [33m 495[2mms[22m[39m
- [32mΓ£ô[39m src/lib/supabase/server.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 69[2mms[22m[39m
- [32mΓ£ô[39m src/modules/github-prs/actions.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 37[2mms[22m[39m
- [32mΓ£ô[39m src/app/auth/github/callback/route.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 150[2mms[22m[39m
- [32mΓ£ô[39m src/lib/supabase/client.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 21[2mms[22m[39m
- [32mΓ£ô[39m src/fonts/index.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 29[2mms[22m[39m
- [32mΓ£ô[39m src/app/account/github/page.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 1171[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders page with accounts list [33m 619[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m has connect button with OAuth URL [33m 471[2mms[22m[39m
- [32mΓ£ô[39m src/modules/github-prs/components/pr-tree.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 2195[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders account node with label and username [33m 611[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders multiple accounts [33m 341[2mms[22m[39m
- [32mΓ£ô[39m src/components/datetime-display.test.tsx [2m([22m[2m25 tests[22m[2m)[22m[33m 456[2mms[22m[39m
- [32mΓ£ô[39m src/lib/utils.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 24[2mms[22m[39m
- [32mΓ£ô[39m src/modules/news/lib/rss-parser.test.ts [2m([22m[2m58 tests[22m[2m)[22m[32m 49[2mms[22m[39m
- [32mΓ£ô[39m src/app/account/page.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 1986[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders account settings form correctly [33m 1508[2mms[22m[39m
- [32mΓ£ô[39m src/themes/index.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 22[2mms[22m[39m
- [32mΓ£ô[39m src/app/news/page.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 722[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders back button [33m 460[2mms[22m[39m
- [32mΓ£ô[39m src/components/ui/dialog.test.tsx [2m([22m[2m1 test[22m[2m)[22m[33m 585[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders correctly when triggered [33m 581[2mms[22m[39m
- [32mΓ£ô[39m src/components/ui/avatar.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 83[2mms[22m[39m
- [32mΓ£ô[39m src/components/header.test.tsx [2m([22m[2m21 tests[22m[2m)[22m[33m 532[2mms[22m[39m
- [32mΓ£ô[39m src/components/ui/badge.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 344[2mms[22m[39m
+stderr | src/app/signup/page.test.tsx > SignUpPage > renders signup form correctly
+React does not recognize the `whileHover` prop on a DOM element. If you intentionally want it to appear in the DOM as a custom attribute, spell it as lowercase `whilehover` instead. If you accidentally passed it from a parent component, remove it from the DOM element.
+
+ [32mΓ£ô[39m src/components/ui/alert.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 760[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders with default variant [33m 596[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/news/components/mark-as-read-button.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 783[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders button with correct text for 1 item [33m 527[2mms[22m[39m
+ [32mΓ£ô[39m src/app/signup/page.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 929[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders signup form correctly [33m 839[2mms[22m[39m
+ [32mΓ£ô[39m src/components/landing/feature-section.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 520[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/mail/components/bulk-action-bar.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 256[2mms[22m[39m
+stderr | src/app/login/page.test.tsx > LoginPage > renders login form correctly
+React does not recognize the `whileHover` prop on a DOM element. If you intentionally want it to appear in the DOM as a custom attribute, spell it as lowercase `whilehover` instead. If you accidentally passed it from a parent component, remove it from the DOM element.
+
+ [32mΓ£ô[39m src/modules/news-sources/components/admin-settings-form.test.tsx [2m([22m[2m17 tests[22m[2m)[22m[33m 1079[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m shows Saving... while submitting [33m 396[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/timers/components/timers-widget.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 613[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/mail/components/mail-list.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 214[2mms[22m[39m
+ [32mΓ£ô[39m src/components/landing/landing-footer.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[33m 1086[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders Sign Up link with correct href [33m 553[2mms[22m[39m
+ [32mΓ£ô[39m src/components/landing/hero-section.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 1609[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders Get Started button with correct link [33m 694[2mms[22m[39m
+ [32mΓ£ô[39m src/app/timers/page.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 382[2mms[22m[39m
+stderr | src/components/landing/landing-page.test.tsx > LandingPage > renders all sections
+React does not recognize the `whileHover` prop on a DOM element. If you intentionally want it to appear in the DOM as a custom attribute, spell it as lowercase `whilehover` instead. If you accidentally passed it from a parent component, remove it from the DOM element.
+React does not recognize the `whileInView` prop on a DOM element. If you intentionally want it to appear in the DOM as a custom attribute, spell it as lowercase `whileinview` instead. If you accidentally passed it from a parent component, remove it from the DOM element.
+
+stderr | src/modules/news-sources/components/source-list.test.tsx > SourceList > opens edit dialog when clicking edit button
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+ [32mΓ£ô[39m src/components/brightness-controls.test.tsx [2m([22m[2m11 tests[22m[2m | [22m[33m2 skipped[39m[2m)[22m[33m 974[2mms[22m[39m
+ [32mΓ£ô[39m src/components/ui/badge.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 538[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders as a child when asChild is true [33m 427[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/github-prs/components/pr-tree.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 2808[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders account node with label and username [33m 753[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m shows total PR count on account node [33m 355[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders multiple accounts [33m 486[2mms[22m[39m
+ [32mΓ£ô[39m src/app/login/page.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 1135[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders login form correctly [33m 942[2mms[22m[39m
+ [32mΓ£ô[39m src/components/landing/landing-page.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[33m 343[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/mail/components/account-card.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[32m 245[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/mail/components/mail-item.test.tsx [2m([22m[2m13 tests[22m[2m)[22m[33m 1195[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m should call onSelect when clicked [33m 448[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/timers/components/create-timer-dialog.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 6904[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m opens dialog when trigger clicked [33m 394[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m updates duration when preset clicked [32m 300[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m creates timer on form submit [33m 1030[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m closes dialog after successful create [33m 1274[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m disables submit when name is empty [33m 339[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m updates duration input correctly [33m 609[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m closes dialog when cancel clicked [33m 463[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m handles NaN duration input by defaulting to 1 minute [33m 397[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m does not submit when duration is invalid [33m 1672[2mms[22m[39m
+ [32mΓ£ô[39m src/components/dashboard-grid.test.tsx [2m([22m[2m17 tests[22m[2m)[22m[33m 467[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/news/components/refresh-button.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[33m 1211[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders with default state [33m 669[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/github-prs/components/pr-item.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[33m 832[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders as link to GitHub [33m 625[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/news/components/news-item.test.tsx [2m([22m[2m26 tests[22m[2m)[22m[33m 1010[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m renders link with correct href [33m 371[2mms[22m[39m
+stderr | src/modules/news-sources/components/source-list.test.tsx > SourceList > closes edit dialog and clears editing source when dialog is closed
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+ [32mΓ£ô[39m src/app/expenditures/page.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[32m 219[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/mail/components/mail-widget.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 244[2mms[22m[39m
+ [32mΓ£ô[39m src/components/header.test.tsx [2m([22m[2m22 tests[22m[2m)[22m[33m 772[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/expenditures/components/expenditures-widget.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[33m 1194[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders empty state when no sources [33m 839[2mms[22m[39m
+ [32mΓ£ô[39m src/components/ui/dialog.test.tsx [2m([22m[2m1 test[22m[2m)[22m[33m 749[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders correctly when triggered [33m 745[2mms[22m[39m
+ [32mΓ£ô[39m src/components/ui/select.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 839[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m renders with data-slot attribute [33m 582[2mms[22m[39m
+ [32mΓ£ô[39m src/components/sidebar-wrapper.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 733[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/news/components/news-widget.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 1411[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders View All link [33m 1141[2mms[22m[39m
+ [32mΓ£ô[39m src/components/ui/sidebar.test.tsx [2m([22m[2m61 tests[22m[2m)[22m[33m 841[2mms[22m[39m
+stderr | src/modules/news-sources/components/source-list.test.tsx > SourceList > reloads page on successful edit
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+ [32mΓ£ô[39m src/app/account/github/github-accounts-list.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[33m 2670[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m enters edit mode when clicking edit button [33m 949[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m saves label when clicking save button [33m 618[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m cancels edit when clicking cancel button [33m 495[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/timers/components/timer-card.test.tsx [2m([22m[2m29 tests[22m[2m)[22m[33m 5562[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m calls startTimer when Start button clicked [33m 585[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m calls deleteTimer when delete button clicked and confirmed [33m 323[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m updates timer when valid time is entered [33m 909[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m cancels editing on Escape key [33m 322[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m saves on Enter key [33m 489[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m does not update if value is invalid [33m 712[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/notifications/components/notification-bell-wrapper.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 4708[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders NotificationBell with notifications [33m 1146[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m calls dismissNotification when dismiss button clicked [33m 826[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m calls dismissAllNotifications when Clear all clicked [33m 1001[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m refreshes router after dismiss [33m 872[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m refreshes router after dismiss all [33m 740[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/mail/components/account-tabs.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 148[2mms[22m[39m
+ [32mΓ£ô[39m src/components/ui/dropdown-menu.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 2859[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders correctly when triggered [33m 1280[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders DropdownMenuGroup with data-slot attribute [33m 460[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders destructive variant correctly [33m 387[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders inset label correctly [33m 363[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders submenu with sub trigger and content [33m 364[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/news-sources/components/source-list.test.tsx [2m([22m[2m24 tests[22m[2m)[22m[33m 4883[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders source list with table [33m 639[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders Add Source button [33m 350[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m opens add dialog when Add Source is clicked [33m 723[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m opens edit dialog when clicking edit button [33m 340[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m closes edit dialog and clears editing source when dialog is closed [33m 721[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m reloads page on successful edit [33m 757[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/news/components/source-exclusion-settings.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 4576[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders manage sources button [33m 626[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m opens sheet when button is clicked [33m 517[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m displays all sources when sheet is open [33m 428[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders category labels [33m 304[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders switches for each source [33m 403[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m shows excluded source with correct switch state [33m 368[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m shows included source with correct switch state [33m 330[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m calls toggleSourceExclusion when switch is clicked [33m 421[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m updates UI when toggle succeeds [33m 525[2mms[22m[39m
+ [32mΓ£ô[39m src/components/ui/table.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 87[2mms[22m[39m
+ [32mΓ£ô[39m src/app/account/page.test.tsx [2m([22m[2m18 tests[22m[2m)[22m[33m 5768[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders account settings form correctly [33m 2220[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders password change section [33m 964[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/notifications/components/notification-item.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 501[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m calls onDismiss when dismiss button is clicked [33m 355[2mms[22m[39m
+stderr | src/app/mail/settings/page.test.tsx > MailSettingsPage > Error handling > shows error when loading accounts fails
+Failed to load mail accounts: Error: Network error
+    at F:/github/HemSoft/dashboard/src/app/mail/settings/page.test.tsx:408:45
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+ [32mΓ£ô[39m src/modules/notifications/components/notification-list.test.tsx [2m([22m[2m11 tests[22m[2m)[22m[33m 1208[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m shows Back to Dashboard link in empty state [33m 312[2mms[22m[39m
+ [32mΓ£ô[39m src/app/mail/settings/page.test.tsx [2m([22m[2m22 tests[22m[2m)[22m[33m 6856[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m renders page title and back button [33m 592[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m toggles add account form when button is clicked [33m 400[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m closes form when cancel is clicked [33m 609[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m shows error when required fields are empty [33m 450[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m creates account with form data [33m 566[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m shows error when account creation fails [33m 553[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m closes form and reloads accounts after successful creation [33m 478[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m changes provider when selected [33m 841[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m changes sync frequency when input is modified [33m 522[2mms[22m[39m
+ [32mΓ£ô[39m src/app/notifications/page.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 368[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/notifications/components/notification-bell.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 2809[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders bell icon [33m 520[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m opens dropdown when clicked [33m 578[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m shows empty state when no notifications [33m 369[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m shows Clear all button when there are notifications [33m 351[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m calls onDismissAll when Clear all is clicked [33m 381[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m shows View all link when count exceeds 10 [33m 309[2mms[22m[39m
 stderr | src/app/layout.test.tsx > RootLayout > renders correctly with children when logged in
 In HTML, <html> cannot be a child of <div>.
 This will cause a hydration error.
 
- [32mΓ£ô[39m src/proxy.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 22[2mms[22m[39m
- [32mΓ£ô[39m src/lib/supabase/admin.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 50[2mms[22m[39m
- [32mΓ£ô[39m src/lib/gravatar.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32mΓ£ô[39m src/app/layout.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 146[2mms[22m[39m
+ [32mΓ£ô[39m src/components/ui/progress.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 76[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/expenditures/components/add-expenditure-form.test.tsx [2m([22m[2m18 tests[22m[2m)[22m[33m 8649[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m renders add button when closed [33m 673[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m opens form when button clicked [33m 428[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m closes form when cancel clicked [33m 447[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m submits form with valid data [33m 436[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m closes form and resets on success [33m 392[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m shows error message on failure [33m 394[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m submits with optional fields [33m 366[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m resets form when reopened [33m 478[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m shows billing month field when yearly cycle is selected [33m 805[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m hides billing month field when switching back to monthly [33m 1131[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m submits yearly billing with billing month [33m 1039[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m clears billing month when switching to monthly [33m 1273[2mms[22m[39m
+ [32mΓ£ô[39m src/lib/news-fetcher/index.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 84[2mms[22m[39m
+stderr | src/modules/news-sources/actions.test.ts > news-sources actions > getNewsSources > includes inactive sources for admin
+Error in getNewsSources: TypeError: query.order is not a function
+    at Module.getNewsSources (F:/github/HemSoft/dashboard/src/modules/news-sources/actions.ts:75:41)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at F:/github/HemSoft/dashboard/src/modules/news-sources/actions.test.ts:209:7
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:20
+
+stderr | src/modules/news-sources/actions.test.ts > news-sources actions > getNewsSources > returns error on database failure
+Error fetching news sources: { message: 'DB error' }
+
+stderr | src/modules/news-sources/actions.test.ts > news-sources actions > getNewsSources > catches and returns thrown Error
+Error in getNewsSources: Error: Network error
+    at F:/github/HemSoft/dashboard/src/modules/news-sources/actions.test.ts:228:37
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+stderr | src/modules/news-sources/actions.test.ts > news-sources actions > getNewsSources > catches and returns unknown error
+Error in getNewsSources: Unknown failure
+
+stderr | src/modules/news-sources/actions.test.ts > news-sources actions > createNewsSource > returns error on database failure
+Error creating news source: { message: 'Insert failed' }
+
+stderr | src/modules/news-sources/actions.test.ts > news-sources actions > createNewsSource > catches and returns thrown Error
+Error in createNewsSource: Error: Network error
+    at F:/github/HemSoft/dashboard/src/modules/news-sources/actions.test.ts:324:45
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+stderr | src/modules/news-sources/actions.test.ts > news-sources actions > createNewsSource > catches and returns unknown error
+Error in createNewsSource: Unknown failure
+
+stderr | src/modules/news-sources/actions.test.ts > news-sources actions > updateNewsSource > returns error on database failure
+Error updating news source: { message: 'Update failed' }
+
+stderr | src/modules/news-sources/actions.test.ts > news-sources actions > updateNewsSource > catches and returns thrown Error
+Error in updateNewsSource: Error: Network error
+    at F:/github/HemSoft/dashboard/src/modules/news-sources/actions.test.ts:434:36
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+stderr | src/modules/news-sources/actions.test.ts > news-sources actions > updateNewsSource > catches and returns unknown error
+Error in updateNewsSource: Unknown failure
+
+stderr | src/modules/news-sources/actions.test.ts > news-sources actions > deleteNewsSource > returns error on database failure
+Error deleting news source: { message: 'Delete failed' }
+
+stderr | src/modules/news-sources/actions.test.ts > news-sources actions > deleteNewsSource > catches and returns thrown Error
+Error in deleteNewsSource: Error: Network error
+    at F:/github/HemSoft/dashboard/src/modules/news-sources/actions.test.ts:524:36
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+stderr | src/modules/news-sources/actions.test.ts > news-sources actions > deleteNewsSource > catches and returns unknown error
+Error in deleteNewsSource: Unknown failure
+
+stderr | src/modules/news-sources/actions.test.ts > news-sources actions > getSystemSetting > returns error on database failure
+Error fetching system setting: { message: 'DB error' }
+
+stderr | src/modules/news-sources/actions.test.ts > news-sources actions > getSystemSetting > catches and returns thrown Error
+Error in getSystemSetting: Error: Network error
+    at F:/github/HemSoft/dashboard/src/modules/news-sources/actions.test.ts:614:37
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+stderr | src/modules/news-sources/actions.test.ts > news-sources actions > getSystemSetting > catches and returns unknown error
+Error in getSystemSetting: Unknown failure
+
+stderr | src/modules/news-sources/actions.test.ts > news-sources actions > updateSystemSetting > returns error on database failure
+Error updating system setting: { message: 'Upsert failed' }
+
+stderr | src/modules/news-sources/actions.test.ts > news-sources actions > updateSystemSetting > catches and returns thrown Error
+Error in updateSystemSetting: Error: Network error
+    at F:/github/HemSoft/dashboard/src/modules/news-sources/actions.test.ts:675:39
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+stderr | src/modules/news-sources/actions.test.ts > news-sources actions > updateSystemSetting > catches and returns unknown error
+Error in updateSystemSetting: Unknown failure
+
+stderr | src/modules/news-sources/actions.test.ts > news-sources actions > getSystemSettings > returns error on database failure
+Error fetching system settings: { message: 'DB error' }
+
+stderr | src/modules/news-sources/actions.test.ts > news-sources actions > getSystemSettings > catches and returns thrown Error
+Error in getSystemSettings: Error: Network error
+    at F:/github/HemSoft/dashboard/src/modules/news-sources/actions.test.ts:796:37
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+stderr | src/modules/news-sources/actions.test.ts > news-sources actions > getSystemSettings > catches and returns unknown error
+Error in getSystemSettings: Unknown failure
+
+ [32mΓ£ô[39m src/modules/news-sources/actions.test.ts [2m([22m[2m56 tests[22m[2m)[22m[32m 66[2mms[22m[39m
+ [32mΓ£ô[39m src/lib/supabase/server.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 21[2mms[22m[39m
+ [32mΓ£ô[39m src/components/ui/card.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 55[2mms[22m[39m
+ [32mΓ£ô[39m src/hooks/use-theme.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 63[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/github-prs/actions.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 21[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/mail/lib/rate-limiter.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 58[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/news-sources/components/category-badge.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[32m 69[2mms[22m[39m
+ [32mΓ£ô[39m src/hooks/use-sidebar-width.test.ts [2m([22m[2m24 tests[22m[2m)[22m[32m 50[2mms[22m[39m
+ [32mΓ£ô[39m src/lib/brightness.test.ts [2m([22m[2m61 tests[22m[2m)[22m[32m 32[2mms[22m[39m
+ [32mΓ£ô[39m src/hooks/use-font.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 70[2mms[22m[39m
+ [32mΓ£ô[39m src/app/auth/github/callback/route.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 80[2mms[22m[39m
+ [32mΓ£ô[39m src/components/ui/avatar.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 93[2mms[22m[39m
+ [32mΓ£ô[39m src/lib/news-fetcher/parser.test.ts [2m([22m[2m24 tests[22m[2m)[22m[32m 33[2mms[22m[39m
+stderr | src/modules/mail/lib/imap-client.test.ts > imap-client > getImapUnreadCount > should return 0 when IMAP_HOST is not configured
+IMAP host not configured
+
+stderr | src/modules/mail/lib/imap-client.test.ts > imap-client > getImapUnreadCount > should return 0 on exception
+Error fetching IMAP unread count: Error: Token error
+    at F:/github/HemSoft/dashboard/src/modules/mail/lib/imap-client.test.ts:65:38
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+stderr | src/modules/mail/lib/imap-client.test.ts > imap-client > getImapMessages > should return empty array on exception
+Error fetching IMAP messages: Error: IMAP error
+    at F:/github/HemSoft/dashboard/src/modules/mail/lib/imap-client.test.ts:89:38
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+stderr | src/modules/mail/lib/imap-client.test.ts > imap-client > performImapBulkAction > should return failure on exception
+Error performing IMAP bulk action: Error: Network error
+    at F:/github/HemSoft/dashboard/src/modules/mail/lib/imap-client.test.ts:131:38
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+stderr | src/modules/mail/lib/imap-client.test.ts > imap-client > searchImapMessages > should return error on exception
+Error searching IMAP messages: Error: Search failed
+    at F:/github/HemSoft/dashboard/src/modules/mail/lib/imap-client.test.ts:172:38
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+stderr | src/modules/mail/lib/imap-client.test.ts > imap-client > getImapFolders > should return empty array on exception
+Error fetching IMAP folders: Error: IMAP error
+    at F:/github/HemSoft/dashboard/src/modules/mail/lib/imap-client.test.ts:202:38
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+ [32mΓ£ô[39m src/modules/mail/lib/imap-client.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 49[2mms[22m[39m
+stderr | src/lib/resend.test.ts > resend > sendEmail > throws error when send fails
+Failed to send email: { message: 'Invalid API key' }
+
+ [32mΓ£ô[39m src/lib/resend.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 43[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/expenditures/types.test.ts [2m([22m[2m24 tests[22m[2m)[22m[32m 45[2mms[22m[39m
+ [32mΓ£ô[39m src/components/icons/google-icon.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 43[2mms[22m[39m
+stderr | src/modules/mail/actions.test.ts > mail actions > getMailAccounts > should return error when database query fails
+Error fetching mail accounts: { message: 'DB error' }
+
+stderr | src/modules/mail/actions.test.ts > mail actions > createMailAccount > should return error when database insert fails
+Error creating mail account: { message: 'Insert failed' }
+
+stderr | src/modules/mail/actions.test.ts > mail actions > updateMailAccount > should return error when database update fails
+Error updating mail account: { message: 'Update failed' }
+
+stderr | src/modules/mail/actions.test.ts > mail actions > deleteMailAccount > should return error when database delete fails
+Error deleting mail account: { message: 'Delete failed' }
+
+stderr | src/modules/mail/actions.test.ts > mail actions > getMailSummary > should return error when getMailAccounts fails
+Error fetching mail accounts: { message: 'DB error' }
+
+stderr | src/modules/mail/actions.test.ts > mail actions > getMailSummary > should handle errors when fetching unread counts
+Error fetching unread count for acc-1: Error: API error
+    at F:/github/HemSoft/dashboard/src/modules/mail/actions.test.ts:375:58
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:20
+
+ [32mΓ£ô[39m src/modules/mail/actions.test.ts [2m([22m[2m24 tests[22m[2m)[22m[32m 45[2mms[22m[39m
+stderr | src/modules/timers/actions.test.ts > timers actions > getTimers > returns error on database failure
+Error fetching timers: { message: 'Database error' }
+
+stderr | src/modules/timers/actions.test.ts > timers actions > createTimer > handles database error on create
+Error creating timer: { message: 'Insert failed' }
+
+stderr | src/modules/timers/actions.test.ts > timers actions > updateTimer > handles database error on update
+Error updating timer: { message: 'Update failed' }
+
+stderr | src/modules/timers/actions.test.ts > timers actions > deleteTimer > handles database error on delete
+Error deleting timer: { message: 'Delete failed' }
+
+ [32mΓ£ô[39m src/hooks/use-mobile.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 53[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/timers/actions.test.ts [2m([22m[2m33 tests[22m[2m)[22m[32m 38[2mms[22m[39m
+stderr | src/modules/notifications/actions.test.ts > notifications actions > getNotifications > returns error on database failure
+Error fetching notifications: { message: 'DB error' }
+
+stderr | src/app/api/mail/bulk-action/route.test.ts > mail bulk-action route > POST > should return 500 on unexpected error
+Error in /api/mail/bulk-action: Error: Database error
+    at F:/github/HemSoft/dashboard/src/app/api/mail/bulk-action/route.test.ts:249:42
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+stderr | src/modules/notifications/actions.test.ts > notifications actions > getNotifications > catches and returns thrown Error
+Error in getNotifications: Error: Network error
+    at F:/github/HemSoft/dashboard/src/modules/notifications/actions.test.ts:114:37
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+stderr | src/modules/notifications/actions.test.ts > notifications actions > getNotifications > catches and returns unknown error
+Error in getNotifications: Unknown failure
+
+stderr | src/modules/notifications/actions.test.ts > notifications actions > getUnreadCount > returns 0 on error
+Error fetching notification count: { message: 'DB error' }
+
+stderr | src/modules/notifications/actions.test.ts > notifications actions > getUnreadCount > catches and returns thrown Error
+Error in getUnreadCount: Error: Network error
+    at F:/github/HemSoft/dashboard/src/modules/notifications/actions.test.ts:165:37
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+stderr | src/modules/notifications/actions.test.ts > notifications actions > getUnreadCount > catches and returns unknown error
+Error in getUnreadCount: Unknown failure
+
+stderr | src/modules/notifications/actions.test.ts > notifications actions > dismissNotification > returns error on database failure
+Error dismissing notification: { message: 'Delete failed' }
+
+stderr | src/modules/notifications/actions.test.ts > notifications actions > dismissNotification > catches and returns thrown Error
+Error in dismissNotification: Error: Network error
+    at F:/github/HemSoft/dashboard/src/modules/notifications/actions.test.ts:218:37
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+stderr | src/modules/notifications/actions.test.ts > notifications actions > dismissNotification > catches and returns unknown error
+Error in dismissNotification: Unknown failure
+
+stderr | src/modules/notifications/actions.test.ts > notifications actions > dismissAllNotifications > returns error on database failure
+Error dismissing all notifications: { message: 'Delete failed' }
+
+stderr | src/modules/notifications/actions.test.ts > notifications actions > dismissAllNotifications > catches and returns thrown Error
+Error in dismissAllNotifications: Error: Network error
+    at F:/github/HemSoft/dashboard/src/modules/notifications/actions.test.ts:265:37
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+stderr | src/modules/notifications/actions.test.ts > notifications actions > dismissAllNotifications > catches and returns unknown error
+Error in dismissAllNotifications: Unknown failure
+
+stderr | src/modules/notifications/actions.test.ts > notifications actions > dismissNotificationsByType > returns error on database failure
+Error dismissing notifications by type: { message: 'Delete failed' }
+
+stderr | src/modules/notifications/actions.test.ts > notifications actions > dismissNotificationsByType > catches and returns thrown Error
+Error in dismissNotificationsByType: Error: Network error
+    at F:/github/HemSoft/dashboard/src/modules/notifications/actions.test.ts:316:37
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+stderr | src/modules/notifications/actions.test.ts > notifications actions > dismissNotificationsByType > catches and returns unknown error
+Error in dismissNotificationsByType: Unknown failure
+
+ [32mΓ£ô[39m src/components/ui/separator.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 57[2mms[22m[39m
+ [32mΓ£ô[39m src/app/api/mail/bulk-action/route.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 46[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/notifications/actions.test.ts [2m([22m[2m26 tests[22m[2m)[22m[32m 43[2mms[22m[39m
+ [32mΓ£ô[39m src/app/page.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 79[2mms[22m[39m
+stderr | src/app/api/mail/oauth/callback/route.test.ts > mail oauth callback route > GET > should redirect to internal_error on unexpected error
+Error in /api/mail/oauth/callback: Error: Database error
+    at F:/github/HemSoft/dashboard/src/app/api/mail/oauth/callback/route.test.ts:326:42
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+ [32mΓ£ô[39m src/components/ui/skeleton.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 76[2mms[22m[39m
+ [32mΓ£ô[39m src/app/api/mail/oauth/callback/route.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 43[2mms[22m[39m
+stderr | src/modules/mail/lib/gmail-client.test.ts > gmail-client > getGmailUnreadCount > should return 0 on exception
+Error fetching Gmail unread count: Error: Token error
+    at F:/github/HemSoft/dashboard/src/modules/mail/lib/gmail-client.test.ts:61:38
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+stderr | src/modules/mail/lib/gmail-client.test.ts > gmail-client > getGmailMessages > should return empty array on exception
+Error fetching Gmail messages: Error: API error
+    at F:/github/HemSoft/dashboard/src/modules/mail/lib/gmail-client.test.ts:93:38
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+stderr | src/modules/mail/lib/gmail-client.test.ts > gmail-client > performGmailBulkAction > should return failure on exception
+Error performing Gmail bulk action: Error: Network error
+    at F:/github/HemSoft/dashboard/src/modules/mail/lib/gmail-client.test.ts:137:38
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+stderr | src/modules/mail/lib/gmail-client.test.ts > gmail-client > searchGmailMessages > should return error on exception
+Error searching Gmail messages: Error: Search failed
+    at F:/github/HemSoft/dashboard/src/modules/mail/lib/gmail-client.test.ts:191:38
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+stderr | src/modules/mail/lib/gmail-client.test.ts > gmail-client > getGmailFolders > should return empty array on exception
+Error fetching Gmail folders: Error: API error
+    at F:/github/HemSoft/dashboard/src/modules/mail/lib/gmail-client.test.ts:229:38
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+stderr | src/app/api/mail/search/route.test.ts > mail search route > POST > should return 500 on unexpected error
+Error in /api/mail/search: Error: Database error
+    at F:/github/HemSoft/dashboard/src/app/api/mail/search/route.test.ts:226:42
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+stderr | src/lib/redis.test.ts > redis > getRedisClient > should return null when credentials are not configured
+Redis credentials not configured. Caching will be disabled.
+
+stderr | src/lib/redis.test.ts > redis > getRedisClient > should return null when URL is missing
+Redis credentials not configured. Caching will be disabled.
+
+stderr | src/lib/redis.test.ts > redis > getRedisClient > should return null when token is missing
+Redis credentials not configured. Caching will be disabled.
+
+stderr | src/lib/redis.test.ts > redis > getCache > should return null when Redis client is unavailable
+Redis credentials not configured. Caching will be disabled.
+
+ [32mΓ£ô[39m src/modules/mail/lib/gmail-client.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 33[2mms[22m[39m
+stderr | src/lib/redis.test.ts > redis > getCache > should return null when Redis get throws error
+Redis get error: Error: Redis error
+    at F:/github/HemSoft/dashboard/src/lib/redis.test.ts:90:33
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+stderr | src/lib/redis.test.ts > redis > setCache > should return false when Redis client is unavailable
+Redis credentials not configured. Caching will be disabled.
+
+stderr | src/lib/redis.test.ts > redis > setCache > should return false when Redis set throws error
+Redis set error: Error: Redis error
+    at F:/github/HemSoft/dashboard/src/lib/redis.test.ts:124:33
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+stderr | src/lib/redis.test.ts > redis > deleteCache > should return false when Redis client is unavailable
+Redis credentials not configured. Caching will be disabled.
+
+ [32mΓ£ô[39m src/app/api/mail/search/route.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 49[2mms[22m[39m
+stderr | src/lib/redis.test.ts > redis > deleteCache > should return false when Redis delete throws error
+Redis delete error: Error: Redis error
+    at F:/github/HemSoft/dashboard/src/lib/redis.test.ts:149:33
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+stderr | src/lib/redis.test.ts > redis > deleteCachePattern > should return 0 when Redis client is unavailable
+Redis credentials not configured. Caching will be disabled.
+
+stderr | src/lib/redis.test.ts > redis > deleteCachePattern > should return 0 when Redis throws error
+Redis delete pattern error: Error: Redis error
+    at F:/github/HemSoft/dashboard/src/lib/redis.test.ts:187:34
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+ [32mΓ£ô[39m src/lib/redis.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 36[2mms[22m[39m
+stderr | src/modules/news/actions.test.ts > News Actions > getNewsItems > returns empty array and error on database error
+Failed to fetch news items: { message: 'Database error' }
+
+stderr | src/modules/news/actions.test.ts > News Actions > markNewsAsRead > returns false when update fails
+Failed to mark news as read: Error: Update failed
+    at F:/github/HemSoft/dashboard/src/modules/news/actions.test.ts:208:50
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+stderr | src/modules/news/actions.test.ts > News Actions > getSourcesWithExclusion > returns error when fetching sources fails
+Failed to fetch news sources: { message: 'Database error' }
+
+stderr | src/modules/news/actions.test.ts > News Actions > toggleSourceExclusion > returns failure when add exclusion fails with desiredExcluded=true
+Failed to add source exclusion: { message: 'Upsert failed' }
+
+stderr | src/modules/news/actions.test.ts > News Actions > toggleSourceExclusion > returns failure when remove exclusion fails with desiredExcluded=false
+Failed to remove source exclusion: { message: 'Delete failed' }
+
+stderr | src/modules/news/actions.test.ts > News Actions > excludeSource > returns failure when upsert fails
+Failed to exclude source: { message: 'Upsert failed' }
+
+stderr | src/modules/news/actions.test.ts > News Actions > includeSource > returns failure when delete fails
+Failed to include source: { message: 'Delete failed' }
+
+stderr | src/modules/expenditures/actions.test.ts > expenditures actions > getExpenditures > returns error when database query fails
+Error fetching expenditures: { message: 'DB error' }
+
+stderr | src/modules/expenditures/actions.test.ts > expenditures actions > createExpenditureSource > returns error when insert fails
+Error creating expenditure source: { message: 'Insert failed' }
+
+stderr | src/modules/expenditures/actions.test.ts > expenditures actions > updateExpenditureSource > returns error when update fails
+Error updating expenditure source: { message: 'Update failed' }
+
+ [32mΓ£ô[39m src/modules/news/actions.test.ts [2m([22m[2m28 tests[22m[2m)[22m[32m 51[2mms[22m[39m
+stderr | src/modules/expenditures/actions.test.ts > expenditures actions > deleteExpenditureSource > returns error when delete fails
+Error deleting expenditure source: { message: 'Delete failed' }
+
+ [32mΓ£ô[39m src/modules/expenditures/actions.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 31[2mms[22m[39m
+stderr | src/modules/mail/lib/token-manager.test.ts > token-manager > storeToken > should handle insert error
+Error inserting token: { message: 'Insert failed' }
+
+stderr | src/modules/mail/lib/token-manager.test.ts > token-manager > storeToken > should handle update error
+Error updating token: { message: 'Update failed' }
+
+stderr | src/modules/mail/lib/token-manager.test.ts > token-manager > storeToken > should handle exception during token storage
+Error storing token: Error: Connection error
+    at F:/github/HemSoft/dashboard/src/modules/mail/lib/token-manager.test.ts:142:42
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+stderr | src/modules/mail/lib/token-manager.test.ts > token-manager > getToken > should return null when token not found
+Error fetching token: { message: 'Not found' }
+
+stderr | src/modules/mail/lib/token-manager.test.ts > token-manager > getToken > should handle exception during token retrieval
+Error retrieving token: Error: DB error
+    at F:/github/HemSoft/dashboard/src/modules/mail/lib/token-manager.test.ts:233:42
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+stderr | src/modules/mail/lib/token-manager.test.ts > token-manager > deleteToken > should handle delete error
+Error deleting token: { message: 'Delete failed' }
+
+stderr | src/modules/mail/lib/token-manager.test.ts > token-manager > deleteToken > should handle exception during deletion
+Error deleting token: Error: Connection lost
+    at F:/github/HemSoft/dashboard/src/modules/mail/lib/token-manager.test.ts:267:42
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+ [32mΓ£ô[39m src/modules/mail/lib/token-manager.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 42[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/news/components/auto-mark-as-read.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[32m 60[2mms[22m[39m
+stderr | src/app/api/mail/empty-folder/route.test.ts > mail empty-folder route > DELETE > should return 500 on unexpected error
+Error in /api/mail/empty-folder: Error: Database error
+    at F:/github/HemSoft/dashboard/src/app/api/mail/empty-folder/route.test.ts:158:42
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+stderr | src/modules/mail/lib/outlook-client.test.ts > outlook-client > getOutlookUnreadCount > should return 0 on exception
+Error fetching Outlook unread count: Error: Token error
+    at F:/github/HemSoft/dashboard/src/modules/mail/lib/outlook-client.test.ts:61:38
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+stderr | src/modules/mail/lib/outlook-client.test.ts > outlook-client > getOutlookMessages > should return empty array on exception
+Error fetching Outlook messages: Error: API error
+    at F:/github/HemSoft/dashboard/src/modules/mail/lib/outlook-client.test.ts:93:38
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+stderr | src/modules/mail/lib/outlook-client.test.ts > outlook-client > performOutlookBulkAction > should return failure on exception
+Error performing Outlook bulk action: Error: Network error
+    at F:/github/HemSoft/dashboard/src/modules/mail/lib/outlook-client.test.ts:137:38
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+ [32mΓ£ô[39m src/app/account/actions.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 29[2mms[22m[39m
+stderr | src/modules/mail/lib/outlook-client.test.ts > outlook-client > searchOutlookMessages > should return error on exception
+Error searching Outlook messages: Error: Search failed
+    at F:/github/HemSoft/dashboard/src/modules/mail/lib/outlook-client.test.ts:191:38
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+stderr | src/modules/mail/lib/outlook-client.test.ts > outlook-client > getOutlookFolders > should return empty array on exception
+Error fetching Outlook folders: Error: API error
+    at F:/github/HemSoft/dashboard/src/modules/mail/lib/outlook-client.test.ts:229:38
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+ [32mΓ£ô[39m src/app/api/mail/empty-folder/route.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 28[2mms[22m[39m
+stderr | src/app/api/mail/messages/route.test.ts > mail messages route > GET > should return 500 on unexpected error
+Error in /api/mail/messages: Error: Database error
+    at F:/github/HemSoft/dashboard/src/app/api/mail/messages/route.test.ts:262:42
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+stderr | src/app/api/cron/fetch-news/route.test.ts > fetch-news route > POST > should handle unexpected errors
+Fetch news cron error: Error: Database connection failed
+    at F:/github/HemSoft/dashboard/src/app/api/cron/fetch-news/route.test.ts:181:15
+    at Mock (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/spy/dist/index.js:285:34)
+    at Module.POST (F:/github/HemSoft/dashboard/src/app/api/cron/fetch-news/route.ts:26:22)
+    at F:/github/HemSoft/dashboard/src/app/api/cron/fetch-news/route.test.ts:191:30
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+
+stderr | src/app/api/cron/fetch-news/route.test.ts > fetch-news route > POST > should handle non-Error thrown values
+Fetch news cron error: String error
+
+ [32mΓ£ô[39m src/modules/mail/lib/outlook-client.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 34[2mms[22m[39m
+ [32mΓ£ô[39m src/app/api/mail/messages/route.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 39[2mms[22m[39m
+ [32mΓ£ô[39m src/app/api/cron/fetch-news/route.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+ [32mΓ£ô[39m src/fonts/index.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+ [32mΓ£ô[39m src/app/auth/actions.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+ [32mΓ£ô[39m src/lib/crypto.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+ [32mΓ£ô[39m src/proxy.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 24[2mms[22m[39m
+ [32mΓ£ô[39m src/lib/supabase/client.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 25[2mms[22m[39m
+stderr | src/app/api/mail/summary/route.test.ts > mail summary route > GET > should return 500 on unexpected error
+Error in /api/mail/summary: Error: Database error
+    at F:/github/HemSoft/dashboard/src/app/api/mail/summary/route.test.ts:134:42
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+ [32mΓ£ô[39m src/app/api/mail/summary/route.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 29[2mms[22m[39m
+ [32mΓ£ô[39m src/lib/supabase/admin.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/github-prs/lib/github-client.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32mΓ£ô[39m src/themes/index.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/timers/types.test.ts [2m([22m[2m28 tests[22m[2m)[22m[32m 15[2mms[22m[39m
  [32mΓ£ô[39m src/modules/github-prs/types.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 12[2mms[22m[39m
- [32mΓ£ô[39m src/modules/news/lib/sources.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 10[2mms[22m[39m
- [32mΓ£ô[39m src/modules/github-prs/lib/github-client.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 19[2mms[22m[39m
- [32mΓ£ô[39m src/modules/news/actions.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 11[2mms[22m[39m
- [32mΓ£ô[39m src/app/actions.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 13[2mms[22m[39m
- [32mΓ£ô[39m src/app/layout.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 93[2mms[22m[39m
- [32mΓ£ô[39m src/app/auth/actions.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 18[2mms[22m[39m
- [32mΓ£ô[39m src/app/account/actions.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 29[2mms[22m[39m
- [32mΓ£ô[39m src/hooks/use-theme.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 70[2mms[22m[39m
- [32mΓ£ô[39m src/modules/news/lib/fetcher.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 20[2mms[22m[39m
- [32mΓ£ô[39m src/components/ui/table.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 86[2mms[22m[39m
- [32mΓ£ô[39m src/app/account/github/github-accounts-list.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[33m 1436[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m enters edit mode when clicking edit button [33m 565[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m saves label when clicking save button [33m 313[2mms[22m[39m
- [32mΓ£ô[39m src/components/sidebar-wrapper.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 478[2mms[22m[39m
- [32mΓ£ô[39m src/app/auth/callback/route.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 11[2mms[22m[39m
- [32mΓ£ô[39m src/hooks/use-font.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 59[2mms[22m[39m
- [32mΓ£ô[39m src/hooks/use-sidebar-width.test.ts [2m([22m[2m24 tests[22m[2m)[22m[32m 57[2mms[22m[39m
- [32mΓ£ô[39m src/components/ui/card.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 61[2mms[22m[39m
- [32mΓ£ô[39m src/components/ui/separator.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 43[2mms[22m[39m
- [32mΓ£ô[39m src/modules/github-prs/components/pr-item.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[33m 350[2mms[22m[39m
- [32mΓ£ô[39m src/modules/news/lib/source-branding.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[32m 65[2mms[22m[39m
- [32mΓ£ô[39m src/modules/github-prs/index.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 5[2mms[22m[39m
- [32mΓ£ô[39m src/app/signup/page.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 422[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders signup form correctly [33m 359[2mms[22m[39m
- [32mΓ£ô[39m src/components/app-sidebar.test.tsx [2m([22m[2m19 tests[22m[2m)[22m[33m 2353[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m has dropdown menu trigger for user section [33m 530[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m opens dropdown menu when user section is clicked [33m 650[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m has account settings link pointing to /account [33m 443[2mms[22m[39m
+ [32mΓ£ô[39m src/lib/utils.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/mail/lib/cache.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32mΓ£ô[39m src/lib/gravatar.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32mΓ£ô[39m src/app/actions.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/notifications/types.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32mΓ£ô[39m src/app/auth/callback/route.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/news-sources/icons.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/news-sources/types.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32mΓ£ô[39m src/lib/widgets/types.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32mΓ£ô[39m src/app/news-sources/page.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32mΓ£ô[39m src/app/actions.dashboard.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32mΓ£ô[39m src/lib/widgets/registry.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32mΓ£ô[39m src/lib/news-fetcher/types.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/mail/types.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/notifications/components/notification-bell-server.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 40[2mms[22m[39m
+ [32mΓ£ô[39m src/lib/env.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/news-sources/index.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/timers/index.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/expenditures/index.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/news/index.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/github-prs/index.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32mΓ£ô[39m src/components/landing/index.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/notifications/index.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 6[2mms[22m[39m
 
-ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ» Failed Tests 2 ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»
+[2m Test Files [22m [1m[32m141 passed[39m[22m[90m (141)[39m
+[2m      Tests [22m [1m[32m1666 passed[39m[22m[2m | [22m[33m2 skipped[39m[90m (1668)[39m
+[2m   Start at [22m 15:36:29
+[2m   Duration [22m 46.39s[2m (transform 16.38s, setup 104.89s, import 186.32s, tests 127.93s, environment 2015.67s)[22m
 
- FAIL  src/app/page.test.tsx > Home Page > renders the dashboard with widgets
-TestingLibraryElementError: Unable to find an element with the text: Dashboard. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
-
-Ignored nodes: comments, script, style
-<body>
-  <div />
-</body>
- Γ¥» Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
- Γ¥» node_modules/@testing-library/dom/dist/query-helpers.js:76:38
- Γ¥» node_modules/@testing-library/dom/dist/query-helpers.js:52:17
- Γ¥» node_modules/@testing-library/dom/dist/query-helpers.js:95:19
- Γ¥» src/app/page.test.tsx:17:19
-     15|     render(<Home />)
-     16| 
-     17|     expect(screen.getByText('Dashboard')).toBeDefined()
-       |                   ^
-     18|     expect(screen.getByText('Your personal dashboard overview.')).toBeΓÇª
-     19|     expect(screen.getByTestId('news-widget')).toBeDefined()
-
-ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[1/2]ΓÄ»
-
- FAIL  src/app/login/page.test.tsx > LoginPage > renders login form correctly
-TestingLibraryElementError: Unable to find an element with the text: Login. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
-
-Ignored nodes: comments, script, style
-<body>
-  <div>
-    <div
-      class="flex min-h-screen"
-    >
-      <div
-        class="relative hidden w-1/2 overflow-hidden lg:flex lg:items-center lg:justify-center"
-      >
-        <div
-          class="absolute inset-0 -z-10"
-        >
-          <div
-            class="absolute left-1/4 top-1/4 size-96 rounded-full bg-primary/10 blur-[120px]"
-          />
-          <div
-            class="absolute bottom-1/4 right-1/4 size-64 rounded-full bg-primary/5 blur-[100px]"
-          />
-        </div>
-        <div
-          class="relative"
-          style="opacity: 0; transform: scale(0.9);"
-        >
-          <div
-            class="relative h-[400px] w-full"
-            style="perspective: 1000px;"
-          >
-            <div
-              class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-            >
-              <div
-                class="size-32 rounded-full bg-primary/30 blur-3xl"
-              />
-            </div>
-            <div
-              class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-            >
-              <div
-                class="size-64 rounded-full border border-primary/20"
-              />
-            </div>
-            <div
-              class="absolute left-1/2 top-1/2 -ml-24 -mt-12 w-48 rounded-xl border bg-card/60 p-4 shadow-lg backdrop-blur-xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20"
-              style="transform-style: preserve-3d; opacity: 0; transform: translateX(120px) scale(0.8);"
-            >
-              <div
-                class="flex items-center gap-3"
-              >
-                <div
-                  class="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary"
-                >
-                  <svg
-                    aria-hidden="true"
-                    class="lucide lucide-newspaper size-5"
-                    fill="none"
-                    height="24"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    viewBox="0 0 24 24"
-                    width="24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M15 18h-5"
-                    />
-                    <path
-                      d="M18 14h-8"
-                    />
-                    <path
-                      d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-4 0v-9a2 2 0 0 1 2-2h2"
-                    />
-                    <rect
-                      height="4"
-                      rx="1"
-                      width="8"
-                      x="10"
-                      y="6"
-                    />
-                  </svg>
-                </div>
-                <div>
-                  <div
-                    class="font-medium text-foreground"
-                  >
-                    News Feed
-                  </div>
-                  <div
-                    class="text-xs text-muted-foreground"
-                  >
-                    12 new articles
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              class="absolute left-1/2 top-1/2 -ml-24 -mt-12 w-48 rounded-xl border bg-card/60 p-4 shadow-lg backdrop-blur-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20"
-              style="transform-style: preserve-3d; opacity: 0; transform: translateX(7.34788079488412e-15px) translateY(120px) scale(0.8);"
-            >
-              <div
-                class="flex items-center gap-3"
-              >
-                <div
-                  class="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary"
-                >
-                  <svg
-                    aria-hidden="true"
-                    class="lucide lucide-git-pull-request size-5"
-                    fill="none"
-                    height="24"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    viewBox="0 0 24 24"
-                    width="24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <circle
-                      cx="18"
-                      cy="18"
-                      r="3"
-                    />
-                    <circle
-                      cx="6"
-                      cy="6"
-                      r="3"
-                    />
-                    <path
-                      d="M13 6h3a2 2 0 0 1 2 2v7"
-                    />
-                    <line
-                      x1="6"
-                      x2="6"
-                      y1="9"
-                      y2="21"
-                    />
-                  </svg>
-                </div>
-                <div>
-                  <div
-                    [3...
- Γ¥» Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
- Γ¥» node_modules/@testing-library/dom/dist/query-helpers.js:76:38
- Γ¥» node_modules/@testing-library/dom/dist/query-helpers.js:52:17
- Γ¥» node_modules/@testing-library/dom/dist/query-helpers.js:95:19
- Γ¥» src/app/login/page.test.tsx:18:19
-     16|     render(Page);
-     17| 
-     18|     expect(screen.getByText("Login")).toBeDefined();
-       |                   ^
-     19|     expect(
-     20|       screen.getByText("Enter your email and password to access your dΓÇª
-
-ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[2/2]ΓÄ»
-
-
-[2m Test Files [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m57 passed[39m[22m[90m (59)[39m
-[2m      Tests [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m504 passed[39m[22m[90m (506)[39m
-[2m   Start at [22m 15:40:59
-[2m   Duration [22m 20.58s[2m (transform 5.12s, setup 61.85s, import 56.81s, tests 30.05s, environment 849.47s)[22m
-
+[34m % [39m[2mCoverage report from [22m[33mv8[39m
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |   92.27 |    85.55 |   92.72 |   92.94 |                   
+ src               |     100 |      100 |     100 |     100 |                   
+  proxy.ts         |     100 |      100 |     100 |     100 |                   
+ src/app           |    98.9 |    94.73 |     100 |   98.86 |                   
+  ....dashboard.ts |      98 |       95 |     100 |   97.91 | 148               
+  actions.ts       |     100 |      100 |     100 |     100 |                   
+  layout.tsx       |     100 |      100 |     100 |     100 |                   
+  page.tsx         |     100 |       75 |     100 |     100 | 32                
+ src/app/account   |     100 |     93.1 |     100 |     100 |                   
+  actions.ts       |     100 |    88.88 |     100 |     100 | 53-56             
+  page.tsx         |     100 |      100 |     100 |     100 |                   
+ ...account/github |     100 |    88.88 |     100 |     100 |                   
+  ...unts-list.tsx |     100 |     87.5 |     100 |     100 | 30                
+  page.tsx         |     100 |       90 |     100 |     100 | 35                
+ ...pp/agent-tasks |       0 |        0 |       0 |       0 |                   
+  page.tsx         |       0 |        0 |       0 |       0 | 9-63              
+ ...ron/fetch-news |     100 |      100 |     100 |     100 |                   
+  route.ts         |     100 |      100 |     100 |     100 |                   
+ ...pp/api/inngest |       0 |      100 |     100 |       0 |                   
+  route.ts         |       0 |      100 |     100 |       0 | 10                
+ ...il/bulk-action |     100 |      100 |     100 |     100 |                   
+  route.ts         |     100 |      100 |     100 |     100 |                   
+ ...l/empty-folder |     100 |      100 |     100 |     100 |                   
+  route.ts         |     100 |      100 |     100 |     100 |                   
+ .../mail/messages |     100 |      100 |     100 |     100 |                   
+  route.ts         |     100 |      100 |     100 |     100 |                   
+ ...oauth/callback |     100 |      100 |     100 |     100 |                   
+  route.ts         |     100 |      100 |     100 |     100 |                   
+ ...pi/mail/search |     100 |      100 |     100 |     100 |                   
+  route.ts         |     100 |      100 |     100 |     100 |                   
+ ...i/mail/summary |     100 |      100 |     100 |     100 |                   
+  route.ts         |     100 |      100 |     100 |     100 |                   
+ src/app/auth      |     100 |    96.77 |     100 |     100 |                   
+  actions.ts       |     100 |    96.77 |     100 |     100 | 23                
+ .../auth/callback |     100 |     87.5 |     100 |     100 |                   
+  route.ts         |     100 |     87.5 |     100 |     100 | 15                
+ ...ithub/callback |     100 |    92.85 |     100 |     100 |                   
+  route.ts         |     100 |    92.85 |     100 |     100 | 98                
+ src/app/chat      |       0 |        0 |       0 |       0 |                   
+  page.tsx         |       0 |        0 |       0 |       0 | 12-52             
+ ...p/expenditures |     100 |      100 |     100 |     100 |                   
+  page.tsx         |     100 |      100 |     100 |     100 |                   
+ src/app/login     |     100 |      100 |     100 |     100 |                   
+  page.tsx         |     100 |      100 |     100 |     100 |                   
+ src/app/mail      |   95.06 |       75 |     100 |     100 |                   
+  page.tsx         |   95.06 |       75 |     100 |     100 | ...89-100,124,149 
+ .../mail/settings |   96.49 |    92.85 |   93.75 |   98.21 |                   
+  page.tsx         |   96.49 |    92.85 |   93.75 |   98.21 | 250               
+ src/app/news      |     100 |      100 |     100 |     100 |                   
+  page.tsx         |     100 |      100 |     100 |     100 |                   
+ ...p/news-sources |     100 |      100 |     100 |     100 |                   
+  page.tsx         |     100 |      100 |     100 |     100 |                   
+ .../notifications |     100 |      100 |     100 |     100 |                   
+  page.tsx         |     100 |      100 |     100 |     100 |                   
+ src/app/prs       |     100 |      100 |     100 |     100 |                   
+  page.tsx         |     100 |      100 |     100 |     100 |                   
+ src/app/signup    |     100 |      100 |     100 |     100 |                   
+  page.tsx         |     100 |      100 |     100 |     100 |                   
+ src/app/timers    |   93.54 |    84.61 |     100 |   96.66 |                   
+  page.tsx         |   93.54 |    84.61 |     100 |   96.66 | 41                
+ src/components    |   96.66 |    88.46 |   95.45 |   96.77 |                   
+  app-sidebar.tsx  |      75 |    92.85 |   66.66 |      75 | 117-118           
+  ...-controls.tsx |   76.92 |    62.16 |    62.5 |   79.16 | 72,76-79          
+  ...fig-sheet.tsx |     100 |    96.87 |     100 |     100 | 81                
+  ...oard-grid.tsx |     100 |       90 |     100 |     100 | 55,61             
+  ...e-display.tsx |     100 |      100 |     100 |     100 |                   
+  font-picker.tsx  |     100 |      100 |     100 |     100 |                   
+  header.tsx       |     100 |      100 |     100 |     100 |                   
+  ...r-wrapper.tsx |     100 |      100 |     100 |     100 |                   
+  theme-picker.tsx |     100 |      100 |     100 |     100 |                   
+ ...mponents/icons |     100 |      100 |     100 |     100 |                   
+  google-icon.tsx  |     100 |      100 |     100 |     100 |                   
+ ...onents/landing |     100 |      100 |     100 |     100 |                   
+  auth-layout.tsx  |     100 |      100 |     100 |     100 |                   
+  cta-section.tsx  |     100 |      100 |     100 |     100 |                   
+  ...e-section.tsx |     100 |      100 |     100 |     100 |                   
+  ...g-widgets.tsx |     100 |      100 |     100 |     100 |                   
+  hero-section.tsx |     100 |      100 |     100 |     100 |                   
+  ...ng-footer.tsx |     100 |      100 |     100 |     100 |                   
+  landing-page.tsx |     100 |      100 |     100 |     100 |                   
+ src/components/ui |   98.85 |    95.37 |   99.13 |   99.41 |                   
+  alert.tsx        |     100 |      100 |     100 |     100 |                   
+  avatar.tsx       |     100 |      100 |     100 |     100 |                   
+  badge.tsx        |     100 |      100 |     100 |     100 |                   
+  button.tsx       |     100 |      100 |     100 |     100 |                   
+  card.tsx         |     100 |      100 |     100 |     100 |                   
+  collapsible.tsx  |     100 |      100 |     100 |     100 |                   
+  dialog.tsx       |     100 |      100 |     100 |     100 |                   
+  ...down-menu.tsx |     100 |      100 |     100 |     100 |                   
+  input.tsx        |     100 |      100 |     100 |     100 |                   
+  label.tsx        |     100 |      100 |     100 |     100 |                   
+  progress.tsx     |     100 |      100 |     100 |     100 |                   
+  select.tsx       |     100 |    71.42 |     100 |     100 | 66-78             
+  separator.tsx    |     100 |      100 |     100 |     100 |                   
+  sheet.tsx        |     100 |      100 |     100 |     100 |                   
+  sidebar.tsx      |   97.53 |    95.89 |   96.96 |   98.71 | 185               
+  skeleton.tsx     |     100 |      100 |     100 |     100 |                   
+  slider.tsx       |     100 |      100 |     100 |     100 |                   
+  switch.tsx       |     100 |      100 |     100 |     100 |                   
+  table.tsx        |     100 |      100 |     100 |     100 |                   
+  tooltip.tsx      |     100 |      100 |     100 |     100 |                   
+ src/hooks         |   98.42 |    93.54 |     100 |     100 |                   
+  use-font.ts      |     100 |      100 |     100 |     100 |                   
+  use-mobile.ts    |     100 |      100 |     100 |     100 |                   
+  ...ebar-width.ts |   94.73 |    86.66 |     100 |     100 | 30,43             
+  use-theme.ts     |     100 |      100 |     100 |     100 |                   
+ src/inngest       |       0 |        0 |       0 |       0 |                   
+  client.ts        |       0 |      100 |     100 |       0 | 8                 
+  functions.ts     |       0 |        0 |       0 |       0 | 29-69             
+ src/lib           |   95.75 |    87.05 |      98 |   97.29 |                   
+  brightness.ts    |   93.63 |    84.53 |     100 |   97.77 | 151,359,371       
+  crypto.ts        |     100 |      100 |     100 |     100 |                   
+  env.ts           |       0 |        0 |       0 |       0 | 4-37              
+  gravatar.ts      |     100 |      100 |     100 |     100 |                   
+  redis.ts         |     100 |      100 |     100 |     100 |                   
+  resend.ts        |     100 |    88.88 |     100 |     100 | 8                 
+  utils.ts         |     100 |      100 |     100 |     100 |                   
+  version.ts       |     100 |      100 |     100 |     100 |                   
+ src/lib/agent     |       0 |        0 |       0 |       0 |                   
+  agent.ts         |       0 |        0 |       0 |       0 | 29-45             
+  client.ts        |       0 |        0 |       0 |       0 | 9-44              
+  tools.ts         |       0 |        0 |       0 |       0 | 23-56             
+ ...b/news-fetcher |    98.8 |    93.24 |     100 |   98.76 |                   
+  parser.ts        |    98.8 |    93.24 |     100 |   98.76 | 20                
+ src/lib/supabase  |     100 |      100 |     100 |     100 |                   
+  admin.ts         |     100 |      100 |     100 |     100 |                   
+  client.ts        |     100 |      100 |     100 |     100 |                   
+  server.ts        |     100 |      100 |     100 |     100 |                   
+ src/lib/widgets   |     100 |      100 |     100 |     100 |                   
+  registry.ts      |     100 |      100 |     100 |     100 |                   
+ ...es/agent-tasks |       0 |        0 |       0 |       0 |                   
+  actions.ts       |       0 |        0 |       0 |       0 | 45-256            
+ ...sks/components |       0 |        0 |       0 |       0 |                   
+  ...et-client.tsx |       0 |        0 |       0 |       0 | 26-90             
+  ...ks-widget.tsx |       0 |      100 |       0 |       0 | 9-11              
+ src/modules/chat  |       0 |        0 |       0 |       0 |                   
+  actions.ts       |       0 |        0 |       0 |       0 | 55-355            
+ ...hat/components |       0 |        0 |       0 |       0 |                   
+  ...et-client.tsx |       0 |        0 |       0 |       0 | 23-74             
+  chat-widget.tsx  |       0 |      100 |       0 |       0 | 9-11              
+ ...s/expenditures |     100 |    95.23 |     100 |     100 |                   
+  actions.ts       |     100 |    95.23 |     100 |     100 | 39,114            
+ ...res/components |   97.27 |    95.19 |   90.32 |   97.22 |                   
+  ...ture-form.tsx |   95.91 |    96.66 |   85.71 |   95.91 | 118,160           
+  ...ture-item.tsx |   97.72 |    92.85 |    92.3 |   97.72 | 108               
+  ...es-widget.tsx |     100 |      100 |     100 |     100 |                   
+ ...les/github-prs |     100 |       85 |     100 |     100 |                   
+  actions.ts       |     100 |       85 |     100 |     100 | 38,72,123         
+ ...prs/components |     100 |      100 |     100 |     100 |                   
+  pr-item.tsx      |     100 |      100 |     100 |     100 |                   
+  pr-tree.tsx      |     100 |      100 |     100 |     100 |                   
+  pr-widget.tsx    |     100 |      100 |     100 |     100 |                   
+ ...github-prs/lib |     100 |      100 |     100 |     100 |                   
+  github-client.ts |     100 |      100 |     100 |     100 |                   
+ src/modules/mail  |   98.96 |    89.36 |     100 |     100 |                   
+  actions.ts       |   98.96 |    89.36 |     100 |     100 | ...23-124,126,276 
+ ...ail/components |     100 |    98.11 |     100 |     100 |                   
+  account-card.tsx |     100 |      100 |     100 |     100 |                   
+  account-tabs.tsx |     100 |      100 |     100 |     100 |                   
+  ...ction-bar.tsx |     100 |       80 |     100 |     100 | 35                
+  mail-item.tsx    |     100 |      100 |     100 |     100 |                   
+  mail-list.tsx    |     100 |      100 |     100 |     100 |                   
+  mail-widget.tsx  |     100 |      100 |     100 |     100 |                   
+ ...dules/mail/lib |     100 |     99.1 |     100 |     100 |                   
+  cache.ts         |     100 |      100 |     100 |     100 |                   
+  gmail-client.ts  |     100 |      100 |     100 |     100 |                   
+  imap-client.ts   |     100 |      100 |     100 |     100 |                   
+  ...ook-client.ts |     100 |      100 |     100 |     100 |                   
+  rate-limiter.ts  |     100 |      100 |     100 |     100 |                   
+  token-manager.ts |     100 |    97.67 |     100 |     100 | 97                
+ src/modules/news  |     100 |    88.46 |     100 |     100 |                   
+  actions.ts       |     100 |    88.46 |     100 |     100 | ...18,149-161,193 
+ ...s/news-sources |     100 |    98.11 |     100 |     100 |                   
+  actions.ts       |     100 |    98.03 |     100 |     100 | 82,394            
+  icons.ts         |     100 |      100 |     100 |     100 |                   
+ ...ces/components |   95.23 |    97.26 |   92.68 |   96.84 |                   
+  ...ings-form.tsx |   93.33 |      100 |    87.5 |   96.15 | 54                
+  ...ory-badge.tsx |     100 |      100 |     100 |     100 |                   
+  source-form.tsx  |     100 |    95.83 |     100 |     100 | 87                
+  source-list.tsx  |   94.54 |    96.87 |    92.3 |   95.91 | 85-86             
+ ...ews/components |     100 |    94.91 |     100 |     100 |                   
+  ...k-as-read.tsx |     100 |      100 |     100 |     100 |                   
+  ...ad-button.tsx |     100 |      100 |     100 |     100 |                   
+  news-item.tsx    |     100 |    95.45 |     100 |     100 | 46                
+  news-widget.tsx  |     100 |      100 |     100 |     100 |                   
+  ...sh-button.tsx |     100 |      100 |     100 |     100 |                   
+  ...-settings.tsx |     100 |       80 |     100 |     100 | 50,106            
+ .../notifications |     100 |    94.28 |     100 |     100 |                   
+  actions.ts       |     100 |    94.28 |     100 |     100 | 41,78             
+ ...ons/components |     100 |      100 |     100 |     100 |                   
+  ...ll-server.tsx |     100 |      100 |     100 |     100 |                   
+  ...l-wrapper.tsx |     100 |      100 |     100 |     100 |                   
+  ...tion-bell.tsx |     100 |      100 |     100 |     100 |                   
+  ...tion-item.tsx |     100 |      100 |     100 |     100 |                   
+  ...tion-list.tsx |     100 |      100 |     100 |     100 |                   
+ ...modules/timers |     100 |    99.09 |     100 |     100 |                   
+  actions.ts       |     100 |    99.09 |     100 |     100 | 38                
+ ...ers/components |   96.66 |    87.12 |   98.24 |    98.2 |                   
+  ...er-dialog.tsx |   96.15 |    84.61 |     100 |   96.15 | 36                
+  ...-provider.tsx |   98.24 |    88.46 |     100 |     100 | 21-26,109         
+  timer-card.tsx   |   95.23 |    89.09 |   94.44 |   96.25 | 226-228           
+  ...rs-widget.tsx |   97.26 |    84.21 |     100 |     100 | 106,112,150-175   
+-------------------|---------|----------|---------|---------|-------------------
+ERROR: Coverage for lines (92.94%) does not meet global threshold (98%)
+ERROR: Coverage for functions (92.72%) does not meet global threshold (98%)
+ERROR: Coverage for statements (92.27%) does not meet global threshold (98%)
+ERROR: Coverage for branches (85.55%) does not meet global threshold (95%)
+error: script "test:coverage" exited with code 1
