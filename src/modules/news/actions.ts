@@ -4,10 +4,10 @@ import { createClient } from "@/lib/supabase/server";
 import type { BrandColor, NewsSourceCategory, SourceIcon } from "@/modules/news-sources";
 import { revalidatePath } from "next/cache";
 import type {
-  FetchNewsItemsResult,
-  FetchSourcesWithExclusionResult,
-  NewsItem,
-  NewsSourceWithExclusion,
+    FetchNewsItemsResult,
+    FetchSourcesWithExclusionResult,
+    NewsItem,
+    NewsSourceWithExclusion,
 } from "./types";
 
 /** Source data shape from Supabase join */
