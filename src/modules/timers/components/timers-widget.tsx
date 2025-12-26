@@ -1,17 +1,80 @@
+"use client";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
 } from "@/components/ui/card";
-import { AlertTriangle, Timer as TimerIcon } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
+import { AlertTriangle, CheckCircle2, Pause, Play, Timer as TimerIcon } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import { getTimers } from "../actions";
-import type { Timer } from "../types";
-import { formatTime } from "../types";
+import type { Timer, TimerState } from "../types";
+import { formatTime, getProgress } from "../types";
+
+const MAX_VISIBLE_TIMERS = 4;
+
+/** Priority order for sorting timers */
+const STATE_PRIORITY: Record<TimerState, number> = {
+  running: 0,
+  paused: 1,
+  stopped: 2,
+  completed: 3,
+};
+
+function sortTimers(timers: Timer[]): Timer[] {
+  return [...timers].sort((a, b) => {
+    const priorityDiff = STATE_PRIORITY[a.state] - STATE_PRIORITY[b.state];
+    if (priorityDiff !== 0) return priorityDiff;
+    // Within same state, sort by remaining time (ascending)
+    return a.remainingSeconds - b.remainingSeconds;
+  });
+}
+
+function TimerStateIcon({ state }: { state: TimerState }) {
+  switch (state) {
+    case "running":
+      return <Play className="h-3 w-3 text-green-500 fill-green-500" />;
+    case "paused":
+      return <Pause className="h-3 w-3 text-yellow-500" />;
+    case "completed":
+      return <CheckCircle2 className="h-3 w-3 text-muted-foreground" />;
+    default:
+      return <TimerIcon className="h-3 w-3 text-muted-foreground" />;
+  }
+}
+
+interface TimerRowProps {
+  timer: Timer;
+  localRemaining: number;
+}
+
+function TimerRow({ timer, localRemaining }: TimerRowProps) {
+  const progress = getProgress({ ...timer, remainingSeconds: localRemaining });
+  const isCompleted = timer.state === "completed";
+
+  return (
+    <div className="space-y-1">
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2 min-w-0 flex-1">
+          <TimerStateIcon state={timer.state} />
+          <span className={`text-sm truncate ${isCompleted ? "text-muted-foreground line-through" : ""}`}>
+            {timer.name}
+          </span>
+        </div>
+        <span className={`text-sm font-medium tabular-nums shrink-0 ${isCompleted ? "text-muted-foreground" : ""}`}>
+          {formatTime(localRemaining)}
+        </span>
+      </div>
+      <Progress value={progress} className="h-1" />
+    </div>
+  );
+}
 
 function EmptyTimersView() {
   return (
@@ -24,53 +87,126 @@ function EmptyTimersView() {
   );
 }
 
-function TimersSummaryView({ timers, nextTimer }: { timers: Timer[]; nextTimer: Timer | null }) {
-  if (nextTimer) {
-    return (
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="text-sm text-muted-foreground">Currently running:</div>
-            <div className="text-sm font-medium">{nextTimer.name}</div>
-          </div>
-          <div className="text-right">
-            <div className="text-lg font-bold tabular-nums">
-              {formatTime(nextTimer.remainingSeconds)}
-            </div>
-            <div className="text-xs text-muted-foreground">remaining</div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+interface TimersListProps {
+  timers: Timer[];
+  localRemainingMap: Map<string, number>;
+}
+
+function TimersList({ timers, localRemainingMap }: TimersListProps) {
+  const sorted = sortTimers(timers);
+  const visible = sorted.slice(0, MAX_VISIBLE_TIMERS);
+  const hiddenCount = sorted.length - visible.length;
 
   return (
     <div className="space-y-3">
-      <div className="text-center py-2">
-        <div className="text-sm text-muted-foreground">
-          {timers.length} timer{timers.length !== 1 ? "s" : ""} ready
+      {visible.map((timer) => (
+        <TimerRow
+          key={timer.id}
+          timer={timer}
+          localRemaining={localRemainingMap.get(timer.id) ?? timer.remainingSeconds}
+        />
+      ))}
+      {hiddenCount > 0 && (
+        <div className="text-center">
+          <span className="text-xs text-muted-foreground">
+            +{hiddenCount} more timer{hiddenCount !== 1 ? "s" : ""}
+          </span>
         </div>
-      </div>
+      )}
     </div>
   );
 }
 
-function TimersContent({ timers, error }: { timers: Timer[]; error: string | undefined }) {
+function LoadingView() {
+  return (
+    <div className="text-center py-4">
+      <p className="text-sm text-muted-foreground">Loading...</p>
+    </div>
+  );
+}
+
+interface TimersContentProps {
+  loading: boolean;
+  error: string | undefined;
+  timers: Timer[];
+  localRemainingMap: Map<string, number>;
+}
+
+function TimersContent({ loading, error, timers, localRemainingMap }: TimersContentProps) {
+  if (loading) {
+    return <LoadingView />;
+  }
   if (timers.length === 0 && !error) {
     return <EmptyTimersView />;
   }
-
-  if (timers.length > 0) {
-    const runningTimers = timers.filter((t) => t.state === "running");
-    const nextTimer = runningTimers.length > 0 ? runningTimers[0] : null;
-    return <TimersSummaryView timers={timers} nextTimer={nextTimer} />;
-  }
-
-  return null;
+  return <TimersList timers={timers} localRemainingMap={localRemainingMap} />;
 }
 
-export async function TimerWidget() {
-  const { timers, error } = await getTimers();
+function decrementRunningTimers(
+  timers: Timer[],
+  prev: Map<string, number>
+): Map<string, number> {
+  const runningTimers = timers.filter((t) => t.state === "running");
+  if (runningTimers.length === 0) return prev;
+
+  const next = new Map(prev);
+  for (const timer of runningTimers) {
+    const current = next.get(timer.id) ?? timer.remainingSeconds;
+    if (current > 0) {
+      next.set(timer.id, current - 1);
+    }
+  }
+  return next;
+}
+
+export function TimerWidget() {
+  const [timers, setTimers] = useState<Timer[]>([]);
+  const [localRemainingMap, setLocalRemainingMap] = useState<Map<string, number>>(new Map());
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | undefined>();
+  const isMounted = useRef(true);
+
+  // Initial load and periodic refresh
+  useEffect(() => {
+    isMounted.current = true;
+
+    const loadTimers = async () => {
+      const result = await getTimers();
+      if (!isMounted.current) return;
+
+      if (result.error) {
+        setError(result.error);
+      } else {
+        setError(undefined);
+        setTimers(result.timers);
+        // Initialize local remaining map
+        const newMap = new Map<string, number>();
+        result.timers.forEach((t) => newMap.set(t.id, t.remainingSeconds));
+        setLocalRemainingMap(newMap);
+      }
+      setLoading(false);
+    };
+
+    loadTimers();
+    const refreshInterval = setInterval(loadTimers, 30000);
+
+    return () => {
+      isMounted.current = false;
+      clearInterval(refreshInterval);
+    };
+  }, []);
+
+  // Real-time countdown for running timers
+  useEffect(() => {
+    const hasRunningTimers = timers.some((t) => t.state === "running");
+    if (!hasRunningTimers) return;
+
+    const interval = setInterval(() => {
+      setLocalRemainingMap((prev) => decrementRunningTimers(timers, prev));
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [timers]);
 
   return (
     <Card>
@@ -102,7 +238,12 @@ export async function TimerWidget() {
             <span>{error}</span>
           </div>
         )}
-        <TimersContent timers={timers} error={error} />
+        <TimersContent
+          loading={loading}
+          error={error}
+          timers={timers}
+          localRemainingMap={localRemainingMap}
+        />
       </CardContent>
     </Card>
   );
