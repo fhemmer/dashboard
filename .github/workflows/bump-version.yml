@@ -9,12 +9,10 @@ jobs:
     # Skip if commit message contains [skip ci] or was made by this action
     if: "!contains(github.event.head_commit.message, '[skip ci]') && !contains(github.event.head_commit.message, 'chore: bump version')"
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.VERSION_BUMP_TOKEN }}
 
       - name: Bump version and date
         run: |
