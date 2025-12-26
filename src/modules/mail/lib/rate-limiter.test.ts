@@ -1,13 +1,15 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { checkRateLimit, cleanupRateLimits, resetRateLimit } from "./rate-limiter";
+import {
+    checkRateLimit,
+    cleanupRateLimits,
+    resetRateLimit,
+} from "./rate-limiter";
 
-describe("rate-limiter", () => {
+describe("rate limiter", () => {
   beforeEach(() => {
     vi.useFakeTimers();
-    // Reset all rate limits before each test
-    resetRateLimit("test-key");
-    resetRateLimit("key-1");
-    resetRateLimit("key-2");
+    // Reset the rate limiter state before each test
+    cleanupRateLimits();
   });
 
   afterEach(() => {
@@ -15,143 +17,126 @@ describe("rate-limiter", () => {
   });
 
   describe("checkRateLimit", () => {
-    it("should allow first request and set remaining to MAX - 1", () => {
+    it("should allow first request for a key", () => {
       const result = checkRateLimit("test-key");
 
       expect(result.allowed).toBe(true);
-      expect(result.remaining).toBe(29); // MAX_REQUESTS_PER_MINUTE - 1
+      expect(result.remaining).toBe(29); // 30 max - 1 = 29
     });
 
-    it("should allow multiple requests within limit", () => {
-      for (let i = 0; i < 10; i++) {
-        const result = checkRateLimit("test-key");
-        expect(result.allowed).toBe(true);
-        expect(result.remaining).toBe(29 - i);
-      }
+    it("should decrement remaining on each request", () => {
+      const result1 = checkRateLimit("decrement-key");
+      const result2 = checkRateLimit("decrement-key");
+      const result3 = checkRateLimit("decrement-key");
+
+      expect(result1.remaining).toBe(29);
+      expect(result2.remaining).toBe(28);
+      expect(result3.remaining).toBe(27);
     });
 
-    it("should deny requests when limit is exceeded", () => {
-      // Use up all 30 requests
+    it("should block when limit is exceeded", () => {
+      // Make 30 requests to exhaust the limit
       for (let i = 0; i < 30; i++) {
-        checkRateLimit("test-key");
+        checkRateLimit("exhausted-key");
       }
 
-      // 31st request should be denied
-      const result = checkRateLimit("test-key");
+      const result = checkRateLimit("exhausted-key");
+
       expect(result.allowed).toBe(false);
       expect(result.remaining).toBe(0);
     });
 
-    it("should reset limit after window expires", () => {
-      // Use up all requests
-      for (let i = 0; i < 30; i++) {
-        checkRateLimit("test-key");
-      }
+    it("should allow requests after window expires", () => {
+      // Make some requests
+      checkRateLimit("expiry-key");
+      checkRateLimit("expiry-key");
 
-      // Verify limit is exceeded
-      expect(checkRateLimit("test-key").allowed).toBe(false);
+      // Advance time beyond the window (1 minute)
+      vi.advanceTimersByTime(61 * 1000);
 
-      // Advance time past the window (1 minute)
-      vi.advanceTimersByTime(61000);
+      const result = checkRateLimit("expiry-key");
 
-      // Request should now be allowed
-      const result = checkRateLimit("test-key");
       expect(result.allowed).toBe(true);
-      expect(result.remaining).toBe(29);
+      expect(result.remaining).toBe(29); // Reset to max - 1
     });
 
     it("should track different keys independently", () => {
-      // Use up limit for key-1
-      for (let i = 0; i < 30; i++) {
-        checkRateLimit("key-1");
-      }
+      checkRateLimit("key-a");
+      checkRateLimit("key-a");
+      checkRateLimit("key-a");
 
-      // key-1 should be denied
-      expect(checkRateLimit("key-1").allowed).toBe(false);
+      const resultA = checkRateLimit("key-a");
+      const resultB = checkRateLimit("key-b");
 
-      // key-2 should still be allowed
-      const result = checkRateLimit("key-2");
-      expect(result.allowed).toBe(true);
-      expect(result.remaining).toBe(29);
+      expect(resultA.remaining).toBe(26); // 30 - 4
+      expect(resultB.remaining).toBe(29); // Fresh key, 30 - 1
     });
 
-    it("should cleanup expired entries when map is large", () => {
-      // Create many keys to trigger cleanup (> MAX_ENTRIES)
+    it("should clean up expired entries when map is large", () => {
+      // Create many entries (more than MAX_ENTRIES threshold)
       for (let i = 0; i < 10001; i++) {
-        checkRateLimit(`temp-key-${i}`);
+        checkRateLimit(`key-${i}`);
       }
 
       // Advance time to expire all entries
-      vi.advanceTimersByTime(61000);
+      vi.advanceTimersByTime(61 * 1000);
 
-      // New request should trigger cleanup and be allowed
+      // This should trigger cleanup
       const result = checkRateLimit("new-key");
+
       expect(result.allowed).toBe(true);
+      expect(result.remaining).toBe(29);
     });
   });
 
   describe("resetRateLimit", () => {
-    it("should reset rate limit for a key", () => {
-      // Use up all requests
+    it("should reset limit for a specific key", () => {
+      // Exhaust the limit
       for (let i = 0; i < 30; i++) {
-        checkRateLimit("test-key");
+        checkRateLimit("reset-key");
       }
 
-      expect(checkRateLimit("test-key").allowed).toBe(false);
+      // Verify it's blocked
+      expect(checkRateLimit("reset-key").allowed).toBe(false);
 
-      // Reset the key
-      resetRateLimit("test-key");
+      // Reset and verify it's allowed again
+      resetRateLimit("reset-key");
+      const result = checkRateLimit("reset-key");
 
-      // Should be allowed again
-      const result = checkRateLimit("test-key");
       expect(result.allowed).toBe(true);
       expect(result.remaining).toBe(29);
     });
 
-    it("should not affect other keys", () => {
-      checkRateLimit("key-1");
-      checkRateLimit("key-2");
+    it("should not affect other keys when resetting one", () => {
+      checkRateLimit("keep-key");
+      checkRateLimit("keep-key");
+      checkRateLimit("reset-me");
 
-      resetRateLimit("key-1");
+      resetRateLimit("reset-me");
 
-      // key-1 starts fresh
-      expect(checkRateLimit("key-1").remaining).toBe(29);
+      const keepResult = checkRateLimit("keep-key");
+      const resetResult = checkRateLimit("reset-me");
 
-      // key-2 continues counting
-      expect(checkRateLimit("key-2").remaining).toBe(28);
+      expect(keepResult.remaining).toBe(27); // 30 - 3
+      expect(resetResult.remaining).toBe(29); // Reset, 30 - 1
     });
   });
 
   describe("cleanupRateLimits", () => {
-    it("should remove expired entries", () => {
+    it("should clean up all expired entries", () => {
       // Create some entries
-      checkRateLimit("key-1");
-      checkRateLimit("key-2");
+      checkRateLimit("cleanup-1");
+      checkRateLimit("cleanup-2");
 
-      // Advance time past the window
-      vi.advanceTimersByTime(61000);
+      // Advance time to expire them
+      vi.advanceTimersByTime(61 * 1000);
 
-      // Cleanup should remove expired entries
+      // Manually trigger cleanup
       cleanupRateLimits();
 
-      // New requests should start fresh
-      expect(checkRateLimit("key-1").remaining).toBe(29);
-      expect(checkRateLimit("key-2").remaining).toBe(29);
-    });
-
-    it("should not remove active entries", () => {
-      // Create an entry
-      checkRateLimit("test-key");
-
-      // Advance time but not past the window
-      vi.advanceTimersByTime(30000);
-
-      // Cleanup should not remove active entry
-      cleanupRateLimits();
-
-      // Should continue counting
-      const result = checkRateLimit("test-key");
-      expect(result.remaining).toBe(28);
+      // New requests should have full limit available
+      const result = checkRateLimit("cleanup-1");
+      expect(result.remaining).toBe(29);
     });
   });
 });

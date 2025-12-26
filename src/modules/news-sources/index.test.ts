@@ -31,6 +31,15 @@ describe("news-sources index", () => {
     expect(newsSourcesModule.toNewsSource).toBeDefined();
   });
 
+  it("exports icon utilities", () => {
+    expect(newsSourcesModule.sourceIconComponents).toBeDefined();
+    expect(newsSourcesModule.defaultSourceIcon).toBeDefined();
+    expect(newsSourcesModule.getSourceIcon).toBeDefined();
+    expect(newsSourcesModule.brandColorClasses).toBeDefined();
+    expect(newsSourcesModule.defaultBrandColorClasses).toBeDefined();
+    expect(newsSourcesModule.getBrandColorClasses).toBeDefined();
+  });
+
   it("BRAND_COLORS is an array", () => {
     expect(Array.isArray(newsSourcesModule.BRAND_COLORS)).toBe(true);
     expect(newsSourcesModule.BRAND_COLORS.length).toBeGreaterThan(0);

@@ -2,35 +2,52 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import NewsPage from "./page";
 
-const mockFetchNews = vi.fn().mockResolvedValue({
+const createMockSource = (id: string, name: string) => ({
+  id,
+  name,
+  iconName: "rocket" as const,
+  brandColor: "orange" as const,
+  category: "dev" as const,
+});
+
+const mockGetNewsItems = vi.fn().mockResolvedValue({
   items: [
     {
       id: "1",
       title: "Test News Item 1",
       summary: "Test summary 1",
-      source: "Test Source",
       url: "https://example.com/1",
+      imageUrl: null,
       publishedAt: new Date("2025-12-20T10:00:00Z"),
-      category: "dev",
+      source: createMockSource("source-1", "Test Source"),
     },
     {
       id: "2",
       title: "Test News Item 2",
       summary: "Test summary 2",
-      source: "Test Source",
       url: "https://example.com/2",
+      imageUrl: null,
       publishedAt: new Date("2025-12-19T10:00:00Z"),
-      category: "ai",
+      source: createMockSource("source-2", "Test Source 2"),
     },
   ],
-  errors: [],
+  error: null,
 });
 
 const mockGetNewsLastSeenAt = vi.fn().mockResolvedValue(null);
 
+const mockGetSourcesWithExclusion = vi.fn().mockResolvedValue({
+  sources: [
+    { ...createMockSource("source-1", "Test Source"), isExcluded: false },
+    { ...createMockSource("source-2", "Test Source 2"), isExcluded: false },
+  ],
+  error: null,
+});
+
 vi.mock("@/modules/news", () => ({
-  fetchNews: () => mockFetchNews(),
+  getNewsItems: () => mockGetNewsItems(),
   getNewsLastSeenAt: () => mockGetNewsLastSeenAt(),
+  getSourcesWithExclusion: () => mockGetSourcesWithExclusion(),
   NewsItemComponent: ({ item, isNew }: { item: { title: string }; isNew?: boolean }) => (
     <div data-testid="news-item" data-is-new={isNew}>
       {item.title}
@@ -40,6 +57,7 @@ vi.mock("@/modules/news", () => ({
   MarkAsReadButton: ({ newCount }: { newCount: number }) =>
     newCount > 0 ? <button>Mark {newCount} as read</button> : null,
   AutoMarkAsRead: () => null,
+  SourceExclusionSettings: () => <button>Manage Sources</button>,
 }));
 
 describe("News Page", () => {
@@ -63,6 +81,13 @@ describe("News Page", () => {
     render(Page);
 
     expect(screen.getByRole("button", { name: /refresh/i })).toBeDefined();
+  });
+
+  it("renders manage sources button", async () => {
+    const Page = await NewsPage();
+    render(Page);
+
+    expect(screen.getByRole("button", { name: /manage sources/i })).toBeDefined();
   });
 
   it("renders all news items", async () => {
@@ -110,7 +135,7 @@ describe("News Page", () => {
 
 describe("News Page empty state", () => {
   it("shows empty message when no items", async () => {
-    mockFetchNews.mockResolvedValueOnce({ items: [], errors: [] });
+    mockGetNewsItems.mockResolvedValueOnce({ items: [], error: null });
 
     const Page = await NewsPage();
     render(Page);
@@ -120,19 +145,16 @@ describe("News Page empty state", () => {
 });
 
 describe("News Page error state", () => {
-  it("shows error alert when feeds fail", async () => {
-    mockFetchNews.mockResolvedValueOnce({
+  it("shows error alert when loading fails", async () => {
+    mockGetNewsItems.mockResolvedValueOnce({
       items: [],
-      errors: [
-        { source: "BBC Tech", message: "HTTP 500" },
-        { source: "NPR News", message: "Network error" },
-      ],
+      error: "Database error",
     });
 
     const Page = await NewsPage();
     render(Page);
 
-    expect(screen.getByText("Some feeds failed to load")).toBeDefined();
-    expect(screen.getByText("BBC Tech, NPR News")).toBeDefined();
+    expect(screen.getByText("Failed to load news")).toBeDefined();
+    expect(screen.getByText("Database error")).toBeDefined();
   });
 });

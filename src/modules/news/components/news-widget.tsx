@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { AlertTriangle, Newspaper } from "lucide-react";
 import Link from "next/link";
-import { fetchNews } from "../actions";
+import { getNewsItems } from "../actions";
 import { NewsItemComponent } from "./news-item";
 
 interface NewsWidgetProps {
@@ -16,7 +16,7 @@ interface NewsWidgetProps {
 }
 
 export async function NewsWidget({ maxItems = 3 }: NewsWidgetProps) {
-  const { items, errors } = await fetchNews();
+  const { items, error } = await getNewsItems();
   const displayItems = items.slice(0, maxItems);
 
   return (
@@ -34,10 +34,10 @@ export async function NewsWidget({ maxItems = 3 }: NewsWidgetProps) {
         </Button>
       </CardHeader>
       <CardContent>
-        {errors.length > 0 && (
+        {error && (
           <div className="flex items-center gap-2 text-sm text-destructive mb-4">
             <AlertTriangle className="h-4 w-4" />
-            <span>{errors.length} feed(s) failed</span>
+            <span>Failed to load news</span>
           </div>
         )}
         <div className="divide-y">
@@ -45,7 +45,7 @@ export async function NewsWidget({ maxItems = 3 }: NewsWidgetProps) {
             <NewsItemComponent key={item.id} item={item} compact />
           ))}
         </div>
-        {items.length === 0 && (
+        {items.length === 0 && !error && (
           <p className="text-sm text-muted-foreground text-center py-4">
             No news items available
           </p>

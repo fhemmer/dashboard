@@ -1,6 +1,6 @@
 /**
- * IMAP Client (for hemmer.us)
- * Handles IMAP connections and mail operations
+ * IMAP Client (Custom)
+ * Handles IMAP connections and mail operations for custom mail servers
  *
  * STATUS: PLACEHOLDER IMPLEMENTATION
  * All functions return empty/default data. Full IMAP integration is pending.
@@ -9,7 +9,7 @@
  * Required for implementation:
  * - IMAP server credentials (host, port, user, password)
  * - The `imap` npm package for IMAP protocol handling
- * - Environment variables: IMAP_HEMMER_HOST, IMAP_HEMMER_PORT
+ * - Environment variables: IMAP_HOST, IMAP_PORT
  */
 
 import type {
@@ -43,8 +43,8 @@ export async function getImapUnreadCount(accountId: string): Promise<number> {
     }
 
     // Placeholder: Implement IMAP connection and STATUS command
-    // For now, use env variables for hemmer.us
-    const host = process.env.IMAP_HEMMER_HOST;
+    // Use env variables for custom IMAP server
+    const host = process.env.IMAP_HOST;
 
     if (!host) {
       console.error("IMAP host not configured");

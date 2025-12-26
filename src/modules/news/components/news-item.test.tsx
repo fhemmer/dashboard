@@ -8,10 +8,16 @@ describe("NewsItemComponent", () => {
     id: "1",
     title: "Test News Title",
     summary: "This is a test summary for the news item.",
-    source: "Test Source",
     url: "https://example.com/news",
+    imageUrl: null,
     publishedAt: new Date("2025-12-20T10:00:00Z"),
-    category: "dev",
+    source: {
+      id: "source-1",
+      name: "Test Source",
+      iconName: "blocks",
+      brandColor: "gray",
+      category: "dev",
+    },
   };
 
   describe("compact mode", () => {
@@ -110,7 +116,10 @@ describe("NewsItemComponent", () => {
       ["ai", "text-purple-500"],
       ["general", "text-gray-500"],
     ] as const)("renders %s category with correct color", (category, expectedClass) => {
-      const item = { ...mockItem, category };
+      const item: NewsItem = {
+        ...mockItem,
+        source: { ...mockItem.source, category },
+      };
       render(<NewsItemComponent item={item} />);
 
       const badge = screen.getByText(category);
@@ -120,15 +129,23 @@ describe("NewsItemComponent", () => {
 
   describe("source branding", () => {
     it.each([
-      ["Hacker News", "text-orange-600"],
-      ["AP", "text-red-600"],
-      ["BBC Tech", "text-rose-600"],
-      ["VS Code", "text-cyan-600"],
-    ])("renders %s with branded colors", (source, expectedClass) => {
-      const item = { ...mockItem, source };
+      ["rocket", "orange", "text-orange-600"],
+      ["newspaper", "red", "text-red-600"],
+      ["tv", "rose", "text-rose-600"],
+      ["code-2", "cyan", "text-cyan-600"],
+    ] as const)("renders %s icon with %s color", (iconName, brandColor, expectedClass) => {
+      const item: NewsItem = {
+        ...mockItem,
+        source: {
+          ...mockItem.source,
+          name: `${iconName} Source`,
+          iconName: iconName as NewsItem["source"]["iconName"],
+          brandColor: brandColor as NewsItem["source"]["brandColor"],
+        },
+      };
       render(<NewsItemComponent item={item} />);
 
-      const sourceBadge = screen.getByText(source).closest("span");
+      const sourceBadge = screen.getByText(`${iconName} Source`).closest("span");
       expect(sourceBadge?.className).toContain(expectedClass);
     });
 
@@ -142,7 +159,7 @@ describe("NewsItemComponent", () => {
 
   describe("relative time formatting", () => {
     it("shows relative time for recent items", () => {
-      const recentItem = {
+      const recentItem: NewsItem = {
         ...mockItem,
         publishedAt: new Date(Date.now() - 1000 * 60 * 30), // 30 minutes ago
       };
@@ -152,7 +169,7 @@ describe("NewsItemComponent", () => {
     });
 
     it("shows hours for items within a day", () => {
-      const hourAgoItem = {
+      const hourAgoItem: NewsItem = {
         ...mockItem,
         publishedAt: new Date(Date.now() - 1000 * 60 * 60 * 3), // 3 hours ago
       };
@@ -162,7 +179,7 @@ describe("NewsItemComponent", () => {
     });
 
     it("shows 'Yesterday' for items from yesterday", () => {
-      const yesterdayItem = {
+      const yesterdayItem: NewsItem = {
         ...mockItem,
         publishedAt: new Date(Date.now() - 1000 * 60 * 60 * 24), // 24 hours ago
       };
@@ -172,7 +189,7 @@ describe("NewsItemComponent", () => {
     });
 
     it("shows days for items within a week", () => {
-      const daysAgoItem = {
+      const daysAgoItem: NewsItem = {
         ...mockItem,
         publishedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3), // 3 days ago
       };
@@ -182,7 +199,7 @@ describe("NewsItemComponent", () => {
     });
 
     it("shows date for items older than a week", () => {
-      const oldItem = {
+      const oldItem: NewsItem = {
         ...mockItem,
         publishedAt: new Date("2025-01-01T10:00:00Z"),
       };

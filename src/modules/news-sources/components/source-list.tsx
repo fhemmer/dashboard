@@ -16,44 +16,14 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import {
-    Binary,
-    Blocks,
-    Brain,
-    Code2,
-    ExternalLink,
-    Globe,
-    Mic,
-    Newspaper,
-    Pencil,
-    Plus,
-    Radio,
-    Rocket,
-    Rss,
-    Trash2,
-    Tv,
-    type LucideIcon,
-} from "lucide-react";
+import { ExternalLink, Pencil, Plus, Trash2 } from "lucide-react";
 import { useState, useTransition } from "react";
 import { deleteNewsSource, toggleNewsSourceActive } from "../actions";
-import type { NewsSource, SourceIcon, UserRole } from "../types";
+import { defaultSourceIcon, sourceIconComponents } from "../icons";
+import type { NewsSource, UserRole } from "../types";
 import { getBrandColorClass } from "../types";
 import { CategoryBadge } from "./category-badge";
 import { SourceForm } from "./source-form";
-
-const iconComponents: Record<SourceIcon, LucideIcon> = {
-  blocks: Blocks,
-  brain: Brain,
-  binary: Binary,
-  "code-2": Code2,
-  globe: Globe,
-  mic: Mic,
-  newspaper: Newspaper,
-  radio: Radio,
-  rocket: Rocket,
-  rss: Rss,
-  tv: Tv,
-};
 
 function updateSourceActive(sources: NewsSource[], sourceId: string): NewsSource[] {
   return sources.map((s) =>
@@ -260,7 +230,7 @@ function SourceTableRow({
   onEdit,
   onDelete,
 }: SourceTableRowProps) {
-  const IconComponent = iconComponents[source.iconName];
+  const IconComponent = sourceIconComponents[source.iconName] ?? defaultSourceIcon;
   const colorClass = getBrandColorClass(source.brandColor);
 
   return (

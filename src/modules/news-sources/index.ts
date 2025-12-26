@@ -15,6 +15,14 @@ export { CategoryBadge } from "./components/category-badge";
 export { SourceForm } from "./components/source-form";
 export { SourceList } from "./components/source-list";
 export {
+    brandColorClasses,
+    defaultBrandColorClasses,
+    defaultSourceIcon,
+    getBrandColorClasses,
+    getSourceIcon,
+    sourceIconComponents
+} from "./icons";
+export {
     BRAND_COLORS, SOURCE_ICONS, getBrandColorClass,
     getCategoryColorClass,
     getCategoryLabel, toNewsSource

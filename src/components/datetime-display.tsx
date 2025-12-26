@@ -7,11 +7,11 @@ interface DateTimeDisplayProps {
 }
 
 export function formatTime(date: Date, includeSeconds = false): string {
-  return date.toLocaleTimeString("en-US", {
+  return date.toLocaleTimeString("en-GB", {
     hour: "2-digit",
     minute: "2-digit",
     ...(includeSeconds && { second: "2-digit" }),
-    hour12: false,
+    hourCycle: "h23",
   });
 }
 

@@ -3,46 +3,70 @@ import { describe, expect, it, vi } from "vitest";
 import { NewsWidget } from "./news-widget";
 
 vi.mock("../actions", () => ({
-  fetchNews: vi.fn().mockResolvedValue({
+  getNewsItems: vi.fn().mockResolvedValue({
     items: [
       {
         id: "1",
         title: "First News Item",
         summary: "Summary 1",
-        source: "Source 1",
         url: "https://example.com/1",
+        imageUrl: null,
         publishedAt: new Date("2025-12-20T10:00:00Z"),
-        category: "dev",
+        source: {
+          id: "source-1",
+          name: "Source 1",
+          iconName: "rocket" as const,
+          brandColor: "orange" as const,
+          category: "dev" as const,
+        },
       },
       {
         id: "2",
         title: "Second News Item",
         summary: "Summary 2",
-        source: "Source 2",
         url: "https://example.com/2",
+        imageUrl: null,
         publishedAt: new Date("2025-12-19T10:00:00Z"),
-        category: "ai",
+        source: {
+          id: "source-2",
+          name: "Source 2",
+          iconName: "rocket" as const,
+          brandColor: "orange" as const,
+          category: "dev" as const,
+        },
       },
       {
         id: "3",
         title: "Third News Item",
         summary: "Summary 3",
-        source: "Source 3",
         url: "https://example.com/3",
+        imageUrl: null,
         publishedAt: new Date("2025-12-18T10:00:00Z"),
-        category: "tech",
+        source: {
+          id: "source-3",
+          name: "Source 3",
+          iconName: "rocket" as const,
+          brandColor: "orange" as const,
+          category: "dev" as const,
+        },
       },
       {
         id: "4",
         title: "Fourth News Item",
         summary: "Summary 4",
-        source: "Source 4",
         url: "https://example.com/4",
+        imageUrl: null,
         publishedAt: new Date("2025-12-17T10:00:00Z"),
-        category: "general",
+        source: {
+          id: "source-4",
+          name: "Source 4",
+          iconName: "rocket" as const,
+          brandColor: "orange" as const,
+          category: "dev" as const,
+        },
       },
     ],
-    errors: [],
+    error: null,
   }),
 }));
 
@@ -85,8 +109,8 @@ describe("NewsWidget", () => {
 
 describe("NewsWidget empty state", () => {
   it("shows empty message when no items", async () => {
-    const { fetchNews } = await import("../actions");
-    vi.mocked(fetchNews).mockResolvedValueOnce({ items: [], errors: [] });
+    const { getNewsItems } = await import("../actions");
+    vi.mocked(getNewsItems).mockResolvedValueOnce({ items: [], error: null });
 
     const Widget = await NewsWidget({});
     render(Widget);
@@ -96,29 +120,16 @@ describe("NewsWidget empty state", () => {
 });
 
 describe("NewsWidget error state", () => {
-  it("shows error count when feeds fail", async () => {
-    const { fetchNews } = await import("../actions");
-    vi.mocked(fetchNews).mockResolvedValueOnce({
-      items: [
-        {
-          id: "1",
-          title: "Working Item",
-          summary: "Summary",
-          source: "Source",
-          url: "https://example.com/1",
-          publishedAt: new Date(),
-          category: "dev",
-        },
-      ],
-      errors: [
-        { source: "BBC Tech", message: "HTTP 500" },
-        { source: "NPR News", message: "Network error" },
-      ],
+  it("shows error message when loading fails", async () => {
+    const { getNewsItems } = await import("../actions");
+    vi.mocked(getNewsItems).mockResolvedValueOnce({
+      items: [],
+      error: "Failed to fetch news",
     });
 
     const Widget = await NewsWidget({});
     render(Widget);
 
-    expect(screen.getByText("2 feed(s) failed")).toBeDefined();
+    expect(screen.getByText("Failed to load news")).toBeDefined();
   });
 });

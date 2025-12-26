@@ -171,7 +171,7 @@ export default function MailSettingsPage() {
                 <SelectContent>
                   <SelectItem value="gmail">Gmail</SelectItem>
                   <SelectItem value="outlook">Outlook</SelectItem>
-                  <SelectItem value="imap">IMAP (hemmer.us)</SelectItem>
+                  <SelectItem value="imap">IMAP (Custom)</SelectItem>
                 </SelectContent>
               </Select>
             </div>

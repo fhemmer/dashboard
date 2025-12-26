@@ -73,67 +73,75 @@ describe("MailItem", () => {
     expect(readContainer.innerHTML).not.toBe(unreadContainer.innerHTML);
   });
 
-  it("should call onSelect with message id when clicked", () => {
-    const onSelect = vi.fn();
-    render(<MailItem message={mockMessage} onSelect={onSelect} />);
+  describe("selection", () => {
+    it("should call onSelect when clicked", () => {
+      const onSelect = vi.fn();
+      render(<MailItem message={mockMessage} onSelect={onSelect} />);
 
-    fireEvent.click(screen.getByRole("button"));
-
-    expect(onSelect).toHaveBeenCalledWith("msg-1");
-  });
-
-  it("should call onSelect when pressing Enter key", () => {
-    const onSelect = vi.fn();
-    render(<MailItem message={mockMessage} onSelect={onSelect} />);
-
-    fireEvent.keyDown(screen.getByRole("button"), { key: "Enter" });
-
-    expect(onSelect).toHaveBeenCalledWith("msg-1");
-  });
-
-  it("should call onSelect when pressing Space key", () => {
-    const onSelect = vi.fn();
-    render(<MailItem message={mockMessage} onSelect={onSelect} />);
-
-    fireEvent.keyDown(screen.getByRole("button"), { key: " " });
-
-    expect(onSelect).toHaveBeenCalledWith("msg-1");
-  });
-
-  it("should not call onSelect for other keys", () => {
-    const onSelect = vi.fn();
-    render(<MailItem message={mockMessage} onSelect={onSelect} />);
-
-    fireEvent.keyDown(screen.getByRole("button"), { key: "Tab" });
-
-    expect(onSelect).not.toHaveBeenCalled();
-  });
-
-  it("should handle click without onSelect callback", () => {
-    render(<MailItem message={mockMessage} />);
-
-    // Should not throw when clicking without onSelect
-    expect(() => {
       fireEvent.click(screen.getByRole("button"));
-    }).not.toThrow();
+
+      expect(onSelect).toHaveBeenCalledWith("msg-1");
+    });
+
+    it("should call onSelect when Enter key is pressed", () => {
+      const onSelect = vi.fn();
+      render(<MailItem message={mockMessage} onSelect={onSelect} />);
+
+      fireEvent.keyDown(screen.getByRole("button"), { key: "Enter" });
+
+      expect(onSelect).toHaveBeenCalledWith("msg-1");
+    });
+
+    it("should call onSelect when Space key is pressed", () => {
+      const onSelect = vi.fn();
+      render(<MailItem message={mockMessage} onSelect={onSelect} />);
+
+      fireEvent.keyDown(screen.getByRole("button"), { key: " " });
+
+      expect(onSelect).toHaveBeenCalledWith("msg-1");
+    });
+
+    it("should not call onSelect for other keys", () => {
+      const onSelect = vi.fn();
+      render(<MailItem message={mockMessage} onSelect={onSelect} />);
+
+      fireEvent.keyDown(screen.getByRole("button"), { key: "Escape" });
+
+      expect(onSelect).not.toHaveBeenCalled();
+    });
+
+    it("should not throw when clicked without onSelect handler", () => {
+      render(<MailItem message={mockMessage} />);
+
+      expect(() => {
+        fireEvent.click(screen.getByRole("button"));
+      }).not.toThrow();
+    });
+
+    it("should apply selected styling when isSelected is true", () => {
+      render(<MailItem message={mockMessage} isSelected={true} />);
+
+      const button = screen.getByRole("button");
+      expect(button.className).toContain("ring-2");
+      expect(button.className).toContain("ring-primary");
+    });
+
+    it("should not apply selected styling when isSelected is false", () => {
+      render(<MailItem message={mockMessage} isSelected={false} />);
+
+      const button = screen.getByRole("button");
+      expect(button.className).not.toContain("ring-2");
+    });
   });
 
-  it("should show selected state with ring styling", () => {
-    render(<MailItem message={mockMessage} isSelected={true} />);
-
-    const button = screen.getByRole("button");
-    expect(button.className).toContain("ring-2");
-    expect(button.className).toContain("ring-primary");
-  });
-
-  it("should render from address without name", () => {
+  it("should render sender email only when no name is provided", () => {
     const messageWithoutName = {
       ...mockMessage,
-      from: { email: "noreply@example.com" },
+      from: { email: "sender@example.com" },
     };
 
     render(<MailItem message={messageWithoutName} />);
 
-    expect(screen.getByText("noreply@example.com")).toBeInTheDocument();
+    expect(screen.getByText("sender@example.com")).toBeInTheDocument();
   });
 });

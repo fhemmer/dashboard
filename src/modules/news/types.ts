@@ -1,32 +1,68 @@
-export type NewsCategory = "tech" | "dev" | "ai" | "general";
+import type { Database } from "@/lib/supabase/database.types";
+import type { BrandColor, NewsSourceCategory, SourceIcon } from "@/modules/news-sources";
 
+export type NewsCategory = NewsSourceCategory;
+
+/**
+ * Database row type for news items.
+ */
+export type NewsItemRow = Database["public"]["Tables"]["news_items"]["Row"];
+
+/**
+ * Embedded source information within a news item.
+ */
+export interface NewsItemSource {
+  id: string;
+  name: string;
+  iconName: SourceIcon;
+  brandColor: BrandColor;
+  category: NewsCategory;
+}
+
+/**
+ * News item with embedded source information.
+ */
 export interface NewsItem {
   id: string;
   title: string;
-  summary: string;
-  source: string;
+  summary: string | null;
   url: string;
+  imageUrl: string | null;
   publishedAt: Date;
-  category: NewsCategory;
+  source: NewsItemSource;
 }
 
-export interface RssSource {
-  name: string;
-  url: string;
-  category: NewsCategory;
-}
-
-export interface FeedError {
-  source: string;
-  message: string;
-}
-
-export interface FetchNewsResult {
+/**
+ * Result of fetching news items.
+ */
+export interface FetchNewsItemsResult {
   items: NewsItem[];
-  errors: FeedError[];
+  error: string | null;
 }
 
+/**
+ * Props for the NewsWidget component.
+ */
 export interface NewsWidgetProps {
-  items?: NewsItem[];
   maxItems?: number;
+}
+
+/**
+ * News source with exclusion status for the current user.
+ */
+export interface NewsSourceWithExclusion {
+  id: string;
+  name: string;
+  iconName: SourceIcon;
+  brandColor: BrandColor;
+  category: NewsCategory;
+  isExcluded: boolean;
+}
+
+/**
+ * Result of fetching sources with exclusion status.
+ */
+export interface FetchSourcesWithExclusionResult {
+  sources: NewsSourceWithExclusion[];
+  error: string | null;
 }

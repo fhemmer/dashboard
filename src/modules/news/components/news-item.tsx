@@ -1,6 +1,10 @@
 import { Badge } from "@/components/ui/badge";
-import { getSourceBrand } from "../lib/source-branding";
-import type { NewsItem as NewsItemType } from "../types";
+import {
+  defaultSourceIcon,
+  getBrandColorClasses,
+  sourceIconComponents,
+} from "@/modules/news-sources";
+import type { NewsItemSource, NewsItem as NewsItemType } from "../types";
 
 interface NewsItemProps {
   readonly item: NewsItemType;
@@ -8,7 +12,7 @@ interface NewsItemProps {
   readonly isNew?: boolean;
 }
 
-const categoryColors: Record<NewsItemType["category"], string> = {
+const categoryColors: Record<NewsItemType["source"]["category"], string> = {
   tech: "bg-blue-500/10 text-blue-500",
   dev: "bg-green-500/10 text-green-500",
   ai: "bg-purple-500/10 text-purple-500",
@@ -34,17 +38,20 @@ function formatRelativeTime(date: Date): string {
 }
 
 interface SourceBadgeProps {
-  readonly source: string;
+  readonly source: NewsItemSource;
 }
 
 function SourceBadge({ source }: SourceBadgeProps) {
-  const brand = getSourceBrand(source);
+  const IconComponent =
+    sourceIconComponents[source.iconName] ?? defaultSourceIcon;
+  const colorClasses = getBrandColorClasses(source.brandColor);
+
   return (
     <span
-      className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium border ${brand.bgColor} ${brand.textColor} ${brand.borderColor}`}
+      className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium border ${colorClasses.bg} ${colorClasses.text} ${colorClasses.border}`}
     >
-      {brand.icon}
-      {source}
+      <IconComponent className="h-3.5 w-3.5" />
+      {source.name}
     </span>
   );
 }
@@ -81,8 +88,8 @@ export function NewsItemComponent({
               </span>
             </div>
           </div>
-          <Badge variant="secondary" className={categoryColors[item.category]}>
-            {item.category}
+          <Badge variant="secondary" className={categoryColors[item.source.category]}>
+            {item.source.category}
           </Badge>
         </div>
       </a>
@@ -118,8 +125,8 @@ export function NewsItemComponent({
             </span>
           </div>
         </div>
-        <Badge variant="secondary" className={categoryColors[item.category]}>
-          {item.category}
+        <Badge variant="secondary" className={categoryColors[item.source.category]}>
+          {item.source.category}
         </Badge>
       </div>
     </a>

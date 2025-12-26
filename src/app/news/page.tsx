@@ -2,19 +2,22 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
     AutoMarkAsRead,
-    fetchNews,
+    getNewsItems,
     getNewsLastSeenAt,
+    getSourcesWithExclusion,
     MarkAsReadButton,
     NewsItemComponent,
     RefreshButton,
+    SourceExclusionSettings,
 } from "@/modules/news";
 import { AlertTriangle, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 export default async function NewsPage() {
-  const [{ items, errors }, lastSeenAt] = await Promise.all([
-    fetchNews(),
+  const [{ items, error }, lastSeenAt, { sources }] = await Promise.all([
+    getNewsItems(),
     getNewsLastSeenAt(),
+    getSourcesWithExclusion(),
   ]);
 
   const newItems = items.filter(
@@ -45,18 +48,17 @@ export default async function NewsPage() {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <SourceExclusionSettings sources={sources} />
           <MarkAsReadButton newCount={newCount} />
           <RefreshButton />
         </div>
       </div>
 
-      {errors.length > 0 && (
+      {error && (
         <Alert variant="destructive">
           <AlertTriangle className="h-4 w-4" />
-          <AlertTitle>Some feeds failed to load</AlertTitle>
-          <AlertDescription>
-            {errors.map((e) => e.source).join(", ")}
-          </AlertDescription>
+          <AlertTitle>Failed to load news</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
 
@@ -68,7 +70,7 @@ export default async function NewsPage() {
             isNew={!lastSeenAt || item.publishedAt > lastSeenAt}
           />
         ))}
-        {items.length === 0 && (
+        {items.length === 0 && !error && (
           <div className="text-center py-12">
             <p className="text-muted-foreground">No news items available</p>
           </div>
