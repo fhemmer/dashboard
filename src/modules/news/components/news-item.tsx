@@ -1,8 +1,8 @@
 import { Badge } from "@/components/ui/badge";
 import {
-    defaultSourceIcon,
-    getBrandColorClasses,
-    sourceIconComponents,
+  defaultSourceIcon,
+  getBrandColorClasses,
+  sourceIconComponents,
 } from "@/modules/news-sources";
 import type { NewsItemSource, NewsItem as NewsItemType } from "../types";
 

@@ -2,18 +2,18 @@
 
 import { Button } from "@/components/ui/button";
 import {
-    Sheet,
-    SheetContent,
-    SheetDescription,
-    SheetHeader,
-    SheetTitle,
-    SheetTrigger,
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
 } from "@/components/ui/sheet";
 import { Switch } from "@/components/ui/switch";
 import {
-    defaultSourceIcon,
-    getBrandColorClasses,
-    sourceIconComponents,
+  defaultSourceIcon,
+  getBrandColorClasses,
+  sourceIconComponents,
 } from "@/modules/news-sources";
 import { Settings2 } from "lucide-react";
 import type React from "react";
@@ -25,17 +25,25 @@ interface SourceExclusionSettingsProps {
   readonly sources: NewsSourceWithExclusion[];
 }
 
+/** Update sources state after successful toggle */
+function updateSourcesState(
+  sourceId: string,
+  isExcluded: boolean,
+  setSources: React.Dispatch<React.SetStateAction<NewsSourceWithExclusion[]>>
+) {
+  setSources((prev) =>
+    prev.map((s) => (s.id === sourceId ? { ...s, isExcluded } : s))
+  );
+}
+
+/** Perform the toggle action and update state */
 async function performToggle(
   sourceId: string,
   setSources: React.Dispatch<React.SetStateAction<NewsSourceWithExclusion[]>>
 ) {
   const result = await toggleSourceExclusion(sourceId);
   if (result.success) {
-    setSources((prev) =>
-      prev.map((s) =>
-        s.id === sourceId ? { ...s, isExcluded: result.isExcluded } : s
-      )
-    );
+    updateSourcesState(sourceId, result.isExcluded, setSources);
   }
 }
 

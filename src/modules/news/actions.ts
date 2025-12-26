@@ -4,15 +4,51 @@ import { createClient } from "@/lib/supabase/server";
 import type { BrandColor, NewsSourceCategory, SourceIcon } from "@/modules/news-sources";
 import { revalidatePath } from "next/cache";
 import type {
-    FetchNewsItemsResult,
-    FetchSourcesWithExclusionResult,
-    NewsItem,
-    NewsSourceWithExclusion,
+  FetchNewsItemsResult,
+  FetchSourcesWithExclusionResult,
+  NewsItem,
+  NewsSourceWithExclusion,
 } from "./types";
+
+/** Source data shape from Supabase join */
+interface NewsSourceData {
+  id: string;
+  name: string;
+  icon_name: string;
+  brand_color: string;
+  category: string;
+}
+
+/** Transform a raw news item row to domain NewsItem */
+function transformNewsItem(item: {
+  id: string;
+  title: string;
+  summary: string | null;
+  link: string;
+  image_url: string | null;
+  published_at: string;
+  news_sources: NewsSourceData;
+}): NewsItem {
+  return {
+    id: item.id,
+    title: item.title,
+    summary: item.summary,
+    url: item.link,
+    imageUrl: item.image_url,
+    publishedAt: new Date(item.published_at),
+    source: {
+      id: item.news_sources.id,
+      name: item.news_sources.name,
+      iconName: item.news_sources.icon_name as SourceIcon,
+      brandColor: item.news_sources.brand_color as BrandColor,
+      category: item.news_sources.category as NewsSourceCategory,
+    },
+  };
+}
 
 /**
  * Get news items from the database, excluding sources the user has opted out of.
- * Uses database-level filtering for efficiency.
+ * Uses database-level filtering for efficiency and parallel queries.
  */
 export async function getNewsItems(): Promise<FetchNewsItemsResult> {
   const supabase = await createClient();
@@ -20,22 +56,15 @@ export async function getNewsItems(): Promise<FetchNewsItemsResult> {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Get user's excluded sources first to filter at database level
-  let excludedSourceIds: string[] = [];
-  if (user) {
-    const { data: exclusions } = await supabase
-      .from("user_news_source_exclusions")
-      .select("source_id")
-      .eq("user_id", user.id);
+  // Fetch exclusions and base query builder in parallel
+  const exclusionsPromise = user
+    ? supabase
+        .from("user_news_source_exclusions")
+        .select("source_id")
+        .eq("user_id", user.id)
+    : Promise.resolve({ data: null });
 
-    if (exclusions) {
-      excludedSourceIds = exclusions.map((e) => e.source_id);
-    }
-  }
-
-  // Build the query to get news items with source info
-  // Filter out excluded sources at database level for correct pagination
-  let query = supabase
+  const newsQueryBase = supabase
     .from("news_items")
     .select(
       `
@@ -58,50 +87,34 @@ export async function getNewsItems(): Promise<FetchNewsItemsResult> {
     .order("published_at", { ascending: false })
     .limit(100);
 
-  // Apply source exclusions at database level if user has any
-  if (excludedSourceIds.length > 0) {
-    const quotedIds = excludedSourceIds.map((id) => `"${id}"`).join(",");
-    query = query.not("source_id", "in", `(${quotedIds})`);
-  }
+  // Wait for exclusions to determine final query
+  const { data: exclusions } = await exclusionsPromise;
+  const excludedSourceIds = exclusions?.map((e) => e.source_id) ?? [];
 
-  const { data: newsData, error: newsError } = await query;
+  // Build exclusion filter string outside template literal
+  const exclusionFilter =
+    excludedSourceIds.length > 0
+      ? "(" + excludedSourceIds.map((id) => `"${id}"`).join(",") + ")"
+      : null;
+
+  // Build final query with exclusions applied functionally
+  const finalQuery = exclusionFilter
+    ? newsQueryBase.not("source_id", "in", exclusionFilter)
+    : newsQueryBase;
+
+  const { data: newsData, error: newsError } = await finalQuery;
 
   if (newsError) {
     console.error("Failed to fetch news items:", newsError);
     return { items: [], error: newsError.message };
   }
 
-  // Transform and filter items without valid source data
-  const items: NewsItem[] = (newsData ?? [])
-    .filter((item) => {
-      // Filter out items without valid source data
-      return item.news_sources !== null;
-    })
-    .map((item) => {
-      const source = item.news_sources as {
-        id: string;
-        name: string;
-        icon_name: string;
-        brand_color: string;
-        category: string;
-      };
-
-      return {
-        id: item.id,
-        title: item.title,
-        summary: item.summary,
-        url: item.link,
-        imageUrl: item.image_url,
-        publishedAt: new Date(item.published_at),
-        source: {
-          id: source.id,
-          name: source.name,
-          iconName: source.icon_name as SourceIcon,
-          brandColor: source.brand_color as BrandColor,
-          category: source.category as NewsSourceCategory,
-        },
-      };
-    });
+  // Transform items with valid source data using flatMap (combined filter + map)
+  const items: NewsItem[] = (newsData ?? []).flatMap((item) =>
+    item.news_sources !== null
+      ? [transformNewsItem(item as Parameters<typeof transformNewsItem>[0])]
+      : []
+  );
 
   return { items, error: null };
 }
@@ -178,6 +191,7 @@ export async function getUserExcludedSources(): Promise<string[]> {
 
 /**
  * Toggle a source's exclusion status for the current user.
+ * Uses upsert with onConflict to prevent race conditions from double-clicks.
  */
 export async function toggleSourceExclusion(
   sourceId: string
@@ -197,7 +211,7 @@ export async function toggleSourceExclusion(
     .select("source_id")
     .eq("user_id", user.id)
     .eq("source_id", sourceId)
-    .single();
+    .maybeSingle();
 
   if (existing) {
     // Remove exclusion
@@ -215,10 +229,13 @@ export async function toggleSourceExclusion(
     revalidatePath("/news");
     return { success: true, isExcluded: false };
   } else {
-    // Add exclusion
+    // Add exclusion using upsert to handle race conditions
     const { error } = await supabase
       .from("user_news_source_exclusions")
-      .insert({ user_id: user.id, source_id: sourceId });
+      .upsert(
+        { user_id: user.id, source_id: sourceId },
+        { onConflict: "user_id,source_id", ignoreDuplicates: true }
+      );
 
     if (error) {
       console.error("Failed to add source exclusion:", error);

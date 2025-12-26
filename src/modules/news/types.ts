@@ -66,4 +66,3 @@ export interface FetchSourcesWithExclusionResult {
   sources: NewsSourceWithExclusion[];
   error: string | null;
 }
-

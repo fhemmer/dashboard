@@ -363,7 +363,7 @@ describe("News Actions", () => {
           select: vi.fn().mockReturnValue({
             eq: vi.fn().mockReturnValue({
               eq: vi.fn().mockReturnValue({
-                single: vi.fn().mockResolvedValue({ data: { source_id: "source-1" } }),
+                maybeSingle: vi.fn().mockResolvedValue({ data: { source_id: "source-1" } }),
               }),
             }),
           }),
@@ -391,7 +391,7 @@ describe("News Actions", () => {
           select: vi.fn().mockReturnValue({
             eq: vi.fn().mockReturnValue({
               eq: vi.fn().mockReturnValue({
-                single: vi.fn().mockResolvedValue({ data: { source_id: "source-1" } }),
+                maybeSingle: vi.fn().mockResolvedValue({ data: { source_id: "source-1" } }),
               }),
             }),
           }),
@@ -417,13 +417,13 @@ describe("News Actions", () => {
           select: vi.fn().mockReturnValue({
             eq: vi.fn().mockReturnValue({
               eq: vi.fn().mockReturnValue({
-                single: vi.fn().mockResolvedValue({ data: null }),
+                maybeSingle: vi.fn().mockResolvedValue({ data: null }),
               }),
             }),
           }),
         })
         .mockReturnValueOnce({
-          insert: vi.fn().mockResolvedValue({ error: null }),
+          upsert: vi.fn().mockResolvedValue({ error: null }),
         });
       mockRevalidatePath.mockClear();
 
@@ -440,13 +440,13 @@ describe("News Actions", () => {
           select: vi.fn().mockReturnValue({
             eq: vi.fn().mockReturnValue({
               eq: vi.fn().mockReturnValue({
-                single: vi.fn().mockResolvedValue({ data: null }),
+                maybeSingle: vi.fn().mockResolvedValue({ data: null }),
               }),
             }),
           }),
         })
         .mockReturnValueOnce({
-          insert: vi.fn().mockResolvedValue({ error: { message: "Insert failed" } }),
+          upsert: vi.fn().mockResolvedValue({ error: { message: "Insert failed" } }),
         });
 
       const result = await toggleSourceExclusion("source-1");
