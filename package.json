@@ -34,6 +34,7 @@
     "@types/imap": "^0.8.43",
     "@types/nodemailer": "^7.0.4",
     "@upstash/redis": "^1.35.8",
+    "@vercel/analytics": "^1.6.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",

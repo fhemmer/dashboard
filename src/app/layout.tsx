@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/next";
 import { Header } from "@/components/header";
 import { SidebarWrapper } from "@/components/sidebar-wrapper";
 import { SidebarInset } from "@/components/ui/sidebar";
@@ -203,6 +204,7 @@ export default async function RootLayout({
         ) : (
           <main className="h-screen w-full">{children}</main>
         )}
+        <Analytics />
       </body>
     </html>
   );
