@@ -204,7 +204,7 @@ export default async function RootLayout({
         ) : (
           <main className="h-screen w-full">{children}</main>
         )}
-        <Analytics />
+        <Analytics debug />
       </body>
     </html>
   );
