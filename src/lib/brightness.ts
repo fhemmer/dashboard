@@ -77,6 +77,208 @@ export function adjustOklchColor(oklch: string, brightness: number): string {
 }
 
 /**
+ * Parse hex color to RGB values
+ * @param hex Hex color string (e.g., "#ff0000" or "#f00")
+ * @returns RGB tuple [r, g, b] (0-255) or null if invalid
+ */
+export function parseHexToRgb(hex: string): [number, number, number] | null {
+  const match = hex.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i);
+  if (match) {
+    return [parseInt(match[1], 16), parseInt(match[2], 16), parseInt(match[3], 16)];
+  }
+  // Handle shorthand hex (#f00)
+  const shortMatch = hex.match(/^#?([a-f\d])([a-f\d])([a-f\d])$/i);
+  if (shortMatch) {
+    return [
+      parseInt(shortMatch[1] + shortMatch[1], 16),
+      parseInt(shortMatch[2] + shortMatch[2], 16),
+      parseInt(shortMatch[3] + shortMatch[3], 16),
+    ];
+  }
+  return null;
+}
+
+/**
+ * Convert RGB to hex
+ * @param r Red (0-255)
+ * @param g Green (0-255)
+ * @param b Blue (0-255)
+ * @returns Hex color string
+ */
+export function rgbToHex(r: number, g: number, b: number): string {
+  const clamp = (n: number) => Math.max(0, Math.min(255, Math.round(n)));
+  const toHex = (n: number) => clamp(n).toString(16).padStart(2, "0");
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
+
+/**
+ * Adjust brightness of a hex color
+ * @param hex Hex color string
+ * @param brightness Brightness percentage (0-200)
+ * @returns Adjusted hex color string
+ */
+export function adjustHexColor(hex: string, brightness: number): string {
+  const rgb = parseHexToRgb(hex);
+  if (!rgb) return hex;
+
+  const multiplier = brightness / 100;
+  const adjusted = rgb.map((v) => v * multiplier) as [number, number, number];
+  return rgbToHex(adjusted[0], adjusted[1], adjusted[2]);
+}
+
+/**
+ * Parse rgb/rgba color string
+ * @param color RGB color string (e.g., "rgb(255, 0, 0)" or "rgba(255, 0, 0, 0.5)")
+ * @returns RGB tuple [r, g, b] and optional alpha, or null if invalid
+ */
+export function parseRgb(
+  color: string
+): { r: number; g: number; b: number; a?: number } | null {
+  // Match rgb( or rgba( followed by 3-4 numbers, comma-separated format
+  // Using \d{1,3} instead of \d+ to limit backtracking
+  const rgbMatch = color.match(/^rgba?\((\d{1,3}),\s?(\d{1,3}),\s?(\d{1,3})(?:,\s?([01]?\.?\d*))?\)$/);
+  if (rgbMatch) {
+    return {
+      r: parseInt(rgbMatch[1], 10),
+      g: parseInt(rgbMatch[2], 10),
+      b: parseInt(rgbMatch[3], 10),
+      a: rgbMatch[4] ? parseFloat(rgbMatch[4]) : undefined,
+    };
+  }
+  // Also support space-separated format: rgb(255 0 0) or rgb(255 0 0 / 0.5)
+  const spaceMatch = color.match(/^rgba?\((\d{1,3}) (\d{1,3}) (\d{1,3})(?: \/ ([01]?\.?\d*))?\)$/);
+  if (spaceMatch) {
+    return {
+      r: parseInt(spaceMatch[1], 10),
+      g: parseInt(spaceMatch[2], 10),
+      b: parseInt(spaceMatch[3], 10),
+      a: spaceMatch[4] ? parseFloat(spaceMatch[4]) : undefined,
+    };
+  }
+  return null;
+}
+
+/**
+ * Adjust brightness of an RGB color string
+ * @param color RGB color string
+ * @param brightness Brightness percentage (0-200)
+ * @returns Adjusted RGB color string
+ */
+export function adjustRgbColor(color: string, brightness: number): string {
+  const rgb = parseRgb(color);
+  if (!rgb) return color;
+
+  const multiplier = brightness / 100;
+  const clamp = (n: number) => Math.max(0, Math.min(255, Math.round(n)));
+  const r = clamp(rgb.r * multiplier);
+  const g = clamp(rgb.g * multiplier);
+  const b = clamp(rgb.b * multiplier);
+
+  if (rgb.a !== undefined) {
+    return `rgba(${r}, ${g}, ${b}, ${rgb.a})`;
+  }
+  return `rgb(${r}, ${g}, ${b})`;
+}
+
+/**
+ * Parse lab color string
+ * @param color Lab color string (e.g., "lab(94.1916% -1.09133 -3.56996)")
+ * @returns Parsed values or null if invalid
+ */
+export function parseLab(
+  color: string
+): { l: number; a: number; b: number; alpha?: number } | null {
+  if (!color.startsWith("lab(") || !color.endsWith(")")) return null;
+
+  // Extract content between lab( and )
+  const content = color.slice(4, -1).trim();
+
+  // Check for alpha (contains /)
+  const slashIdx = content.indexOf("/");
+  let mainPart = content;
+  let alphaPart: string | null = null;
+  if (slashIdx !== -1) {
+    mainPart = content.slice(0, slashIdx).trim();
+    alphaPart = content.slice(slashIdx + 1).trim();
+  }
+
+  // Split main part by spaces
+  const parts = mainPart.split(/\s+/);
+  if (parts.length !== 3) return null;
+
+  // First part should end with %
+  if (!parts[0].endsWith("%")) return null;
+  const l = parseFloat(parts[0].slice(0, -1));
+  const a = parseFloat(parts[1]);
+  const b = parseFloat(parts[2]);
+
+  if (isNaN(l) || isNaN(a) || isNaN(b)) return null;
+
+  const result: { l: number; a: number; b: number; alpha?: number } = { l, a, b };
+  if (alphaPart !== null) {
+    const alpha = parseFloat(alphaPart);
+    if (!isNaN(alpha)) result.alpha = alpha;
+  }
+
+  return result;
+}
+
+/**
+ * Adjust brightness of a LAB color by scaling the L (lightness) component
+ * @param color Lab color string
+ * @param brightness Brightness percentage (0-200)
+ * @returns Adjusted lab color string
+ */
+export function adjustLabColor(color: string, brightness: number): string {
+  const lab = parseLab(color);
+  if (!lab) return color;
+
+  const multiplier = brightness / 100;
+  // L is 0-100%, clamp to valid range
+  const newL = Math.max(0, Math.min(100, lab.l * multiplier));
+  // Format with up to 3 decimal places, trimming trailing zeros
+  const lStr = parseFloat(newL.toFixed(3)).toString();
+
+  if (lab.alpha !== undefined) {
+    return `lab(${lStr}% ${lab.a} ${lab.b} / ${lab.alpha})`;
+  }
+  return `lab(${lStr}% ${lab.a} ${lab.b})`;
+}
+
+/**
+ * Adjust any supported color format's brightness
+ * @param color Color string (hex, rgb, rgba, oklch, lab)
+ * @param brightness Brightness percentage (0-200)
+ * @returns Adjusted color string
+ */
+export function adjustColorBrightness(color: string, brightness: number): string {
+  if (brightness === 100) return color;
+
+  // Try lab (browser computed style format)
+  if (color.startsWith("lab(")) {
+    return adjustLabColor(color, brightness);
+  }
+
+  // Try oklch
+  if (color.includes("oklch")) {
+    return adjustOklchColor(color, brightness);
+  }
+
+  // Try hex
+  if (color.startsWith("#")) {
+    return adjustHexColor(color, brightness);
+  }
+
+  // Try rgb/rgba
+  if (color.startsWith("rgb")) {
+    return adjustRgbColor(color, brightness);
+  }
+
+  // Unknown format, return unchanged
+  return color;
+}
+
+/**
  * Get brightness settings from localStorage
  */
 export function getStoredBrightness(): BrightnessSettings {
@@ -201,9 +403,11 @@ function applyBrightnessToVars(
 
   for (const varName of vars) {
     const original = getOriginalValue(root, varName);
-    if (original && original.includes("oklch")) {
-      const adjusted = adjustOklchColor(original, brightness);
-      root.style.setProperty(varName, adjusted);
+    if (original) {
+      const adjusted = adjustColorBrightness(original, brightness);
+      if (adjusted !== original) {
+        root.style.setProperty(varName, adjusted);
+      }
     }
   }
 }

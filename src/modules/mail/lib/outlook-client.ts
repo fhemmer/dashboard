@@ -38,7 +38,7 @@ export async function getOutlookUnreadCount(accountId: string): Promise<number> 
   try {
     const token = await getToken(accountId);
     if (!token || isTokenExpired(token)) {
-      console.error("No valid token for Outlook account:", accountId);
+      // Expected state when account hasn't been authenticated yet
       return 0;
     }
 
@@ -64,7 +64,7 @@ export async function getOutlookMessages(
   try {
     const token = await getToken(accountId);
     if (!token || isTokenExpired(token)) {
-      console.error("No valid token for Outlook account:", accountId);
+      // Expected state when account hasn't been authenticated yet
       return [];
     }
 
@@ -89,7 +89,7 @@ export async function performOutlookBulkAction(
   try {
     const token = await getToken(accountId);
     if (!token || isTokenExpired(token)) {
-      console.error("No valid token for Outlook account:", accountId);
+      // Expected state when account hasn't been authenticated yet
       return { success: false, processedCount: 0 };
     }
 
@@ -115,7 +115,7 @@ export async function searchOutlookMessages(
   try {
     const token = await getToken(request.accountId);
     if (!token || isTokenExpired(token)) {
-      console.error("No valid token for Outlook account:", request.accountId);
+      // Expected state when account hasn't been authenticated yet
       return { messages: [], hasMore: false, error: "Invalid token" };
     }
 
@@ -137,7 +137,7 @@ export async function getOutlookFolders(accountId: string): Promise<MailFolder[]
   try {
     const token = await getToken(accountId);
     if (!token || isTokenExpired(token)) {
-      console.error("No valid token for Outlook account:", accountId);
+      // Expected state when account hasn't been authenticated yet
       return [];
     }
 

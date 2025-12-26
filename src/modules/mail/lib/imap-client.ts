@@ -38,7 +38,7 @@ export async function getImapUnreadCount(accountId: string): Promise<number> {
   try {
     const token = await getToken(accountId);
     if (!token) {
-      console.error("No credentials for IMAP account:", accountId);
+      // Expected state when account hasn't been authenticated yet
       return 0;
     }
 
@@ -75,7 +75,7 @@ export async function getImapMessages(
   try {
     const token = await getToken(accountId);
     if (!token) {
-      console.error("No credentials for IMAP account:", accountId);
+      // Expected state when account hasn't been authenticated yet
       return [];
     }
 
@@ -104,7 +104,7 @@ export async function performImapBulkAction(
   try {
     const token = await getToken(accountId);
     if (!token) {
-      console.error("No credentials for IMAP account:", accountId);
+      // Expected state when account hasn't been authenticated yet
       return { success: false, processedCount: 0 };
     }
 
@@ -131,7 +131,7 @@ export async function searchImapMessages(
   try {
     const token = await getToken(request.accountId);
     if (!token) {
-      console.error("No credentials for IMAP account:", request.accountId);
+      // Expected state when account hasn't been authenticated yet
       return { messages: [], hasMore: false, error: "Invalid credentials" };
     }
 
@@ -156,7 +156,7 @@ export async function getImapFolders(accountId: string): Promise<MailFolder[]> {
   try {
     const token = await getToken(accountId);
     if (!token) {
-      console.error("No credentials for IMAP account:", accountId);
+      // Expected state when account hasn't been authenticated yet
       return [];
     }
 

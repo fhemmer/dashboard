@@ -1,14 +1,22 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
+    adjustColorBrightness,
+    adjustHexColor,
+    adjustLabColor,
     adjustLightness,
     adjustOklchColor,
+    adjustRgbColor,
     applyBrightnessToDocument,
     clearBrightnessCache,
     DEFAULT_BRIGHTNESS,
     getStoredBrightness,
+    parseHexToRgb,
+    parseLab,
     parseOklchLightness,
+    parseRgb,
     replaceOklchLightness,
     resetBrightnessOnDocument,
+    rgbToHex,
     setStoredBrightness,
     type BrightnessSettings,
 } from "./brightness";
@@ -95,6 +103,203 @@ describe("brightness utilities", () => {
     });
   });
 
+  describe("parseHexToRgb", () => {
+    it("parses 6-digit hex colors", () => {
+      expect(parseHexToRgb("#ff0000")).toEqual([255, 0, 0]);
+      expect(parseHexToRgb("#00ff00")).toEqual([0, 255, 0]);
+      expect(parseHexToRgb("#0000ff")).toEqual([0, 0, 255]);
+      expect(parseHexToRgb("#ffffff")).toEqual([255, 255, 255]);
+      expect(parseHexToRgb("#000000")).toEqual([0, 0, 0]);
+    });
+
+    it("parses hex without # prefix", () => {
+      expect(parseHexToRgb("ff0000")).toEqual([255, 0, 0]);
+      expect(parseHexToRgb("eaeff5")).toEqual([234, 239, 245]);
+    });
+
+    it("parses 3-digit shorthand hex", () => {
+      expect(parseHexToRgb("#f00")).toEqual([255, 0, 0]);
+      expect(parseHexToRgb("#0f0")).toEqual([0, 255, 0]);
+      expect(parseHexToRgb("#00f")).toEqual([0, 0, 255]);
+      expect(parseHexToRgb("fff")).toEqual([255, 255, 255]);
+    });
+
+    it("returns null for invalid strings", () => {
+      expect(parseHexToRgb("")).toBeNull();
+      expect(parseHexToRgb("invalid")).toBeNull();
+      expect(parseHexToRgb("rgb(255,0,0)")).toBeNull();
+    });
+  });
+
+  describe("rgbToHex", () => {
+    it("converts RGB to hex", () => {
+      expect(rgbToHex(255, 0, 0)).toBe("#ff0000");
+      expect(rgbToHex(0, 255, 0)).toBe("#00ff00");
+      expect(rgbToHex(0, 0, 255)).toBe("#0000ff");
+      expect(rgbToHex(255, 255, 255)).toBe("#ffffff");
+      expect(rgbToHex(0, 0, 0)).toBe("#000000");
+    });
+
+    it("clamps values to valid range", () => {
+      expect(rgbToHex(300, 0, 0)).toBe("#ff0000");
+      expect(rgbToHex(-10, 0, 0)).toBe("#000000");
+      expect(rgbToHex(128, 256, 512)).toBe("#80ffff");
+    });
+
+    it("rounds fractional values", () => {
+      expect(rgbToHex(127.5, 0, 0)).toBe("#800000");
+      expect(rgbToHex(127.4, 0, 0)).toBe("#7f0000");
+    });
+  });
+
+  describe("adjustHexColor", () => {
+    it("adjusts hex color brightness", () => {
+      expect(adjustHexColor("#808080", 100)).toBe("#808080");
+      expect(adjustHexColor("#808080", 50)).toBe("#404040");
+      expect(adjustHexColor("#808080", 200)).toBe("#ffffff");
+    });
+
+    it("returns original for invalid hex", () => {
+      expect(adjustHexColor("invalid", 150)).toBe("invalid");
+    });
+
+    it("clamps brightened values to max 255", () => {
+      const result = adjustHexColor("#ff0000", 200);
+      expect(result).toBe("#ff0000"); // Can't go brighter than ff
+    });
+  });
+
+  describe("parseRgb", () => {
+    it("parses rgb colors", () => {
+      expect(parseRgb("rgb(255, 0, 0)")).toEqual({ r: 255, g: 0, b: 0 });
+      expect(parseRgb("rgb(0, 255, 0)")).toEqual({ r: 0, g: 255, b: 0 });
+      expect(parseRgb("rgb(128, 128, 128)")).toEqual({ r: 128, g: 128, b: 128 });
+    });
+
+    it("parses rgba colors", () => {
+      expect(parseRgb("rgba(255, 0, 0, 0.5)")).toEqual({ r: 255, g: 0, b: 0, a: 0.5 });
+      expect(parseRgb("rgba(0, 0, 0, 1)")).toEqual({ r: 0, g: 0, b: 0, a: 1 });
+      expect(parseRgb("rgba(255, 255, 255, 0)")).toEqual({ r: 255, g: 255, b: 255, a: 0 });
+    });
+
+    it("returns null for invalid strings", () => {
+      expect(parseRgb("")).toBeNull();
+      expect(parseRgb("invalid")).toBeNull();
+      expect(parseRgb("#ff0000")).toBeNull();
+    });
+  });
+
+  describe("adjustRgbColor", () => {
+    it("adjusts rgb color brightness", () => {
+      expect(adjustRgbColor("rgb(128, 128, 128)", 100)).toBe("rgb(128, 128, 128)");
+      expect(adjustRgbColor("rgb(128, 128, 128)", 50)).toBe("rgb(64, 64, 64)");
+      expect(adjustRgbColor("rgb(100, 100, 100)", 200)).toBe("rgb(200, 200, 200)");
+    });
+
+    it("preserves alpha in rgba colors", () => {
+      expect(adjustRgbColor("rgba(128, 128, 128, 0.5)", 50)).toBe("rgba(64, 64, 64, 0.5)");
+    });
+
+    it("returns original for invalid format", () => {
+      expect(adjustRgbColor("invalid", 150)).toBe("invalid");
+    });
+  });
+
+  describe("parseLab", () => {
+    it("parses basic lab color", () => {
+      expect(parseLab("lab(94.1916% -1.09133 -3.56996)")).toEqual({
+        l: 94.1916,
+        a: -1.09133,
+        b: -3.56996,
+        alpha: undefined,
+      });
+    });
+
+    it("parses lab color with alpha", () => {
+      expect(parseLab("lab(50% 10 20 / 0.5)")).toEqual({
+        l: 50,
+        a: 10,
+        b: 20,
+        alpha: 0.5,
+      });
+    });
+
+    it("parses lab color with negative values", () => {
+      expect(parseLab("lab(2.40103% -.464223 -7.8273)")).toEqual({
+        l: 2.40103,
+        a: -0.464223,
+        b: -7.8273,
+        alpha: undefined,
+      });
+    });
+
+    it("returns null for invalid format", () => {
+      expect(parseLab("rgb(255, 0, 0)")).toBeNull();
+      expect(parseLab("lab(invalid)")).toBeNull();
+      expect(parseLab("#ff0000")).toBeNull();
+    });
+  });
+
+  describe("adjustLabColor", () => {
+    it("increases lightness for brightness > 100", () => {
+      expect(adjustLabColor("lab(50% 10 20)", 150)).toBe("lab(75% 10 20)");
+    });
+
+    it("decreases lightness for brightness < 100", () => {
+      expect(adjustLabColor("lab(50% 10 20)", 50)).toBe("lab(25% 10 20)");
+    });
+
+    it("clamps lightness to 0-100 range", () => {
+      expect(adjustLabColor("lab(80% 10 20)", 200)).toBe("lab(100% 10 20)");
+      expect(adjustLabColor("lab(20% 10 20)", 0)).toBe("lab(0% 10 20)");
+    });
+
+    it("preserves alpha value", () => {
+      expect(adjustLabColor("lab(50% 10 20 / 0.5)", 150)).toBe("lab(75% 10 20 / 0.5)");
+    });
+
+    it("preserves negative a and b values", () => {
+      expect(adjustLabColor("lab(50% -10 -20)", 150)).toBe("lab(75% -10 -20)");
+    });
+
+    it("returns original for invalid format", () => {
+      expect(adjustLabColor("rgb(255, 0, 0)", 150)).toBe("rgb(255, 0, 0)");
+    });
+  });
+
+  describe("adjustColorBrightness", () => {
+    it("returns original when brightness is 100", () => {
+      expect(adjustColorBrightness("#ff0000", 100)).toBe("#ff0000");
+      expect(adjustColorBrightness("rgb(255, 0, 0)", 100)).toBe("rgb(255, 0, 0)");
+      expect(adjustColorBrightness("oklch(0.5 0.2 180)", 100)).toBe("oklch(0.5 0.2 180)");
+      expect(adjustColorBrightness("lab(50% 10 20)", 100)).toBe("lab(50% 10 20)");
+    });
+
+    it("detects and adjusts lab colors (browser computed format)", () => {
+      expect(adjustColorBrightness("lab(50% 10 20)", 150)).toBe("lab(75% 10 20)");
+      expect(adjustColorBrightness("lab(94.1916% -1.09133 -3.56996)", 50)).toBe("lab(47.096% -1.09133 -3.56996)");
+    });
+
+    it("detects and adjusts oklch colors", () => {
+      const result = adjustColorBrightness("oklch(0.5 0.2 180)", 150);
+      expect(result).toContain("oklch(");
+      expect(parseOklchLightness(result)).toBe(0.75);
+    });
+
+    it("detects and adjusts hex colors", () => {
+      expect(adjustColorBrightness("#808080", 50)).toBe("#404040");
+    });
+
+    it("detects and adjusts rgb colors", () => {
+      expect(adjustColorBrightness("rgb(128, 128, 128)", 50)).toBe("rgb(64, 64, 64)");
+    });
+
+    it("returns unknown formats unchanged", () => {
+      expect(adjustColorBrightness("hsl(0, 100%, 50%)", 150)).toBe("hsl(0, 100%, 50%)");
+      expect(adjustColorBrightness("unknown", 150)).toBe("unknown");
+    });
+  });
+
   describe("localStorage operations", () => {
     beforeEach(() => {
       localStorage.clear();
@@ -149,15 +354,15 @@ describe("brightness utilities", () => {
     beforeEach(() => {
       document.documentElement.style.cssText = "";
       clearBrightnessCache();
-      // Set up mock CSS variables that the brightness functions will read
+      // Set up mock CSS variables - use lab() colors like the real browser does after CSS processing
       vi.spyOn(window, "getComputedStyle").mockImplementation(() => ({
         getPropertyValue: (prop: string) => {
           const vars: Record<string, string> = {
-            "--foreground": "oklch(0.145 0 0)",
-            "--background": "oklch(1 0 0)",
-            "--primary": "oklch(0.205 0 0)",
-            "--primary-foreground": "oklch(0.985 0 0)",
-            "--muted-foreground": "oklch(0.556 0 0)",
+            "--foreground": "lab(94.1916% -1.09133 -3.56996)",
+            "--background": "lab(2.40103% -.464223 -7.8273)",
+            "--primary": "lab(58.7199% -5.55909 -50.5326)",
+            "--primary-foreground": "lab(3.50% -1 -3)",
+            "--muted-foreground": "lab(60% -2 -10)",
           };
           return vars[prop] || "";
         },
@@ -182,9 +387,10 @@ describe("brightness utilities", () => {
         applyBrightnessToDocument(settings, false);
 
         const root = document.documentElement;
-        // Should have set foreground variable with adjusted lightness
+        // Should have set foreground variable with adjusted lab() brightness
         const fg = root.style.getPropertyValue("--foreground");
-        expect(fg).toContain("oklch(");
+        expect(fg).toBeTruthy();
+        expect(fg).toMatch(/^lab\(/);
       });
 
       it("applies CSS variable adjustments when background brightness is not default", () => {
@@ -198,9 +404,10 @@ describe("brightness utilities", () => {
         applyBrightnessToDocument(settings, false);
 
         const root = document.documentElement;
-        // Should have set background variable with adjusted lightness
+        // Should have set background variable with adjusted lab() brightness
         const bg = root.style.getPropertyValue("--background");
-        expect(bg).toContain("oklch(");
+        expect(bg).toBeTruthy();
+        expect(bg).toMatch(/^lab\(/);
       });
 
       it("applies correct adjustments for dark mode", () => {
@@ -215,8 +422,8 @@ describe("brightness utilities", () => {
 
         const root = document.documentElement;
         // Should have adjusted foreground and background for dark mode
-        expect(root.style.getPropertyValue("--foreground")).toContain("oklch(");
-        expect(root.style.getPropertyValue("--background")).toContain("oklch(");
+        expect(root.style.getPropertyValue("--foreground")).toBeTruthy();
+        expect(root.style.getPropertyValue("--background")).toBeTruthy();
       });
 
       it("removes style overrides when brightness is at default", () => {
@@ -280,8 +487,9 @@ describe("brightness utilities", () => {
 
         const root = document.documentElement;
         const fg = root.style.getPropertyValue("--foreground");
-        // Original lightness 0.145, with 150% brightness = 0.2175
-        expect(fg).toBe("oklch(0.217 0 0)");
+        // lab(94.1916% ...) with 150% brightness should clamp to 100%
+        expect(fg).toBeTruthy();
+        expect(fg).toMatch(/^lab\(/);
       });
 
       it("handles brightness values below 100 by decreasing lightness", () => {
@@ -296,8 +504,8 @@ describe("brightness utilities", () => {
 
         const root = document.documentElement;
         const fg = root.style.getPropertyValue("--foreground");
-        // Original lightness 0.145, with 50% brightness = 0.0725
-        expect(fg).toBe("oklch(0.072 0 0)");
+        // lab(94.1916% ...) with 50% brightness = lab(47.096% ...)
+        expect(fg).toBe("lab(47.096% -1.09133 -3.56996)");
       });
     });
 

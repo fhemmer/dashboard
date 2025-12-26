@@ -11,6 +11,7 @@ This project follows the **StackProbe** protocol. All agents and contributors mu
 ## Build Scripts
 | Script | Command | Purpose |
 |--------|---------|---------|
+| `bun dev` | `next dev --port 5001` | **Dev server runs on port 5001** (NOT the default 3000) |
 | `bun check` | `lint && typecheck && test:run` | **Run before every commit** - validates all quality gates |
 | `bun lint` | `eslint` | ESLint + SonarQube rules |
 | `bun typecheck` | `tsc --noEmit` | TypeScript type checking |

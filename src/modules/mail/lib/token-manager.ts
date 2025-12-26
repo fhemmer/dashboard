@@ -92,7 +92,11 @@ export async function getToken(accountId: string): Promise<DecryptedToken | null
       .single();
 
     if (error || !data) {
-      console.error("Error fetching token:", error);
+      // PGRST116 = "no rows returned" - expected when token doesn't exist yet
+      // Only log actual errors, not expected "no token" cases
+      if (error && error.code !== "PGRST116") {
+        console.error("Error fetching token:", error);
+      }
       return null;
     }
 
