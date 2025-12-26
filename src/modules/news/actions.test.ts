@@ -354,27 +354,93 @@ describe("News Actions", () => {
       expect(result).toEqual({ success: false, isExcluded: false });
     });
 
-    it("removes exclusion when source is already excluded", async () => {
+    it("adds exclusion when desiredExcluded is true (idempotent path)", async () => {
       mockGetUser.mockResolvedValueOnce({
         data: { user: { id: "user-123" } },
       });
-      mockFrom
-        .mockReturnValueOnce({
-          select: vi.fn().mockReturnValue({
+      mockFrom.mockReturnValueOnce({
+        upsert: vi.fn().mockResolvedValue({ error: null }),
+      });
+      mockRevalidatePath.mockClear();
+
+      const result = await toggleSourceExclusion("source-1", true);
+      expect(result).toEqual({ success: true, isExcluded: true });
+      expect(mockRevalidatePath).toHaveBeenCalledWith("/news");
+    });
+
+    it("removes exclusion when desiredExcluded is false (idempotent path)", async () => {
+      mockGetUser.mockResolvedValueOnce({
+        data: { user: { id: "user-123" } },
+      });
+      mockFrom.mockReturnValueOnce({
+        delete: vi.fn().mockReturnValue({
+          eq: vi.fn().mockReturnValue({
+            eq: vi.fn().mockResolvedValue({ error: null }),
+          }),
+        }),
+      });
+      mockRevalidatePath.mockClear();
+
+      const result = await toggleSourceExclusion("source-1", false);
+      expect(result).toEqual({ success: true, isExcluded: false });
+      expect(mockRevalidatePath).toHaveBeenCalledWith("/news");
+    });
+
+    it("returns failure when add exclusion fails with desiredExcluded=true", async () => {
+      mockGetUser.mockResolvedValueOnce({
+        data: { user: { id: "user-123" } },
+      });
+      mockFrom.mockReturnValueOnce({
+        upsert: vi.fn().mockResolvedValue({ error: { message: "Upsert failed" } }),
+      });
+
+      const result = await toggleSourceExclusion("source-1", true);
+      expect(result).toEqual({ success: false, isExcluded: false });
+    });
+
+    it("returns failure when remove exclusion fails with desiredExcluded=false", async () => {
+      mockGetUser.mockResolvedValueOnce({
+        data: { user: { id: "user-123" } },
+      });
+      mockFrom.mockReturnValueOnce({
+        delete: vi.fn().mockReturnValue({
+          eq: vi.fn().mockReturnValue({
+            eq: vi.fn().mockResolvedValue({ error: { message: "Delete failed" } }),
+          }),
+        }),
+      });
+
+      const result = await toggleSourceExclusion("source-1", false);
+      expect(result).toEqual({ success: false, isExcluded: true });
+    });
+
+    it("removes exclusion when source is already excluded (legacy toggle path)", async () => {
+      // First call: check user auth
+      mockGetUser.mockResolvedValueOnce({
+        data: { user: { id: "user-123" } },
+      });
+      // Second call: check for existing exclusion
+      mockFrom.mockReturnValueOnce({
+        select: vi.fn().mockReturnValue({
+          eq: vi.fn().mockReturnValue({
             eq: vi.fn().mockReturnValue({
-              eq: vi.fn().mockReturnValue({
-                maybeSingle: vi.fn().mockResolvedValue({ data: { source_id: "source-1" } }),
-              }),
+              maybeSingle: vi.fn().mockResolvedValue({ data: { source_id: "source-1" } }),
             }),
           }),
-        })
-        .mockReturnValueOnce({
-          delete: vi.fn().mockReturnValue({
-            eq: vi.fn().mockReturnValue({
-              eq: vi.fn().mockResolvedValue({ error: null }),
-            }),
+        }),
+      });
+      // Third call: auth check for recursive call
+      mockGetUser.mockResolvedValueOnce({
+        data: { user: { id: "user-123" } },
+      });
+      // Fourth call: delete via desiredExcluded=false
+      mockFrom.mockReturnValueOnce({
+        delete: vi.fn().mockReturnValue({
+          eq: vi.fn().mockReturnValue({
+            eq: vi.fn().mockResolvedValue({ error: null }),
           }),
-        });
+        }),
+      });
       mockRevalidatePath.mockClear();
 
       const result = await toggleSourceExclusion("source-1");
@@ -382,75 +448,33 @@ describe("News Actions", () => {
       expect(mockRevalidatePath).toHaveBeenCalledWith("/news");
     });
 
-    it("returns failure when delete fails during toggle", async () => {
+    it("adds exclusion when source is not excluded (legacy toggle path)", async () => {
+      // First call: check user auth
       mockGetUser.mockResolvedValueOnce({
         data: { user: { id: "user-123" } },
       });
-      mockFrom
-        .mockReturnValueOnce({
-          select: vi.fn().mockReturnValue({
+      // Second call: check for existing exclusion
+      mockFrom.mockReturnValueOnce({
+        select: vi.fn().mockReturnValue({
+          eq: vi.fn().mockReturnValue({
             eq: vi.fn().mockReturnValue({
-              eq: vi.fn().mockReturnValue({
-                maybeSingle: vi.fn().mockResolvedValue({ data: { source_id: "source-1" } }),
-              }),
+              maybeSingle: vi.fn().mockResolvedValue({ data: null }),
             }),
           }),
-        })
-        .mockReturnValueOnce({
-          delete: vi.fn().mockReturnValue({
-            eq: vi.fn().mockReturnValue({
-              eq: vi.fn().mockResolvedValue({ error: { message: "Delete failed" } }),
-            }),
-          }),
-        });
-
-      const result = await toggleSourceExclusion("source-1");
-      expect(result).toEqual({ success: false, isExcluded: true });
-    });
-
-    it("adds exclusion when source is not excluded", async () => {
+        }),
+      });
+      // Third call: auth check for recursive call
       mockGetUser.mockResolvedValueOnce({
         data: { user: { id: "user-123" } },
       });
-      mockFrom
-        .mockReturnValueOnce({
-          select: vi.fn().mockReturnValue({
-            eq: vi.fn().mockReturnValue({
-              eq: vi.fn().mockReturnValue({
-                maybeSingle: vi.fn().mockResolvedValue({ data: null }),
-              }),
-            }),
-          }),
-        })
-        .mockReturnValueOnce({
-          upsert: vi.fn().mockResolvedValue({ error: null }),
-        });
+      // Fourth call: upsert via desiredExcluded=true
+      mockFrom.mockReturnValueOnce({
+        upsert: vi.fn().mockResolvedValue({ error: null }),
+      });
       mockRevalidatePath.mockClear();
 
       const result = await toggleSourceExclusion("source-1");
       expect(result).toEqual({ success: true, isExcluded: true });
-    });
-
-    it("returns failure when insert fails during toggle", async () => {
-      mockGetUser.mockResolvedValueOnce({
-        data: { user: { id: "user-123" } },
-      });
-      mockFrom
-        .mockReturnValueOnce({
-          select: vi.fn().mockReturnValue({
-            eq: vi.fn().mockReturnValue({
-              eq: vi.fn().mockReturnValue({
-                maybeSingle: vi.fn().mockResolvedValue({ data: null }),
-              }),
-            }),
-          }),
-        })
-        .mockReturnValueOnce({
-          upsert: vi.fn().mockResolvedValue({ error: { message: "Insert failed" } }),
-        });
-
-      const result = await toggleSourceExclusion("source-1");
-      expect(result).toEqual({ success: false, isExcluded: false });
     });
   });
 

@@ -42,9 +42,11 @@ export function SourceExclusionSettings({
   const [isPending, startTransition] = useTransition();
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleToggle = (sourceId: string) => {
+  const handleToggle = (sourceId: string, currentlyExcluded: boolean) => {
+    // Pass desired state explicitly to prevent race conditions from rapid clicks
+    const desiredExcluded = !currentlyExcluded;
     startTransition(async () => {
-      const result = await toggleSourceExclusion(sourceId);
+      const result = await toggleSourceExclusion(sourceId, desiredExcluded);
       if (result.success) {
         setSources((prev) => updateSourceExclusionStatus(prev, sourceId, result.isExcluded));
       }
@@ -75,7 +77,7 @@ export function SourceExclusionSettings({
               key={source.id}
               source={source}
               isPending={isPending}
-              onToggle={() => handleToggle(source.id)}
+              onToggle={() => handleToggle(source.id, source.isExcluded)}
             />
           ))}
           {sources.length === 0 && (

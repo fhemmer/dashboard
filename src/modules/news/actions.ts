@@ -195,10 +195,13 @@ export async function getUserExcludedSources(): Promise<string[]> {
 
 /**
  * Toggle a source's exclusion status for the current user.
- * Uses upsert with onConflict to prevent race conditions from double-clicks.
+ * Uses explicit set operations (exclude/include) to avoid race conditions.
+ * The caller should pass the desired state based on UI to ensure idempotency.
  */
 export async function toggleSourceExclusion(
-  sourceId: string
+  sourceId: string,
+  /** If provided, sets the exclusion to this state instead of toggling */
+  desiredExcluded?: boolean
 ): Promise<{ success: boolean; isExcluded: boolean }> {
   const supabase = await createClient();
   const {
@@ -209,7 +212,44 @@ export async function toggleSourceExclusion(
     return { success: false, isExcluded: false };
   }
 
-  // Check if currently excluded
+  // If desired state is specified, use idempotent set operations
+  if (desiredExcluded !== undefined) {
+    if (desiredExcluded) {
+      // Add exclusion using upsert (idempotent - safe for concurrent calls)
+      const { error } = await supabase
+        .from("user_news_source_exclusions")
+        .upsert(
+          { user_id: user.id, source_id: sourceId },
+          { onConflict: "user_id,source_id", ignoreDuplicates: true }
+        );
+
+      if (error) {
+        console.error("Failed to add source exclusion:", error);
+        return { success: false, isExcluded: false };
+      }
+
+      revalidatePath("/news");
+      return { success: true, isExcluded: true };
+    } else {
+      // Remove exclusion (idempotent - delete is no-op if already absent)
+      const { error } = await supabase
+        .from("user_news_source_exclusions")
+        .delete()
+        .eq("user_id", user.id)
+        .eq("source_id", sourceId);
+
+      if (error) {
+        console.error("Failed to remove source exclusion:", error);
+        return { success: false, isExcluded: true };
+      }
+
+      revalidatePath("/news");
+      return { success: true, isExcluded: false };
+    }
+  }
+
+  // Legacy toggle behavior: check current state then flip
+  // Note: This path has inherent race conditions but is kept for backward compatibility
   const { data: existing } = await supabase
     .from("user_news_source_exclusions")
     .select("source_id")
@@ -217,38 +257,8 @@ export async function toggleSourceExclusion(
     .eq("source_id", sourceId)
     .maybeSingle();
 
-  if (existing) {
-    // Remove exclusion
-    const { error } = await supabase
-      .from("user_news_source_exclusions")
-      .delete()
-      .eq("user_id", user.id)
-      .eq("source_id", sourceId);
-
-    if (error) {
-      console.error("Failed to remove source exclusion:", error);
-      return { success: false, isExcluded: true };
-    }
-
-    revalidatePath("/news");
-    return { success: true, isExcluded: false };
-  } else {
-    // Add exclusion using upsert to handle race conditions
-    const { error } = await supabase
-      .from("user_news_source_exclusions")
-      .upsert(
-        { user_id: user.id, source_id: sourceId },
-        { onConflict: "user_id,source_id", ignoreDuplicates: true }
-      );
-
-    if (error) {
-      console.error("Failed to add source exclusion:", error);
-      return { success: false, isExcluded: false };
-    }
-
-    revalidatePath("/news");
-    return { success: true, isExcluded: true };
-  }
+  // Recursively call with explicit desired state to use idempotent path
+  return toggleSourceExclusion(sourceId, !existing);
 }
 
 /**

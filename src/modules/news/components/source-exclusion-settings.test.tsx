@@ -5,7 +5,7 @@ import { SourceExclusionSettings } from "./source-exclusion-settings";
 const mockToggleSourceExclusion = vi.fn();
 
 vi.mock("../actions", () => ({
-  toggleSourceExclusion: (sourceId: string) => mockToggleSourceExclusion(sourceId),
+  toggleSourceExclusion: (sourceId: string, desiredExcluded?: boolean) => mockToggleSourceExclusion(sourceId, desiredExcluded),
 }));
 
 describe("SourceExclusionSettings", () => {
@@ -136,7 +136,8 @@ describe("SourceExclusionSettings", () => {
     });
 
     await waitFor(() => {
-      expect(mockToggleSourceExclusion).toHaveBeenCalledWith("source-1");
+      // Now passes desiredExcluded=true because the source is currently not excluded (isExcluded: false)
+      expect(mockToggleSourceExclusion).toHaveBeenCalledWith("source-1", true);
     });
   });
 
