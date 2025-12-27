@@ -189,6 +189,26 @@ describe("mail actions", () => {
       expect(result.success).toBe(true);
     });
 
+    it("should update email address field", async () => {
+      mockFrom.mockReturnValue(createChainMock({ data: {}, error: null }));
+
+      const result = await updateMailAccount("acc-1", {
+        emailAddress: "new@example.com",
+      });
+
+      expect(result.success).toBe(true);
+    });
+
+    it("should update syncFrequencyMinutes field", async () => {
+      mockFrom.mockReturnValue(createChainMock({ data: {}, error: null }));
+
+      const result = await updateMailAccount("acc-1", {
+        syncFrequencyMinutes: 15,
+      });
+
+      expect(result.success).toBe(true);
+    });
+
     it("should return error when database update fails", async () => {
       mockFrom.mockReturnValue(
         createChainMock({ data: null, error: { message: "Update failed" } })
@@ -495,6 +515,22 @@ describe("mail actions", () => {
 
       expect(result.success).toBe(false);
       expect(result.error).toBe("Storage failed");
+    });
+
+    it("should succeed without invalidating caches when user is null", async () => {
+      const { storeToken } = await import("./lib/token-manager");
+      const { invalidateSummaryCache, invalidateMessagesCache } = await import("./lib/cache");
+      vi.mocked(storeToken).mockResolvedValue({ success: true });
+      mockGetUser.mockResolvedValue({ data: { user: null }, error: null });
+
+      const result = await storeAccountCredentials(
+        "acc-1",
+        "access-token"
+      );
+
+      expect(result.success).toBe(true);
+      expect(invalidateSummaryCache).not.toHaveBeenCalled();
+      expect(invalidateMessagesCache).not.toHaveBeenCalled();
     });
   });
 });

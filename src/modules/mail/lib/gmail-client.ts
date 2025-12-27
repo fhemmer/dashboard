@@ -61,6 +61,7 @@ export async function getGmailMessages(
   _folder: string = "inbox",
   _maxResults: number = 50
 ): Promise<MailMessage[]> {
+  // Parameters prefixed with _ are reserved for future Gmail API implementation
   try {
     const token = await getToken(accountId);
     if (!token || isTokenExpired(token)) {
@@ -88,6 +89,7 @@ export async function performGmailBulkAction(
   messageIds: string[],
   _action: BulkActionType
 ): Promise<{ success: boolean; processedCount: number }> {
+  // Parameter prefixed with _ is reserved for future Gmail API implementation
   try {
     const token = await getToken(accountId);
     if (!token || isTokenExpired(token)) {

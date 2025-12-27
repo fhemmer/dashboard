@@ -27,17 +27,27 @@ export function getOpenRouter() {
 
 export const DEFAULT_MODEL = "anthropic/claude-sonnet-4-20250514";
 
-export const MODEL_PRICES: Record<string, { input: number; output: number }> = {
-  "anthropic/claude-sonnet-4-20250514": { input: 0.003, output: 0.015 },
-  "anthropic/claude-opus-4-20250514": { input: 0.015, output: 0.075 },
-  "openai/gpt-4o": { input: 0.005, output: 0.015 },
-  "openai/gpt-4o-mini": { input: 0.00015, output: 0.0006 },
-  "google/gemini-2.0-flash-001": { input: 0.0001, output: 0.0004 },
+export interface ModelPricing {
+  input: number;
+  output: number;
+  contextWindow: number;
+}
+
+export const MODEL_PRICES: Record<string, ModelPricing> = {
+  "anthropic/claude-sonnet-4-20250514": { input: 0.003, output: 0.015, contextWindow: 200000 },
+  "anthropic/claude-opus-4-20250514": { input: 0.015, output: 0.075, contextWindow: 200000 },
+  "openai/gpt-4o": { input: 0.005, output: 0.015, contextWindow: 128000 },
+  "openai/gpt-4o-mini": { input: 0.00015, output: 0.0006, contextWindow: 128000 },
+  "google/gemini-2.0-flash-001": { input: 0.0001, output: 0.0004, contextWindow: 1000000 },
 };
 
 export function calculateCost(model: string, inputTokens: number, outputTokens: number): number {
-  const prices = MODEL_PRICES[model] ?? { input: 0.001, output: 0.002 };
+  const prices = MODEL_PRICES[model] ?? { input: 0.001, output: 0.002, contextWindow: 128000 };
   return (inputTokens * prices.input + outputTokens * prices.output) / 1000;
+}
+
+export function getContextWindow(model: string): number {
+  return MODEL_PRICES[model]?.contextWindow ?? 128000;
 }
 
 export function getAvailableModels(): Array<{ id: string; name: string }> {

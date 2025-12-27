@@ -161,6 +161,39 @@ describe("account actions", () => {
         "NEXT_REDIRECT:/account?success=true"
       );
     });
+
+    it("handles custom brightness values", async () => {
+      mockGetUser.mockResolvedValue({ data: { user: { id: "user-123" } } });
+      mockEq.mockResolvedValue({ error: null });
+
+      const formData = new FormData();
+      formData.set("displayName", "Test User");
+      formData.set("theme", "default");
+      formData.set("font", "geist");
+      formData.set("fgBrightnessLight", "120");
+      formData.set("bgBrightnessLight", "80");
+      formData.set("fgBrightnessDark", "90");
+      formData.set("bgBrightnessDark", "110");
+
+      await expect(updateProfile(formData)).rejects.toThrow(
+        "NEXT_REDIRECT:/account?success=true"
+      );
+    });
+
+    it("defaults brightness values to 100 when not provided", async () => {
+      mockGetUser.mockResolvedValue({ data: { user: { id: "user-123" } } });
+      mockEq.mockResolvedValue({ error: null });
+
+      const formData = new FormData();
+      formData.set("displayName", "Test User");
+      formData.set("theme", "default");
+      formData.set("font", "geist");
+      // Not setting brightness values
+
+      await expect(updateProfile(formData)).rejects.toThrow(
+        "NEXT_REDIRECT:/account?success=true"
+      );
+    });
   });
 
   describe("updateSidebarWidth", () => {

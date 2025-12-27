@@ -26,6 +26,8 @@ export interface ChatMessageInput {
   content: string;
   toolCalls?: Record<string, unknown>[];
   toolResults?: Record<string, unknown>[];
+  inputTokens?: number;
+  outputTokens?: number;
 }
 
 // ============================================================================
@@ -40,6 +42,7 @@ export interface ChatConversation {
   systemPrompt: string | null;
   createdAt: Date;
   updatedAt: Date;
+  archivedAt: Date | null;
 }
 
 export interface ChatConversationInput {

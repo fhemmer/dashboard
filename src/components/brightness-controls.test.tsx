@@ -84,24 +84,45 @@ describe("BrightnessControls", () => {
     expect(bgDarkInput.value).toBe("125");
   });
 
-  it.skip("shows reset button when values differ from defaults", () => {
-    const { rerender } = render(<BrightnessControls />);
-
-    // Default values - no reset button
-    expect(screen.queryByRole("button", { name: /reset/i })).not.toBeInTheDocument();
+  it("shows reset button when values differ from defaults", () => {
+    render(<BrightnessControls defaultValues={{ fgLight: 150, bgLight: 100, fgDark: 100, bgDark: 100 }} />);
 
     // Non-default values - shows reset button
-    rerender(<BrightnessControls defaultValues={{ fgLight: 150, bgLight: 100, fgDark: 100, bgDark: 100 }} />);
-    expect(screen.getByRole("button", { name: /reset/i })).toBeInTheDocument();
+    expect(screen.getByText(/reset to defaults/i)).toBeInTheDocument();
   });
 
-  it.skip("resets to defaults when reset button clicked", async () => {
+  it("shows reset button when bgLight differs from defaults", () => {
+    render(<BrightnessControls defaultValues={{ fgLight: 100, bgLight: 150, fgDark: 100, bgDark: 100 }} />);
+
+    expect(screen.getByText(/reset to defaults/i)).toBeInTheDocument();
+  });
+
+  it("shows reset button when fgDark differs from defaults", () => {
+    render(<BrightnessControls defaultValues={{ fgLight: 100, bgLight: 100, fgDark: 150, bgDark: 100 }} />);
+
+    expect(screen.getByText(/reset to defaults/i)).toBeInTheDocument();
+  });
+
+  it("shows reset button when bgDark differs from defaults", () => {
+    render(<BrightnessControls defaultValues={{ fgLight: 100, bgLight: 100, fgDark: 100, bgDark: 150 }} />);
+
+    expect(screen.getByText(/reset to defaults/i)).toBeInTheDocument();
+  });
+
+  it("does not show reset button when values are defaults", () => {
+    render(<BrightnessControls />);
+
+    // Default values - no reset button
+    expect(screen.queryByText(/reset to defaults/i)).not.toBeInTheDocument();
+  });
+
+  it("resets to defaults when reset button clicked", async () => {
     const user = userEvent.setup();
     const { resetBrightnessOnDocument, setStoredBrightness } = await import("@/lib/brightness");
 
     render(<BrightnessControls defaultValues={{ fgLight: 150, bgLight: 100, fgDark: 100, bgDark: 100 }} />);
 
-    const resetButton = screen.getByRole("button", { name: /reset/i });
+    const resetButton = screen.getByText(/reset to defaults/i);
     await user.click(resetButton);
 
     expect(resetBrightnessOnDocument).toHaveBeenCalled();
@@ -154,5 +175,53 @@ describe("BrightnessControls", () => {
 
     expect(screen.getByText(/adjust brightness for light theme/i)).toBeInTheDocument();
     expect(screen.getByText(/adjust brightness for dark theme/i)).toBeInTheDocument();
+  });
+
+  it("falls back to localStorage when no defaultValues provided", async () => {
+    const { getStoredBrightness } = await import("@/lib/brightness");
+
+    render(<BrightnessControls />);
+
+    // Should call getStoredBrightness when no defaults are provided
+    expect(getStoredBrightness).toHaveBeenCalled();
+  });
+
+  it("uses partial defaultValues with defaults for missing values", () => {
+    render(<BrightnessControls defaultValues={{ fgLight: 150 }} />);
+
+    const fgLightInput = document.querySelector('input[name="fgBrightnessLight"]') as HTMLInputElement;
+    const bgLightInput = document.querySelector('input[name="bgBrightnessLight"]') as HTMLInputElement;
+
+    expect(fgLightInput.value).toBe("150");
+    expect(bgLightInput.value).toBe("100"); // Falls back to default
+  });
+
+  it("clears brightness cache when settings change", async () => {
+    const { clearBrightnessCache } = await import("@/lib/brightness");
+
+    render(<BrightnessControls />);
+
+    // clearBrightnessCache should be called on mount
+    expect(clearBrightnessCache).toHaveBeenCalled();
+  });
+
+  it("applies brightness to document on mount", async () => {
+    const { applyBrightnessToDocument } = await import("@/lib/brightness");
+
+    // Set up document in dark mode
+    document.documentElement.classList.add("dark");
+
+    render(<BrightnessControls />);
+
+    // Should apply with isDark = true
+    expect(applyBrightnessToDocument).toHaveBeenCalledWith(
+      expect.objectContaining({
+        fgLight: 100,
+        bgLight: 100,
+        fgDark: 100,
+        bgDark: 100,
+      }),
+      true
+    );
   });
 });

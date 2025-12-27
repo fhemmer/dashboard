@@ -20,6 +20,7 @@
     "@dnd-kit/utilities": "^3.2.2",
     "@microsoft/microsoft-graph-client": "^3.0.7",
     "@openrouter/ai-sdk-provider": "^1.5.4",
+    "@radix-ui/react-alert-dialog": "^1.1.15",
     "@radix-ui/react-avatar": "^1.1.11",
     "@radix-ui/react-collapsible": "^1.1.12",
     "@radix-ui/react-dialog": "^1.1.15",

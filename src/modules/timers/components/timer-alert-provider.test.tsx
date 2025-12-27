@@ -24,6 +24,22 @@ let mockGainNode: {
   };
 };
 
+// Define MockAudioContext at module level so it's available for all tests
+class MockAudioContextClass {
+  createOscillator: ReturnType<typeof vi.fn>;
+  createGain: ReturnType<typeof vi.fn>;
+  destination = {};
+  currentTime = 0;
+  state = "running";
+  close: ReturnType<typeof vi.fn>;
+
+  constructor() {
+    this.createOscillator = mockCreateOscillator;
+    this.createGain = mockCreateGain;
+    this.close = mockClose;
+  }
+}
+
 describe("TimerAlertProvider", () => {
   const mockTimer: Timer = {
     id: "timer-1",
@@ -88,19 +104,8 @@ describe("TimerAlertProvider", () => {
     });
     globalThis.Notification = NotificationMock;
 
-    // Mock AudioContext - must be a proper constructor function
-    // Define it as a proper class that can be instantiated with 'new'
-    class MockAudioContext {
-      createOscillator = mockCreateOscillator;
-      createGain = mockCreateGain;
-      destination = {};
-      currentTime = 0;
-      state = "running";
-      close = mockClose;
-    }
-
-    // Ensure the mock works with instanceof and is properly constructible
-    globalThis.AudioContext = MockAudioContext as unknown as typeof AudioContext;
+    // Mock AudioContext using the module-level class
+    globalThis.AudioContext = MockAudioContextClass as unknown as typeof AudioContext;
   });
 
   afterEach(() => {
@@ -128,21 +133,13 @@ describe("TimerAlertProvider", () => {
   });
 
   it("renders nothing when notification permission is granted", async () => {
-    // Re-establish AudioContext mock for this test
-    class MockAudioContext {
-      createOscillator = mockCreateOscillator;
-      createGain = mockCreateGain;
-      destination = {};
-      currentTime = 0;
-      state = "running";
-      close = mockClose;
-    }
-    globalThis.AudioContext = MockAudioContext as unknown as typeof AudioContext;
-
     Object.defineProperty(globalThis.Notification, "permission", {
       value: "granted",
       configurable: true,
     });
+
+    // Ensure AudioContext mock is set (may be cleared by other tests)
+    globalThis.AudioContext = MockAudioContextClass as unknown as typeof AudioContext;
 
     const { container } = render(<TimerAlertProvider />);
 
@@ -195,17 +192,6 @@ describe("TimerAlertProvider", () => {
   });
 
   it("does not play alarm sound when enableAlarm is false", async () => {
-    // Re-establish AudioContext mock in case it was overwritten by other tests
-    class MockAudioContext {
-      createOscillator = mockCreateOscillator;
-      createGain = mockCreateGain;
-      destination = {};
-      currentTime = 0;
-      state = "running";
-      close = mockClose;
-    }
-    globalThis.AudioContext = MockAudioContext as unknown as typeof AudioContext;
-
     Object.defineProperty(globalThis.Notification, "permission", {
       value: "granted",
       configurable: true,
@@ -230,17 +216,6 @@ describe("TimerAlertProvider", () => {
   });
 
   it("shows browser notification when permission is granted", async () => {
-    // Re-establish AudioContext mock in case it was overwritten by other tests
-    class MockAudioContext {
-      createOscillator = mockCreateOscillator;
-      createGain = mockCreateGain;
-      destination = {};
-      currentTime = 0;
-      state = "running";
-      close = mockClose;
-    }
-    globalThis.AudioContext = MockAudioContext as unknown as typeof AudioContext;
-
     Object.defineProperty(globalThis.Notification, "permission", {
       value: "granted",
       configurable: true,
@@ -248,9 +223,14 @@ describe("TimerAlertProvider", () => {
 
     render(<TimerAlertProvider />);
 
-    // Wait for permission state to update
+    // Wait for permission state to update and effect to re-register listener
     await waitFor(() => {
       expect(screen.queryByText("Enable Notifications")).not.toBeInTheDocument();
+    });
+
+    // Give React time to complete the effect re-run with new permission state
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 50));
     });
 
     act(() => {
@@ -271,17 +251,6 @@ describe("TimerAlertProvider", () => {
   });
 
   it("shows browser notification even when audio is disabled", async () => {
-    // Re-establish AudioContext mock in case it was overwritten by other tests
-    class MockAudioContext {
-      createOscillator = mockCreateOscillator;
-      createGain = mockCreateGain;
-      destination = {};
-      currentTime = 0;
-      state = "running";
-      close = mockClose;
-    }
-    globalThis.AudioContext = MockAudioContext as unknown as typeof AudioContext;
-
     Object.defineProperty(globalThis.Notification, "permission", {
       value: "granted",
       configurable: true,
@@ -289,9 +258,14 @@ describe("TimerAlertProvider", () => {
 
     render(<TimerAlertProvider />);
 
-    // Wait for permission state to update
+    // Wait for permission state to update and effect to re-register listener
     await waitFor(() => {
       expect(screen.queryByText("Enable Notifications")).not.toBeInTheDocument();
+    });
+
+    // Give React time to complete the effect re-run with new permission state
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 50));
     });
 
     act(() => {
@@ -446,5 +420,43 @@ describe("TimerAlertProvider", () => {
 
     // Restore
     globalThis.AudioContext = savedAudioContext;
+  });
+
+  it("handles missing Notification API gracefully", async () => {
+    // Remove Notification API
+    const savedNotification = globalThis.Notification;
+    // @ts-expect-error - Intentionally removing for test
+    delete globalThis.Notification;
+
+    render(<TimerAlertProvider />);
+
+    // Should show permission prompt because permission stays at default
+    await waitFor(() => {
+      expect(screen.getByText("Enable Notifications")).toBeInTheDocument();
+    });
+
+    // Restore
+    globalThis.Notification = savedNotification;
+  });
+
+  it("handles requestPermission when Notification API is missing", async () => {
+    // Start with Notification API present to render the prompt
+    render(<TimerAlertProvider />);
+
+    expect(screen.getByText("Enable Notifications")).toBeInTheDocument();
+
+    // Remove Notification before clicking
+    const savedNotification = globalThis.Notification;
+    // @ts-expect-error - Intentionally removing for test
+    delete globalThis.Notification;
+
+    const user = userEvent.setup();
+    const enableButton = screen.getByRole("button", { name: "Enable" });
+
+    // Should not throw when clicking without Notification API
+    await user.click(enableButton);
+
+    // Restore
+    globalThis.Notification = savedNotification;
   });
 });

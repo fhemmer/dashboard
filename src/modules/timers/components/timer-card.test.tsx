@@ -1,4 +1,4 @@
-import { act, render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Timer } from "../types";
@@ -393,6 +393,30 @@ describe("TimerCard", () => {
         expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
       });
       expect(mockUpdateTimer).not.toHaveBeenCalled();
+    });
+
+    it("opens edit mode when Enter key is pressed on timer display", async () => {
+      render(<TimerCard timer={baseTimer} />);
+
+      const display = screen.getByRole("button", { name: /click to edit time/i });
+      display.focus();
+      fireEvent.keyDown(display, { key: "Enter" });
+
+      await waitFor(() => {
+        expect(screen.getByRole("textbox")).toBeInTheDocument();
+      });
+    });
+
+    it("opens edit mode when Space key is pressed on timer display", async () => {
+      render(<TimerCard timer={baseTimer} />);
+
+      const display = screen.getByRole("button", { name: /click to edit time/i });
+      display.focus();
+      fireEvent.keyDown(display, { key: " " });
+
+      await waitFor(() => {
+        expect(screen.getByRole("textbox")).toBeInTheDocument();
+      });
     });
 
     it("saves on Enter key", async () => {

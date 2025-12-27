@@ -107,6 +107,19 @@ describe("timers actions", () => {
       expect(result.timers).toEqual([]);
     });
 
+    it("returns empty array when data is null but no error", async () => {
+      const chain = createChainMock({
+        data: null,
+        error: null,
+      });
+      mockFrom.mockReturnValue(chain);
+
+      const result = await getTimers();
+
+      expect(result.error).toBeUndefined();
+      expect(result.timers).toEqual([]);
+    });
+
     it("syncs running timers on load", async () => {
       const mockData = [
         {

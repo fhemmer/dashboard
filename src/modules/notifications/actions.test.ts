@@ -110,6 +110,15 @@ describe("notifications actions", () => {
       expect(result.error).toBe("DB error");
     });
 
+    it("returns empty array when data is null but no error", async () => {
+      mockLimit.mockResolvedValue({ data: null, error: null });
+
+      const result = await getNotifications();
+
+      expect(result.notifications).toEqual([]);
+      expect(result.error).toBeNull();
+    });
+
     it("catches and returns thrown Error", async () => {
       mockGetUser.mockRejectedValue(new Error("Network error"));
 
@@ -159,6 +168,17 @@ describe("notifications actions", () => {
 
       expect(result.count).toBe(0);
       expect(result.error).toBe("DB error");
+    });
+
+    it("returns 0 when count is null but no error", async () => {
+      mockSelect.mockReturnValue({
+        eq: vi.fn().mockResolvedValue({ count: null, error: null }),
+      });
+
+      const result = await getUnreadCount();
+
+      expect(result.count).toBe(0);
+      expect(result.error).toBeNull();
     });
 
     it("catches and returns thrown Error", async () => {

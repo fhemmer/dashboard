@@ -3,26 +3,26 @@
 /**
  * Chat Module Server Actions
  * Server-side functions for managing chat conversations
- * 
+ *
  * NOTE: Uses type assertions for chat tables until migration is applied
  * and database types are regenerated.
  */
 
-import { DEFAULT_MODEL } from "@/lib/agent";
+import { DEFAULT_MODEL, runAgent as executeAgent, type AgentOptions, type AgentResult } from "@/lib/agent";
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 
 import type {
-  ChatConversation,
-  ChatConversationInput,
-  ChatConversationWithMessages,
-  ChatMessage,
-  ChatMessageInput,
-  ChatSummary,
-  ConversationResult,
-  ConversationsResult,
-  CreateConversationResult,
-  UpdateResult,
+    ChatConversation,
+    ChatConversationInput,
+    ChatConversationWithMessages,
+    ChatMessage,
+    ChatMessageInput,
+    ChatSummary,
+    ConversationResult,
+    ConversationsResult,
+    CreateConversationResult,
+    UpdateResult,
 } from "./types";
 
 // Temporary types until migration is applied
@@ -34,6 +34,7 @@ interface ConversationRow {
   system_prompt: string | null;
   created_at: string;
   updated_at: string;
+  archived_at: string | null;
 }
 
 interface MessageRow {
@@ -51,7 +52,7 @@ interface MessageRow {
 /**
  * Get all conversations for the current user
  */
-export async function getConversations(): Promise<ConversationsResult> {
+export async function getConversations(includeArchived = false): Promise<ConversationsResult> {
   const supabase = await createClient();
   const {
     data: { user },
@@ -61,11 +62,16 @@ export async function getConversations(): Promise<ConversationsResult> {
     return { conversations: [], error: "Not authenticated" };
   }
 
-  const { data, error } = await supabase
+  let query = supabase
     .from("chat_conversations" as "demo")
     .select("*")
-    .eq("user_id", user.id)
-    .order("updated_at", { ascending: false });
+    .eq("user_id", user.id);
+
+  if (!includeArchived) {
+    query = query.is("archived_at", null);
+  }
+
+  const { data, error } = await query.order("updated_at", { ascending: false });
 
   if (error) {
     console.error("Error fetching conversations:", error);
@@ -80,6 +86,7 @@ export async function getConversations(): Promise<ConversationsResult> {
     systemPrompt: row.system_prompt,
     createdAt: new Date(row.created_at),
     updatedAt: new Date(row.updated_at),
+    archivedAt: row.archived_at ? new Date(row.archived_at) : null,
   }));
 
   return { conversations };
@@ -147,6 +154,7 @@ export async function getConversation(id: string): Promise<ConversationResult> {
     systemPrompt: conv.system_prompt,
     createdAt: new Date(conv.created_at),
     updatedAt: new Date(conv.updated_at),
+    archivedAt: conv.archived_at ? new Date(conv.archived_at) : null,
     messages,
   };
 
@@ -259,6 +267,64 @@ export async function deleteConversation(id: string): Promise<UpdateResult> {
 }
 
 /**
+ * Archive a conversation (soft delete)
+ */
+export async function archiveConversation(id: string): Promise<UpdateResult> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { success: false, error: "Not authenticated" };
+  }
+
+  const { error } = await supabase
+    .from("chat_conversations" as "demo")
+    .update({ archived_at: new Date().toISOString() } as Record<string, unknown>)
+    .eq("id", id)
+    .eq("user_id", user.id);
+
+  if (error) {
+    console.error("Error archiving conversation:", error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/chat");
+  revalidatePath(`/chat/${id}`);
+  return { success: true };
+}
+
+/**
+ * Unarchive a conversation
+ */
+export async function unarchiveConversation(id: string): Promise<UpdateResult> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { success: false, error: "Not authenticated" };
+  }
+
+  const { error } = await supabase
+    .from("chat_conversations" as "demo")
+    .update({ archived_at: null } as Record<string, unknown>)
+    .eq("id", id)
+    .eq("user_id", user.id);
+
+  if (error) {
+    console.error("Error unarchiving conversation:", error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/chat");
+  revalidatePath(`/chat/${id}`);
+  return { success: true };
+}
+
+/**
  * Add a message to a conversation
  */
 export async function addMessage(
@@ -295,6 +361,8 @@ export async function addMessage(
       content: input.content,
       tool_calls: input.toolCalls ?? null,
       tool_results: input.toolResults ?? null,
+      input_tokens: input.inputTokens ?? null,
+      output_tokens: input.outputTokens ?? null,
     })
     .select("id")
     .single();
@@ -350,10 +418,28 @@ export async function getChatSummary(): Promise<ChatSummary> {
     systemPrompt: row.system_prompt,
     createdAt: new Date(row.created_at),
     updatedAt: new Date(row.updated_at),
+    archivedAt: row.archived_at ? new Date(row.archived_at) : null,
   }));
 
   return {
     recentConversations,
     totalConversations: count ?? 0,
   };
+}
+
+/**
+ * Run the AI agent (server action)
+ * This must be a server action because OPENROUTER_API_KEY is server-side only
+ */
+export async function runAgentAction(options: AgentOptions): Promise<AgentResult> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error("Not authenticated");
+  }
+
+  return executeAgent(options);
 }

@@ -1,13 +1,16 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
-  addMessage,
-  createConversation,
-  deleteConversation,
-  getChatSummary,
-  getConversation,
-  getConversations,
-  updateConversation,
+    addMessage,
+    archiveConversation,
+    createConversation,
+    deleteConversation,
+    getChatSummary,
+    getConversation,
+    getConversations,
+    runAgentAction,
+    unarchiveConversation,
+    updateConversation,
 } from "./actions";
 
 vi.mock("next/cache", () => ({
@@ -24,6 +27,13 @@ vi.mock("@/lib/supabase/server", () => ({
       from: mockFrom,
     })
   ),
+}));
+
+const mockExecuteAgent = vi.fn();
+
+vi.mock("@/lib/agent", () => ({
+  DEFAULT_MODEL: "test-model",
+  runAgent: (...args: unknown[]) => mockExecuteAgent(...args),
 }));
 
 describe("chat actions", () => {
@@ -52,6 +62,46 @@ describe("chat actions", () => {
           system_prompt: "Be helpful",
           created_at: "2024-01-01T00:00:00Z",
           updated_at: "2024-01-02T00:00:00Z",
+          archived_at: null,
+        },
+      ];
+
+      mockFrom.mockReturnValue({
+        select: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockReturnThis(),
+        is: vi.fn().mockReturnThis(),
+        order: vi.fn().mockResolvedValue({ data: mockData, error: null }),
+      });
+
+      const result = await getConversations();
+
+      expect(result.error).toBeUndefined();
+      expect(result.conversations).toHaveLength(1);
+      expect(result.conversations[0].title).toBe("Test Conversation");
+      expect(result.conversations[0].archivedAt).toBeNull();
+    });
+
+    it("includes archived conversations when requested", async () => {
+      const mockData = [
+        {
+          id: "conv-1",
+          user_id: "user-123",
+          title: "Active Chat",
+          model: "gpt-4",
+          system_prompt: null,
+          created_at: "2024-01-01T00:00:00Z",
+          updated_at: "2024-01-02T00:00:00Z",
+          archived_at: null,
+        },
+        {
+          id: "conv-2",
+          user_id: "user-123",
+          title: "Archived Chat",
+          model: "gpt-4",
+          system_prompt: null,
+          created_at: "2024-01-01T00:00:00Z",
+          updated_at: "2024-01-02T00:00:00Z",
+          archived_at: "2024-01-03T00:00:00Z",
         },
       ];
 
@@ -61,17 +111,17 @@ describe("chat actions", () => {
         order: vi.fn().mockResolvedValue({ data: mockData, error: null }),
       });
 
-      const result = await getConversations();
+      const result = await getConversations(true);
 
-      expect(result.error).toBeUndefined();
-      expect(result.conversations).toHaveLength(1);
-      expect(result.conversations[0].title).toBe("Test Conversation");
+      expect(result.conversations).toHaveLength(2);
+      expect(result.conversations[1].archivedAt).toEqual(new Date("2024-01-03T00:00:00Z"));
     });
 
     it("returns error on database failure", async () => {
       mockFrom.mockReturnValue({
         select: vi.fn().mockReturnThis(),
         eq: vi.fn().mockReturnThis(),
+        is: vi.fn().mockReturnThis(),
         order: vi.fn().mockResolvedValue({
           data: null,
           error: { message: "Database error" },
@@ -88,6 +138,7 @@ describe("chat actions", () => {
       mockFrom.mockReturnValue({
         select: vi.fn().mockReturnThis(),
         eq: vi.fn().mockReturnThis(),
+        is: vi.fn().mockReturnThis(),
         order: vi.fn().mockResolvedValue({ data: null, error: null }),
       });
 
@@ -117,6 +168,7 @@ describe("chat actions", () => {
         system_prompt: null,
         created_at: "2024-01-01T00:00:00Z",
         updated_at: "2024-01-02T00:00:00Z",
+        archived_at: null,
       };
 
       const msgData = [
@@ -151,6 +203,7 @@ describe("chat actions", () => {
       expect(result.conversation).toBeDefined();
       expect(result.conversation?.title).toBe("Test");
       expect(result.conversation?.messages).toHaveLength(1);
+      expect(result.conversation?.archivedAt).toBeNull();
     });
 
     it("returns not found error for PGRST116", async () => {
@@ -396,6 +449,80 @@ describe("chat actions", () => {
     });
   });
 
+  describe("archiveConversation", () => {
+    it("returns error when not authenticated", async () => {
+      mockGetUser.mockResolvedValue({ data: { user: null }, error: null });
+      const result = await archiveConversation("conv-1");
+      expect(result).toEqual({ success: false, error: "Not authenticated" });
+    });
+
+    it("archives conversation", async () => {
+      const chain = {
+        update: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockReturnThis(),
+      };
+      chain.eq.mockReturnValueOnce(chain).mockResolvedValueOnce({ error: null });
+      mockFrom.mockReturnValue(chain);
+
+      const result = await archiveConversation("conv-1");
+
+      expect(result.success).toBe(true);
+    });
+
+    it("returns error on database failure", async () => {
+      const chain = {
+        update: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockReturnThis(),
+      };
+      chain.eq
+        .mockReturnValueOnce(chain)
+        .mockResolvedValueOnce({ error: { message: "Archive failed" } });
+      mockFrom.mockReturnValue(chain);
+
+      const result = await archiveConversation("conv-1");
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("Archive failed");
+    });
+  });
+
+  describe("unarchiveConversation", () => {
+    it("returns error when not authenticated", async () => {
+      mockGetUser.mockResolvedValue({ data: { user: null }, error: null });
+      const result = await unarchiveConversation("conv-1");
+      expect(result).toEqual({ success: false, error: "Not authenticated" });
+    });
+
+    it("unarchives conversation", async () => {
+      const chain = {
+        update: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockReturnThis(),
+      };
+      chain.eq.mockReturnValueOnce(chain).mockResolvedValueOnce({ error: null });
+      mockFrom.mockReturnValue(chain);
+
+      const result = await unarchiveConversation("conv-1");
+
+      expect(result.success).toBe(true);
+    });
+
+    it("returns error on database failure", async () => {
+      const chain = {
+        update: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockReturnThis(),
+      };
+      chain.eq
+        .mockReturnValueOnce(chain)
+        .mockResolvedValueOnce({ error: { message: "Unarchive failed" } });
+      mockFrom.mockReturnValue(chain);
+
+      const result = await unarchiveConversation("conv-1");
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("Unarchive failed");
+    });
+  });
+
   describe("addMessage", () => {
     it("returns error when not authenticated", async () => {
       mockGetUser.mockResolvedValue({ data: { user: null }, error: null });
@@ -498,6 +625,7 @@ describe("chat actions", () => {
           system_prompt: null,
           created_at: "2024-01-01T00:00:00Z",
           updated_at: "2024-01-02T00:00:00Z",
+          archived_at: null,
         },
       ];
 
@@ -535,6 +663,37 @@ describe("chat actions", () => {
       const result = await getChatSummary();
 
       expect(result.totalConversations).toBe(0);
+    });
+  });
+
+  describe("runAgentAction", () => {
+    it("throws error when not authenticated", async () => {
+      mockGetUser.mockResolvedValue({ data: { user: null }, error: null });
+
+      await expect(runAgentAction({ prompt: "Hello" })).rejects.toThrow(
+        "Not authenticated"
+      );
+    });
+
+    it("executes agent for authenticated user", async () => {
+      const mockResult = {
+        text: "Hello, how can I help?",
+        usage: { promptTokens: 10, completionTokens: 20, totalTokens: 30 },
+        finishReason: "stop",
+        steps: 1,
+      };
+      mockExecuteAgent.mockResolvedValue(mockResult);
+
+      const result = await runAgentAction({
+        prompt: "Hello",
+        model: "gpt-4",
+      });
+
+      expect(result).toEqual(mockResult);
+      expect(mockExecuteAgent).toHaveBeenCalledWith({
+        prompt: "Hello",
+        model: "gpt-4",
+      });
     });
   });
 });

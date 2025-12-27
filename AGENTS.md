@@ -78,3 +78,4 @@ See `VISION.md` for the full roadmap.
 - **Plan-First**: Always present a plan before making modifications.
 - **Consent**: Wait for explicit user approval before executing non-trivial tool calls.
 - **Non-Interactive**: Use non-interactive flags for all CLI commands (e.g., `--yes`, `supabase db push --yes`).
+- **Frontend Verification**: After ANY frontend change, use Playwright (`mcp_playwright_mc_browser_*` tools) to visually verify the changes work correctly. Navigate to the affected page, take a snapshot, and confirm the UI renders as expected.

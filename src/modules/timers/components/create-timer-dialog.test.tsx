@@ -236,4 +236,53 @@ describe("CreateTimerDialog", () => {
       });
     });
   });
+
+  it("does not create timer when server returns failure", async () => {
+    mockCreateTimer.mockResolvedValue({ success: false, error: "Failed" });
+    const onCreated = vi.fn();
+
+    render(<CreateTimerDialog onCreated={onCreated} />);
+
+    await userEvent.click(screen.getByText("Create Timer"));
+
+    // Wait for dialog to open
+    await waitFor(() => {
+      expect(screen.getByLabelText("Timer Name")).toBeInTheDocument();
+    });
+
+    // Fill and submit
+    const nameInput = screen.getByLabelText("Timer Name");
+    await userEvent.type(nameInput, "New Timer");
+
+    const submitButton = screen.getAllByText("Create Timer")[1];
+    await userEvent.click(submitButton);
+
+    // Assert onCreated was NOT called since server returned failure
+    await waitFor(() => {
+      expect(mockCreateTimer).toHaveBeenCalled();
+    });
+    // onCreated should NOT be called
+    expect(onCreated).not.toHaveBeenCalled();
+    // Dialog should remain open
+    expect(screen.getByText("Create New Timer")).toBeInTheDocument();
+  });
+
+  it("clamps duration to max 1440 minutes", async () => {
+    render(<CreateTimerDialog />);
+
+    await userEvent.click(screen.getByText("Create Timer"));
+
+    // Wait for dialog to open
+    await waitFor(() => {
+      expect(screen.getByLabelText("Duration (minutes)")).toBeInTheDocument();
+    });
+
+    // Type a very large number
+    const durationInput = screen.getByLabelText("Duration (minutes)") as HTMLInputElement;
+    await userEvent.clear(durationInput);
+    await userEvent.type(durationInput, "9999");
+
+    // Should clamp to 1440
+    expect(Number(durationInput.value)).toBeLessThanOrEqual(1440);
+  });
 });

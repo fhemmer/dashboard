@@ -1,8 +1,8 @@
-import { getConversations } from "@/modules/chat/actions";
 import { Button } from "@/components/ui/button";
-import { Bot, MessageSquare, Plus } from "lucide-react";
+import { getConversations } from "@/modules/chat/actions";
+import { Bot, Plus } from "lucide-react";
 import Link from "next/link";
-import { formatMessageDate } from "@/modules/chat";
+import { ConversationListItem } from "./conversation-list-item";
 
 /**
  * Chat Page
@@ -49,21 +49,10 @@ export default async function ChatPage() {
       ) : (
         <div className="grid gap-4">
           {conversations.map((conversation) => (
-            <Link
+            <ConversationListItem
               key={conversation.id}
-              href={`/chat/${conversation.id}`}
-              className="flex items-center gap-4 p-4 rounded-lg border bg-card hover:bg-accent transition-colors"
-            >
-              <MessageSquare className="h-8 w-8 text-muted-foreground flex-shrink-0" />
-              <div className="flex-1 min-w-0">
-                <h3 className="font-medium truncate">
-                  {conversation.title ?? "New Chat"}
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  {conversation.model.split("/").pop()} • {formatMessageDate(conversation.updatedAt)}
-                </p>
-              </div>
-            </Link>
+              conversation={conversation}
+            />
           ))}
         </div>
       )}

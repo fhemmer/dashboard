@@ -119,12 +119,35 @@ describe("agent client", () => {
   describe("MODEL_PRICES", () => {
     it("should have correct prices for Claude Sonnet 4", async () => {
       const { MODEL_PRICES } = await import("./client");
-      expect(MODEL_PRICES["anthropic/claude-sonnet-4-20250514"]).toEqual({ input: 0.003, output: 0.015 });
+      expect(MODEL_PRICES["anthropic/claude-sonnet-4-20250514"]).toEqual({ input: 0.003, output: 0.015, contextWindow: 200000 });
     });
 
     it("should have correct prices for all models", async () => {
       const { MODEL_PRICES } = await import("./client");
       expect(Object.keys(MODEL_PRICES)).toHaveLength(5);
+    });
+
+    it("should include context window for all models", async () => {
+      const { MODEL_PRICES } = await import("./client");
+      for (const key of Object.keys(MODEL_PRICES)) {
+        expect(MODEL_PRICES[key].contextWindow).toBeGreaterThan(0);
+      }
+    });
+  });
+
+  describe("getContextWindow", () => {
+    it("should return context window for known model", async () => {
+      const { getContextWindow } = await import("./client");
+      expect(getContextWindow("anthropic/claude-sonnet-4-20250514")).toBe(200000);
+      expect(getContextWindow("anthropic/claude-opus-4-20250514")).toBe(200000);
+      expect(getContextWindow("openai/gpt-4o")).toBe(128000);
+      expect(getContextWindow("openai/gpt-4o-mini")).toBe(128000);
+      expect(getContextWindow("google/gemini-2.0-flash-001")).toBe(1000000);
+    });
+
+    it("should return default context window for unknown model", async () => {
+      const { getContextWindow } = await import("./client");
+      expect(getContextWindow("unknown/model")).toBe(128000);
     });
   });
 });

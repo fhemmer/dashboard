@@ -3,10 +3,8 @@ $ vitest run --coverage
 [1m[46m RUN [49m[22m [36mv4.0.16 [39m[90mF:/github/HemSoft/dashboard[39m
       [2mCoverage enabled with [22m[33mv8[39m
 
- [32mΓ£ô[39m src/lib/agent/tools.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 467[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m should have correct description [33m 447[2mms[22m[39m
- [32mΓ£ô[39m src/components/header.server.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 1507[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m getStoredTheme returns null when window is undefined [33m 1502[2mms[22m[39m
+ [32mΓ£ô[39m src/components/header.server.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 1561[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m getStoredTheme returns null when window is undefined [33m 1557[2mms[22m[39m
 stderr | src/app/mail/settings/page.test.tsx > MailSettingsPage > Initial render > renders page title and back button
 An update to MailSettingsPage inside a test was not wrapped in act(...).
 
@@ -32,34 +30,261 @@ This ensures that you're testing the behavior the user would see in the browser.
 stderr | src/app/chat/[id]/chat-interface.test.tsx > ChatInterface > sending messages > should send message on Enter key
 Encountered two children with the same key, `new-msg-id`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted ΓÇö the behavior is unsupported and could change in a future version.
 
-stderr | src/app/chat/[id]/chat-interface.test.tsx > ChatInterface > sending messages > should send message on Enter key
+stderr | src/components/ui/sheet.test.tsx > Sheet > renders SheetContent with data-slot attribute
+`DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
+
+If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
+
+For more information, see https://radix-ui.com/primitives/docs/components/dialog
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+stderr | src/app/chat/[id]/chat-interface.test.tsx > ChatInterface > sending messages > should clear input after sending
 Encountered two children with the same key, `new-msg-id`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted ΓÇö the behavior is unsupported and could change in a future version.
 
+stderr | src/app/chat/[id]/chat-interface.test.tsx > ChatInterface > sending messages > should clear input after sending
+Encountered two children with the same key, `new-msg-id`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted ΓÇö the behavior is unsupported and could change in a future version.
+
+stderr | src/components/landing/cta-section.test.tsx > CTASection > renders the section heading
+React does not recognize the `whileInView` prop on a DOM element. If you intentionally want it to appear in the DOM as a custom attribute, spell it as lowercase `whileinview` instead. If you accidentally passed it from a parent component, remove it from the DOM element.
+
+stderr | src/components/ui/sheet.test.tsx > Sheet > renders SheetClose with data-slot attribute
+`DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
+
+If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
+
+For more information, see https://radix-ui.com/primitives/docs/components/dialog
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+ [32mΓ£ô[39m src/modules/news-sources/components/source-form.test.tsx [2m([22m[2m18 tests[22m[2m)[22m[33m 3630[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders form with all fields [33m 424[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders Add Source button when creating [33m 560[2mms[22m[39m
+stderr | src/components/landing/hero-section.test.tsx > HeroSection > renders the main headline
+React does not recognize the `whileHover` prop on a DOM element. If you intentionally want it to appear in the DOM as a custom attribute, spell it as lowercase `whilehover` instead. If you accidentally passed it from a parent component, remove it from the DOM element.
+
+stderr | src/components/ui/sheet.test.tsx > Sheet > renders SheetHeader with data-slot attribute
+`DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
+
+If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
+
+For more information, see https://radix-ui.com/primitives/docs/components/dialog
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+ [32mΓ£ô[39m src/app/prs/page.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 2101[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders page with PR tree [33m 1154[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m shows manage accounts button [33m 669[2mms[22m[39m
+stderr | src/components/ui/sheet.test.tsx > Sheet > renders SheetFooter with data-slot attribute
+`DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
+
+If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
+
+For more information, see https://radix-ui.com/primitives/docs/components/dialog
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+ [32mΓ£ô[39m src/components/ui/button.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 840[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders correctly [33m 555[2mms[22m[39m
+stderr | src/components/landing/feature-section.test.tsx > FeatureSection > renders the section heading
+React does not recognize the `whileInView` prop on a DOM element. If you intentionally want it to appear in the DOM as a custom attribute, spell it as lowercase `whileinview` instead. If you accidentally passed it from a parent component, remove it from the DOM element.
+
+ [32mΓ£ô[39m src/app/account/github/page.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 1615[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders page with accounts list [33m 884[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m has connect button with OAuth URL [33m 638[2mms[22m[39m
+stderr | src/app/chat/[id]/chat-interface.test.tsx > ChatInterface > sending messages > should call runAgentAction after saving user message
+Encountered two children with the same key, `new-msg-id`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted ΓÇö the behavior is unsupported and could change in a future version.
+
+stderr | src/app/chat/[id]/chat-interface.test.tsx > ChatInterface > sending messages > should call runAgentAction after saving user message
+Encountered two children with the same key, `new-msg-id`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted ΓÇö the behavior is unsupported and could change in a future version.
+
+stderr | src/components/ui/sheet.test.tsx > Sheet > renders SheetTitle with data-slot attribute
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+ [32mΓ£ô[39m src/modules/github-prs/components/pr-widget.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 2587[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders widget with accounts [33m 1973[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/news/components/refresh-button.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[33m 1221[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders with default state [33m 644[2mms[22m[39m
+stderr | src/components/ui/sheet.test.tsx > Sheet > renders SheetDescription with data-slot attribute
+`DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
+
+If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
+
+For more information, see https://radix-ui.com/primitives/docs/components/dialog
+
+ [32mΓ£ô[39m src/components/landing/feature-section.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 465[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/mail/components/mail-item.test.tsx [2m([22m[2m13 tests[22m[2m)[22m[33m 1075[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m should call onSelect when clicked [33m 414[2mms[22m[39m
+stderr | src/app/chat/[id]/chat-interface.test.tsx > ChatInterface > sending messages > should save assistant response with token counts
+Encountered two children with the same key, `new-msg-id`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted ΓÇö the behavior is unsupported and could change in a future version.
+
+stderr | src/app/mail/page.test.tsx > MailPageClient > Error handling > shows error when loading messages fails
+Error loading messages: Error: Failed to fetch messages
+    at loadMessages (F:/github/HemSoft/dashboard/src/app/mail/page.tsx:84:17)
+
+ [32mΓ£ô[39m src/components/brightness-controls.test.tsx [2m([22m[2m16 tests[22m[2m)[22m[33m 2238[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m resets to defaults when reset button clicked [33m 582[2mms[22m[39m
+ [32mΓ£ô[39m src/components/ui/alert.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 795[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders with default variant [33m 583[2mms[22m[39m
+stderr | src/app/mail/page.test.tsx > MailPageClient > Error handling > shows error when bulk action fails
+Error performing bulk action: Error: Failed to perform action
+    at handleBulkAction (F:/github/HemSoft/dashboard/src/app/mail/page.tsx:141:15)
+
+stderr | src/components/ui/sheet.test.tsx > Sheet > renders content on left side
+`DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
+
+If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
+
+For more information, see https://radix-ui.com/primitives/docs/components/dialog
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+ [32mΓ£ô[39m src/app/timers/page.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 630[2mms[22m[39m
+stderr | src/components/ui/sheet.test.tsx > Sheet > renders content on top side
+`DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
+
+If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
+
+For more information, see https://radix-ui.com/primitives/docs/components/dialog
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+ [32mΓ£ô[39m src/app/mail/page.test.tsx [2m([22m[2m14 tests[22m[2m)[22m[33m 2043[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m shows empty state when no accounts exist [33m 555[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m shows add account link in empty state [33m 323[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/timers/components/timers-widget.test.tsx [2m([22m[2m13 tests[22m[2m)[22m[33m 857[2mms[22m[39m
+stderr | src/app/login/page.test.tsx > LoginPage > renders login form correctly
+React does not recognize the `whileHover` prop on a DOM element. If you intentionally want it to appear in the DOM as a custom attribute, spell it as lowercase `whilehover` instead. If you accidentally passed it from a parent component, remove it from the DOM element.
+
+ [32mΓ£ô[39m src/components/landing/landing-footer.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[33m 1300[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders Sign Up link with correct href [33m 720[2mms[22m[39m
+ [32mΓ£ô[39m src/components/landing/cta-section.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[33m 1453[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders Create Account button with correct link [33m 568[2mms[22m[39m
+stderr | src/components/ui/sheet.test.tsx > Sheet > renders content on bottom side
+`DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
+
+If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
+
+For more information, see https://radix-ui.com/primitives/docs/components/dialog
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+ [32mΓ£ô[39m src/modules/expenditures/components/expenditures-widget.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[33m 1063[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders empty state when no sources [33m 680[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/chat/components/chat-widget-client.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 1860[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders widget with no conversations [33m 831[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders link to view all chats [33m 333[2mms[22m[39m
+ [32mΓ£ô[39m src/components/ui/dialog.test.tsx [2m([22m[2m1 test[22m[2m)[22m[33m 836[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders correctly when triggered [33m 832[2mms[22m[39m
+stderr | src/components/ui/sheet.test.tsx > Sheet > applies custom className to SheetContent
+`DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
+
+If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
+
+For more information, see https://radix-ui.com/primitives/docs/components/dialog
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+ [32mΓ£ô[39m src/modules/expenditures/components/expenditure-item.test.tsx [2m([22m[2m20 tests[22m[2m)[22m[33m 7002[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m shows edit button [33m 369[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m cancels edit and restores original values [33m 439[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m saves changes successfully [33m 394[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m shows error on failed save [33m 373[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m clears detailsUrl when emptied [33m 370[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m handles invalid number inputs gracefully [33m 421[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m shows default error message when error is undefined [33m 316[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m shows billing month field when yearly cycle is selected [33m 800[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m hides billing month field when switching back to monthly [33m 844[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m saves yearly billing with billing month [33m 1806[2mms[22m[39m
+stderr | src/components/ui/sheet.test.tsx > Sheet > applies custom className to SheetHeader
+`DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
+
+If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
+
+For more information, see https://radix-ui.com/primitives/docs/components/dialog
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+ [32mΓ£ô[39m src/modules/github-prs/components/pr-item.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[33m 716[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders as link to GitHub [33m 492[2mms[22m[39m
+ [32mΓ£ô[39m src/app/login/page.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 1132[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders login form correctly [33m 949[2mms[22m[39m
 stderr | src/modules/news-sources/components/source-list.test.tsx > SourceList > opens add dialog when Add Source is clicked
 Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
 
-stderr | src/app/chat/[id]/chat-interface.test.tsx > ChatInterface > sending messages > should clear input after sending
-Encountered two children with the same key, `new-msg-id`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted ΓÇö the behavior is unsupported and could change in a future version.
+ [32mΓ£ô[39m src/modules/timers/components/timer-alert-provider.test.tsx [2m([22m[2m15 tests[22m[2m)[22m[33m 1522[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders notification permission prompt when permission is default [33m 796[2mms[22m[39m
+ [32mΓ£ô[39m src/components/ui/switch.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[33m 1383[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders correctly [33m 743[2mms[22m[39m
+ [32mΓ£ô[39m src/components/theme-picker.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[33m 3687[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders select with all theme options [33m 1176[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders theme preview buttons [33m 1604[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m calls setTheme when preview button is clicked [33m 621[2mms[22m[39m
+ [32mΓ£ô[39m src/components/landing/hero-section.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 1861[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders Get Started button with correct link [33m 696[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/agent-tasks/components/agent-tasks-widget-client.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 1812[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders widget with no tasks [33m 823[2mms[22m[39m
+ [32mΓ£ô[39m src/app/chat/page.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 904[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders new chat button [33m 641[2mms[22m[39m
+ [32mΓ£ô[39m src/components/font-picker.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 5536[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders select with all font options [33m 1775[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders font preview buttons [33m 2750[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m calls setFont when preview button is clicked [33m 659[2mms[22m[39m
+stderr | src/components/ui/sheet.test.tsx > Sheet > applies custom className to SheetFooter
+`DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
 
-stderr | src/app/chat/[id]/chat-interface.test.tsx > ChatInterface > sending messages > should clear input after sending
-Encountered two children with the same key, `new-msg-id`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted ΓÇö the behavior is unsupported and could change in a future version.
+If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
 
-stderr | src/app/chat/[id]/chat-interface.test.tsx > ChatInterface > sending messages > should call runAgentAction after saving user message
-Encountered two children with the same key, `new-msg-id`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted ΓÇö the behavior is unsupported and could change in a future version.
-
-stderr | src/app/chat/[id]/chat-interface.test.tsx > ChatInterface > sending messages > should call runAgentAction after saving user message
-Encountered two children with the same key, `new-msg-id`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted ΓÇö the behavior is unsupported and could change in a future version.
-
-stderr | src/modules/news-sources/components/source-list.test.tsx > SourceList > opens edit dialog when clicking edit button
+For more information, see https://radix-ui.com/primitives/docs/components/dialog
 Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
 
-stderr | src/app/chat/[id]/chat-interface.test.tsx > ChatInterface > sending messages > should save assistant response with token counts
+stderr | src/app/signup/page.test.tsx > SignUpPage > renders signup form correctly
+React does not recognize the `whileHover` prop on a DOM element. If you intentionally want it to appear in the DOM as a custom attribute, spell it as lowercase `whilehover` instead. If you accidentally passed it from a parent component, remove it from the DOM element.
+
+stderr | src/modules/news/components/mark-as-read-button.test.tsx > MarkAsReadButton > calls markNewsAsRead when clicked
+A suspended resource finished loading inside a test, but the event was not wrapped in act(...).
+
+When testing, code that resolves suspended data should be wrapped into act(...):
+
+act(() => {
+  /* finish loading suspended data */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+ [32mΓ£ô[39m src/components/ui/input.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 811[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m handles value changes [33m 531[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/github-prs/components/pr-tree.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 3309[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders account node with label and username [33m 1038[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m shows total PR count on account node [33m 373[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m shows category counts [33m 322[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders multiple accounts [33m 541[2mms[22m[39m
+stderr | src/app/chat/[id]/chat-interface.test.tsx > ChatInterface > sending messages > should update conversation title on first message
 Encountered two children with the same key, `new-msg-id`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted ΓÇö the behavior is unsupported and could change in a future version.
 
-stderr | src/app/chat/[id]/chat-interface.test.tsx > ChatInterface > sending messages > should save assistant response with token counts
-Encountered two children with the same key, `new-msg-id`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted ΓÇö the behavior is unsupported and could change in a future version.
+stderr | src/components/ui/sheet.test.tsx > Sheet > applies custom className to SheetTitle
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
 
-stderr | src/modules/news-sources/components/source-list.test.tsx > SourceList > closes edit dialog and clears editing source when dialog is closed
+ [32mΓ£ô[39m src/components/datetime-display.test.tsx [2m([22m[2m25 tests[22m[2m)[22m[33m 984[2mms[22m[39m
+ [32mΓ£ô[39m src/components/ui/select.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 1083[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m renders with data-slot attribute [33m 836[2mms[22m[39m
+ [32mΓ£ô[39m src/components/ui/badge.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 691[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders as a child when asChild is true [33m 573[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/news/components/mark-as-read-button.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 931[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders button with correct text for 1 item [33m 650[2mms[22m[39m
+ [32mΓ£ô[39m src/app/account/github/github-accounts-list.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[33m 2328[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m enters edit mode when clicking edit button [33m 675[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m saves label when clicking save button [33m 552[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m cancels edit when clicking cancel button [33m 383[2mms[22m[39m
+ [32mΓ£ô[39m src/app/signup/page.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 1411[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders signup form correctly [33m 1292[2mms[22m[39m
+stderr | src/components/ui/sheet.test.tsx > Sheet > applies custom className to SheetDescription
+`DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
+
+If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
+
+For more information, see https://radix-ui.com/primitives/docs/components/dialog
+
+ [32mΓ£ô[39m src/modules/news/components/news-widget.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 1912[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders View All link [33m 1507[2mms[22m[39m
+stderr | src/components/ui/sheet.test.tsx > Sheet > closes when close button is clicked
+`DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
+
+If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
+
+For more information, see https://radix-ui.com/primitives/docs/components/dialog
 Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
 
 stderr | src/app/mail/settings/page.test.tsx > MailSettingsPage > Error handling > shows error when loading accounts fails
@@ -75,269 +300,58 @@ Failed to load mail accounts: Error: Network error
     at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
     at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
 
-stderr | src/app/chat/[id]/chat-interface.test.tsx > ChatInterface > sending messages > should update conversation title on first message
-Encountered two children with the same key, `new-msg-id`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted ΓÇö the behavior is unsupported and could change in a future version.
-
-stderr | src/modules/news-sources/components/source-list.test.tsx > SourceList > reloads page on successful edit
+ [32mΓ£ô[39m src/modules/news/components/news-item.test.tsx [2m([22m[2m26 tests[22m[2m)[22m[33m 1359[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m renders link with correct href [33m 491[2mms[22m[39m
+ [32mΓ£ô[39m src/inngest/functions.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 150[2mms[22m[39m
+ [32mΓ£ô[39m src/components/ui/dropdown-menu.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 3880[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders correctly when triggered [33m 1698[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders DropdownMenuGroup with data-slot attribute [33m 622[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders destructive variant correctly [33m 560[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders inset label correctly [33m 464[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders submenu with sub trigger and content [33m 529[2mms[22m[39m
+ [32mΓ£ô[39m src/components/header.test.tsx [2m([22m[2m22 tests[22m[2m)[22m[33m 1010[2mms[22m[39m
+ [32mΓ£ô[39m src/app/agent-tasks/page.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 1695[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders the page header [33m 756[2mms[22m[39m
+stderr | src/modules/news-sources/components/source-list.test.tsx > SourceList > opens edit dialog when clicking edit button
 Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
 
-stderr | src/components/ui/sheet.test.tsx > Sheet > renders SheetContent with data-slot attribute
-`DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
-
-If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
-
-For more information, see https://radix-ui.com/primitives/docs/components/dialog
+ [32mΓ£ô[39m src/lib/agent/tools.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 731[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m should have correct description [33m 686[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/news-sources/components/admin-settings-form.test.tsx [2m([22m[2m17 tests[22m[2m)[22m[33m 1495[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m shows Saving... while submitting [33m 534[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/timers/components/timer-card.test.tsx [2m([22m[2m31 tests[22m[2m)[22m[33m 7211[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m calls startTimer when Start button clicked [33m 589[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m calls deleteTimer when delete button clicked and confirmed [33m 330[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m does not delete when confirmation cancelled [33m 332[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m re-enables delete button after deletion fails [33m 337[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m allows editing when timer is stopped [33m 351[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m updates timer when valid time is entered [33m 869[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m cancels editing on Escape key [33m 432[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m opens edit mode when Enter key is pressed on timer display [33m 314[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m opens edit mode when Space key is pressed on timer display [33m 330[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m saves on Enter key [33m 513[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m does not update if value is invalid [33m 719[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m does not update if value is unchanged [33m 320[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m selects all text when editing starts [33m 314[2mms[22m[39m
+ [32mΓ£ô[39m src/components/sidebar-wrapper.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 1225[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders AppSidebar with passed props [33m 414[2mms[22m[39m
+ [32mΓ£ô[39m src/app/news/page.test.tsx [2m([22m[2m11 tests[22m[2m)[22m[33m 1593[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders back button [33m 735[2mms[22m[39m
+stderr | src/modules/news-sources/components/source-list.test.tsx > SourceList > closes edit dialog and clears editing source when dialog is closed
 Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
 
-stderr | src/components/ui/sheet.test.tsx > Sheet > renders SheetClose with data-slot attribute
-`DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
-
-If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
-
-For more information, see https://radix-ui.com/primitives/docs/components/dialog
-Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
-
- [32mΓ£ô[39m src/app/account/page.test.tsx [2m([22m[2m18 tests[22m[2m)[22m[33m 5544[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders account settings form correctly [33m 1402[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders password change section [33m 1548[2mms[22m[39m
-stderr | src/components/ui/sheet.test.tsx > Sheet > renders SheetHeader with data-slot attribute
-`DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
-
-If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
-
-For more information, see https://radix-ui.com/primitives/docs/components/dialog
-Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
-
- [32mΓ£ô[39m src/app/mail/settings/page.test.tsx [2m([22m[2m22 tests[22m[2m)[22m[33m 7099[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m renders page title and back button [33m 389[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m toggles add account form when button is clicked [33m 320[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m closes form when cancel is clicked [33m 359[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m shows error when required fields are empty [33m 329[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m creates account with form data [33m 328[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m shows error when account creation fails [33m 355[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m closes form and reloads accounts after successful creation [33m 353[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m changes provider when selected [33m 696[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m changes sync frequency when input is modified [33m 441[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m closes dialog when cancel is clicked [33m 452[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m deletes account when confirmed [33m 539[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m shows error when delete fails [33m 560[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m shows default error message when account creation returns no error message [33m 825[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m shows default error message when delete returns no error message [33m 604[2mms[22m[39m
-stderr | src/components/ui/sheet.test.tsx > Sheet > renders SheetFooter with data-slot attribute
-`DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
-
-If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
-
-For more information, see https://radix-ui.com/primitives/docs/components/dialog
-Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
-
-stderr | src/components/ui/sheet.test.tsx > Sheet > renders SheetTitle with data-slot attribute
-Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
-
-stderr | src/components/ui/sheet.test.tsx > Sheet > renders SheetDescription with data-slot attribute
-`DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
-
-If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
-
-For more information, see https://radix-ui.com/primitives/docs/components/dialog
-
- [32mΓ£ô[39m src/modules/news-sources/components/source-list.test.tsx [2m([22m[2m24 tests[22m[2m)[22m[33m 5018[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders source list with table [33m 442[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m opens add dialog when Add Source is clicked [33m 686[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m opens edit dialog when clicking edit button [33m 376[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m closes edit dialog and clears editing source when dialog is closed [33m 818[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m reloads page on successful edit [33m 987[2mms[22m[39m
-stderr | src/components/landing/cta-section.test.tsx > CTASection > renders the section heading
-React does not recognize the `whileInView` prop on a DOM element. If you intentionally want it to appear in the DOM as a custom attribute, spell it as lowercase `whileinview` instead. If you accidentally passed it from a parent component, remove it from the DOM element.
-
-stderr | src/components/ui/sheet.test.tsx > Sheet > renders content on left side
-`DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
-
-If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
-
-For more information, see https://radix-ui.com/primitives/docs/components/dialog
-Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
-
-stderr | src/components/ui/sheet.test.tsx > Sheet > renders content on top side
-`DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
-
-If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
-
-For more information, see https://radix-ui.com/primitives/docs/components/dialog
-Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
-
- [32mΓ£ô[39m src/modules/expenditures/components/expenditure-item.test.tsx [2m([22m[2m20 tests[22m[2m)[22m[33m 6189[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m clears detailsUrl when emptied [33m 315[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m handles invalid number inputs gracefully [33m 456[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m shows default error message when error is undefined [33m 303[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m shows billing month field when yearly cycle is selected [33m 816[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m hides billing month field when switching back to monthly [33m 827[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m saves yearly billing with billing month [33m 1717[2mms[22m[39m
-stderr | src/components/ui/sheet.test.tsx > Sheet > renders content on bottom side
-`DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
-
-If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
-
-For more information, see https://radix-ui.com/primitives/docs/components/dialog
-Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
-
- [32mΓ£ô[39m src/app/prs/page.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 1737[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders page with PR tree [33m 1010[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m shows manage accounts button [33m 498[2mms[22m[39m
-stderr | src/components/ui/sheet.test.tsx > Sheet > applies custom className to SheetContent
-`DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
-
-If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
-
-For more information, see https://radix-ui.com/primitives/docs/components/dialog
-Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
-
-stderr | src/components/ui/sheet.test.tsx > Sheet > applies custom className to SheetHeader
-`DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
-
-If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
-
-For more information, see https://radix-ui.com/primitives/docs/components/dialog
-Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
-
- [32mΓ£ô[39m src/modules/github-prs/components/pr-widget.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 2729[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders widget with accounts [33m 2185[2mms[22m[39m
- [32mΓ£ô[39m src/components/theme-picker.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[33m 3409[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders select with all theme options [33m 1057[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders theme preview buttons [33m 1604[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m calls setTheme when preview button is clicked [33m 492[2mms[22m[39m
- [32mΓ£ô[39m src/modules/news/components/source-exclusion-settings.test.tsx [2m([22m[2m13 tests[22m[2m)[22m[33m 5383[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders manage sources button [33m 457[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m opens sheet when button is clicked [33m 506[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m displays all sources when sheet is open [33m 339[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m shows enabled count [33m 334[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders category labels [33m 318[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders switches for each source [33m 420[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m shows excluded source with correct switch state [33m 382[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m shows included source with correct switch state [33m 460[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m calls toggleSourceExclusion when switch is clicked [33m 554[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m updates UI when toggle succeeds [33m 582[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m does not update UI when toggle fails [33m 523[2mms[22m[39m
- [32mΓ£ô[39m src/app/account/github/page.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 1436[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders page with accounts list [33m 660[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m has connect button with OAuth URL [33m 646[2mms[22m[39m
-stderr | src/components/ui/sheet.test.tsx > Sheet > applies custom className to SheetFooter
-`DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
-
-If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
-
-For more information, see https://radix-ui.com/primitives/docs/components/dialog
-Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
-
-stderr | src/components/landing/feature-section.test.tsx > FeatureSection > renders the section heading
-React does not recognize the `whileInView` prop on a DOM element. If you intentionally want it to appear in the DOM as a custom attribute, spell it as lowercase `whileinview` instead. If you accidentally passed it from a parent component, remove it from the DOM element.
-
- [32mΓ£ô[39m src/components/font-picker.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 5184[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders select with all font options [33m 1482[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders font preview buttons [33m 2615[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m calls setFont when preview button is clicked [33m 714[2mms[22m[39m
- [32mΓ£ô[39m src/components/datetime-display.test.tsx [2m([22m[2m25 tests[22m[2m)[22m[33m 585[2mms[22m[39m
- [32mΓ£ô[39m src/components/landing/cta-section.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[33m 1381[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders Create Account button with correct link [33m 636[2mms[22m[39m
-stderr | src/components/ui/sheet.test.tsx > Sheet > applies custom className to SheetTitle
-Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
-
- [32mΓ£ô[39m src/modules/timers/components/timer-alert-provider.test.tsx [2m([22m[2m15 tests[22m[2m)[22m[33m 1466[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders notification permission prompt when permission is default [33m 618[2mms[22m[39m
-stderr | src/components/ui/sheet.test.tsx > Sheet > applies custom className to SheetDescription
-`DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
-
-If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
-
-For more information, see https://radix-ui.com/primitives/docs/components/dialog
-
- [32mΓ£ô[39m src/components/ui/input.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 733[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m handles value changes [33m 494[2mms[22m[39m
-stderr | src/components/ui/sheet.test.tsx > Sheet > closes when close button is clicked
-`DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
-
-If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
-
-For more information, see https://radix-ui.com/primitives/docs/components/dialog
-Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
-
- [32mΓ£ô[39m src/modules/github-prs/components/pr-item.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[33m 775[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders as link to GitHub [33m 504[2mms[22m[39m
- [32mΓ£ô[39m src/components/landing/feature-section.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 473[2mms[22m[39m
- [32mΓ£ô[39m src/components/ui/alert.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 870[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders with default variant [33m 682[2mms[22m[39m
- [32mΓ£ô[39m src/components/brightness-controls.test.tsx [2m([22m[2m19 tests[22m[2m)[22m[33m 2494[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m resets to defaults when reset button clicked [33m 521[2mms[22m[39m
- [32mΓ£ô[39m src/components/ui/button.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 979[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders correctly [33m 718[2mms[22m[39m
- [32mΓ£ô[39m src/components/ui/badge.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 626[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders as a child when asChild is true [33m 500[2mms[22m[39m
- [32mΓ£ô[39m src/components/ui/dialog.test.tsx [2m([22m[2m1 test[22m[2m)[22m[33m 914[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders correctly when triggered [33m 910[2mms[22m[39m
-stderr | src/components/landing/hero-section.test.tsx > HeroSection > renders the main headline
-React does not recognize the `whileHover` prop on a DOM element. If you intentionally want it to appear in the DOM as a custom attribute, spell it as lowercase `whilehover` instead. If you accidentally passed it from a parent component, remove it from the DOM element.
-
- [32mΓ£ô[39m src/modules/news-sources/components/admin-settings-form.test.tsx [2m([22m[2m17 tests[22m[2m)[22m[33m 1350[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m shows Saving... while submitting [33m 536[2mms[22m[39m
- [32mΓ£ô[39m src/modules/github-prs/components/pr-tree.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 2562[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders account node with label and username [33m 702[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders multiple accounts [33m 447[2mms[22m[39m
- [32mΓ£ô[39m src/modules/agent-tasks/components/agent-tasks-widget-client.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 1933[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders widget with no tasks [33m 885[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m links each run to its detail page [33m 314[2mms[22m[39m
-stderr | src/app/mail/page.test.tsx > MailPageClient > Error handling > shows error when loading messages fails
-Error loading messages: Error: Failed to fetch messages
-    at loadMessages (F:/github/HemSoft/dashboard/src/app/mail/page.tsx:84:17)
-
- [32mΓ£ô[39m src/modules/news/components/refresh-button.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[33m 1410[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders with default state [33m 749[2mms[22m[39m
- [32mΓ£ô[39m src/components/ui/switch.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[33m 1262[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders correctly [33m 673[2mms[22m[39m
-stderr | src/app/mail/page.test.tsx > MailPageClient > Error handling > shows error when bulk action fails
-Error performing bulk action: Error: Failed to perform action
-    at handleBulkAction (F:/github/HemSoft/dashboard/src/app/mail/page.tsx:141:15)
-    at runNextTicks (node:internal/process/task_queues:65:5)
-    at processTimers (node:internal/timers:526:9)
-
- [32mΓ£ô[39m src/app/account/github/github-accounts-list.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[33m 2233[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m enters edit mode when clicking edit button [33m 825[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m saves label when clicking save button [33m 526[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m cancels edit when clicking cancel button [33m 336[2mms[22m[39m
-stderr | src/modules/news/components/mark-as-read-button.test.tsx > MarkAsReadButton > calls markNewsAsRead when clicked
-A suspended resource finished loading inside a test, but the event was not wrapped in act(...).
-
-When testing, code that resolves suspended data should be wrapped into act(...):
-
-act(() => {
-  /* finish loading suspended data */
-});
-/* assert on the output */
-
-This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
-
- [32mΓ£ô[39m src/modules/news-sources/components/source-form.test.tsx [2m([22m[2m18 tests[22m[2m)[22m[33m 3863[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders form with all fields [33m 412[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders Add Source button when creating [33m 606[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m calls onSuccess callback after successful creation [33m 341[2mms[22m[39m
-stderr | src/app/login/page.test.tsx > LoginPage > renders login form correctly
-React does not recognize the `whileHover` prop on a DOM element. If you intentionally want it to appear in the DOM as a custom attribute, spell it as lowercase `whilehover` instead. If you accidentally passed it from a parent component, remove it from the DOM element.
-
- [32mΓ£ô[39m src/modules/expenditures/components/expenditures-widget.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[33m 1067[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders empty state when no sources [33m 691[2mms[22m[39m
- [32mΓ£ô[39m src/components/sidebar-wrapper.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 909[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders AppSidebar with passed props [33m 327[2mms[22m[39m
- [32mΓ£ô[39m src/modules/news/components/mark-as-read-button.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 997[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders button with correct text for 1 item [33m 656[2mms[22m[39m
- [32mΓ£ô[39m src/components/ui/select.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[33m 2382[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m renders with default position (item-aligned) [33m 1025[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m renders with popper position [33m 447[2mms[22m[39m
- [32mΓ£ô[39m src/components/landing/landing-footer.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[33m 1307[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders Sign Up link with correct href [33m 665[2mms[22m[39m
- [32mΓ£ô[39m src/app/timers/page.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 614[2mms[22m[39m
- [32mΓ£ô[39m src/app/mail/page.test.tsx [2m([22m[2m14 tests[22m[2m)[22m[33m 2260[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m shows empty state when no accounts exist [33m 651[2mms[22m[39m
- [32mΓ£ô[39m src/app/agent-tasks/page.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 1719[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders the page header [33m 745[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/news/components/source-exclusion-settings.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 4931[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders manage sources button [33m 552[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m opens sheet when button is clicked [33m 607[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m displays all sources when sheet is open [33m 357[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m shows enabled count [33m 317[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders category labels [33m 324[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders switches for each source [33m 442[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m shows excluded source with correct switch state [33m 354[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m shows included source with correct switch state [33m 417[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m calls toggleSourceExclusion when switch is clicked [33m 516[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m updates UI when toggle succeeds [33m 526[2mms[22m[39m
+ [32mΓ£ô[39m src/components/ui/sidebar.test.tsx [2m([22m[2m61 tests[22m[2m)[22m[33m 1046[2mms[22m[39m
 stderr | src/components/ui/sheet.test.tsx > Sheet > renders SheetOverlay with data-slot attribute
 `DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
 
@@ -346,183 +360,159 @@ If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden c
 For more information, see https://radix-ui.com/primitives/docs/components/dialog
 Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
 
- [32mΓ£ô[39m src/app/login/page.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 1311[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders login form correctly [33m 1086[2mms[22m[39m
- [32mΓ£ô[39m src/modules/timers/components/timers-widget.test.tsx [2m([22m[2m13 tests[22m[2m)[22m[33m 983[2mms[22m[39m
- [32mΓ£ô[39m src/components/header.test.tsx [2m([22m[2m22 tests[22m[2m)[22m[33m 922[2mms[22m[39m
- [32mΓ£ô[39m src/modules/mail/components/mail-item.test.tsx [2m([22m[2m13 tests[22m[2m)[22m[33m 1309[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m should call onSelect when clicked [33m 460[2mms[22m[39m
- [32mΓ£ô[39m src/modules/chat/components/chat-widget-client.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 1910[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders widget with no conversations [33m 840[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m links each conversation to its detail page [33m 348[2mms[22m[39m
-stderr | src/app/signup/page.test.tsx > SignUpPage > renders signup form correctly
-React does not recognize the `whileHover` prop on a DOM element. If you intentionally want it to appear in the DOM as a custom attribute, spell it as lowercase `whilehover` instead. If you accidentally passed it from a parent component, remove it from the DOM element.
-
- [32mΓ£ô[39m src/app/chat/page.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 947[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders new chat button [33m 730[2mms[22m[39m
- [32mΓ£ô[39m src/components/ui/sheet.test.tsx [2m([22m[2m18 tests[22m[2m)[22m[33m 5502[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders Sheet with trigger and content [33m 975[2mms[22m[39m
+ [32mΓ£ô[39m src/components/ui/sheet.test.tsx [2m([22m[2m18 tests[22m[2m)[22m[33m 5395[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders Sheet with trigger and content [33m 840[2mms[22m[39m
      [33m[2mΓ£ô[22m[39m closes when close button is clicked [33m 1381[2mms[22m[39m
- [32mΓ£ô[39m src/app/chat/new/page.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 4479[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders the page header [33m 775[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders model selector with default model [33m 312[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m passes system prompt when provided [33m 1804[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m disables button and shows loading state during submission [33m 389[2mms[22m[39m
- [32mΓ£ô[39m src/inngest/functions.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 341[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m should be created with correct configuration [33m 325[2mms[22m[39m
- [32mΓ£ô[39m src/app/signup/page.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 1191[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders signup form correctly [33m 1057[2mms[22m[39m
- [32mΓ£ô[39m src/components/landing/hero-section.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 1824[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders Get Started button with correct link [33m 714[2mms[22m[39m
- [32mΓ£ô[39m src/app/news/page.test.tsx [2m([22m[2m11 tests[22m[2m)[22m[33m 1723[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders back button [33m 781[2mms[22m[39m
- [32mΓ£ô[39m src/components/app-sidebar.test.tsx [2m([22m[2m20 tests[22m[2m)[22m[33m 9642[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m highlights active link [33m 916[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m shows inactive styling for non-active links [33m 724[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m has dropdown menu trigger for user section [33m 423[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m opens dropdown menu when user section is clicked [33m 1305[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m has account settings link pointing to /account [33m 1278[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders sidebar rail for collapse interaction [33m 365[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m highlights active Expenditures link [33m 885[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m has sign out button in dropdown menu [33m 1019[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m sign out button is inside a form with signOut action [33m 1011[2mms[22m[39m
- [32mΓ£ô[39m src/components/ui/sidebar.test.tsx [2m([22m[2m61 tests[22m[2m)[22m[33m 866[2mms[22m[39m
- [32mΓ£ô[39m src/modules/news/components/news-item.test.tsx [2m([22m[2m26 tests[22m[2m)[22m[33m 1197[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m renders link with correct href [33m 453[2mms[22m[39m
- [32mΓ£ô[39m src/modules/news/components/news-widget.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 1860[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders View All link [33m 1520[2mms[22m[39m
- [32mΓ£ô[39m src/components/ui/dropdown-menu.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 3719[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders correctly when triggered [33m 1555[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders DropdownMenuGroup with data-slot attribute [33m 618[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders destructive variant correctly [33m 628[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders inset label correctly [33m 518[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders submenu with sub trigger and content [33m 394[2mms[22m[39m
- [32mΓ£ô[39m src/lib/agent/agent.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 65[2mms[22m[39m
- [32mΓ£ô[39m src/inngest/client.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 13[2mms[22m[39m
- [32mΓ£ô[39m src/modules/timers/components/timer-card.test.tsx [2m([22m[2m31 tests[22m[2m)[22m[33m 6028[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m calls startTimer when Start button clicked [33m 525[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m calls deleteTimer when delete button clicked and confirmed [33m 346[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m allows editing when timer is stopped [33m 304[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m updates timer when valid time is entered [33m 706[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m cancels editing on Escape key [33m 304[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m saves on Enter key [33m 383[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m does not update if value is invalid [33m 526[2mms[22m[39m
- [32mΓ£ô[39m src/components/dashboard-config-sheet.test.tsx [2m([22m[2m17 tests[22m[2m)[22m[33m 8366[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders the configure button [33m 770[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m opens sheet when clicking configure button [33m 489[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m displays all widgets in the sheet [33m 427[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m shows enabled count in description [33m 367[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders toggle switches for each widget [33m 577[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m shows tip about auto-saving [33m 330[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders drag handles for reordering [33m 351[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m toggles widget visibility when switch is clicked [33m 840[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m toggles disabled widget to enabled [33m 711[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m reverts toggle on server error [33m 741[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m resets local settings when sheet is reopened [33m 815[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m updates enabled count after toggle [33m 566[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m calls updateWidgetOrder when drag ends with reorder [33m 352[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m reverts order on server error during drag [33m 324[2mms[22m[39m
- [32mΓ£ô[39m src/modules/notifications/components/notification-item.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 541[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m calls onDismiss when dismiss button is clicked [33m 355[2mms[22m[39m
- [32mΓ£ô[39m src/app/notifications/page.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 425[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders back button [33m 306[2mms[22m[39m
- [32mΓ£ô[39m src/modules/notifications/components/notification-list.test.tsx [2m([22m[2m11 tests[22m[2m)[22m[33m 1407[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m shows Back to Dashboard link in empty state [33m 367[2mms[22m[39m
- [32mΓ£ô[39m src/modules/timers/components/create-timer-dialog.test.tsx [2m([22m[2m14 tests[22m[2m)[22m[33m 9297[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m opens dialog when trigger clicked [33m 934[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders preset buttons [33m 349[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m updates duration when preset clicked [33m 565[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m creates timer on form submit [33m 1436[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m closes dialog after successful create [33m 1569[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m disables submit when name is empty [33m 326[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m updates duration input correctly [33m 591[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m closes dialog when cancel clicked [33m 441[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m handles NaN duration input by defaulting to 1 minute [33m 329[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m does not submit when duration is invalid [33m 1156[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m does not create timer when server returns failure [33m 747[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m clamps duration to max 1440 minutes [33m 394[2mms[22m[39m
- [32mΓ£ô[39m src/modules/chat/types.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 35[2mms[22m[39m
- [32mΓ£ô[39m src/modules/notifications/components/notification-bell.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 3553[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders bell icon [33m 439[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m opens dropdown when clicked [33m 899[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m shows empty state when no notifications [33m 546[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m shows Clear all button when there are notifications [33m 473[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m calls onDismissAll when Clear all is clicked [33m 443[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m shows View all link when count exceeds 10 [33m 385[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m does not show View all link when count is 10 or less [33m 302[2mms[22m[39m
- [32mΓ£ô[39m src/modules/notifications/components/notification-bell-wrapper.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 3065[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renders NotificationBell with notifications [33m 1041[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m calls dismissNotification when dismiss button clicked [33m 560[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m calls dismissAllNotifications when Clear all clicked [33m 434[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m refreshes router after dismiss [33m 429[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m refreshes router after dismiss all [33m 427[2mms[22m[39m
- [32mΓ£ô[39m src/lib/agent/client.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 26[2mms[22m[39m
- [32mΓ£ô[39m src/modules/expenditures/components/add-expenditure-form.test.tsx [2m([22m[2m18 tests[22m[2m)[22m[33m 10433[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m renders add button when closed [33m 637[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m opens form when button clicked [33m 519[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m closes form when cancel clicked [33m 360[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m submits form with valid data [33m 447[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m closes form and resets on success [33m 427[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m shows error message on failure [33m 415[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m submits with optional fields [33m 583[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m resets form when reopened [33m 492[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m shows billing month field when yearly cycle is selected [33m 1042[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m hides billing month field when switching back to monthly [33m 1687[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m submits yearly billing with billing month [33m 1514[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m clears billing month when switching to monthly [33m 1393[2mms[22m[39m
- [32mΓ£ô[39m src/app/chat/[id]/chat-interface.test.tsx [2m([22m[2m37 tests[22m[2m)[22m[33m 14029[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m should render conversation title [33m 436[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m should enable send button when input has text [33m 316[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m should not send on Shift+Enter (allow multiline) [33m 353[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m should clear input after sending [33m 316[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m should call runAgentAction after saving user message [33m 439[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m should update conversation title on first message [33m 1040[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m should show error when message fails to send [33m 346[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m should show error when assistant message fails to save [33m 379[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m should archive conversation when Archive is clicked [33m 1245[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m should redirect to /chat after successful archive [33m 1114[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m should show error when archive fails [33m 995[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m should show delete confirmation dialog [33m 1149[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m should delete conversation when confirmed [33m 1483[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m should close dialog when cancel is clicked [33m 1021[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m should redirect to /chat after successful delete [33m 735[2mms[22m[39m
-       [33m[2mΓ£ô[22m[39m should show error when delete fails [33m 729[2mms[22m[39m
- [32mΓ£ô[39m src/components/dashboard-grid.test.tsx [2m([22m[2m17 tests[22m[2m)[22m[32m 217[2mms[22m[39m
- [32mΓ£ô[39m src/app/chat/conversation-list-item.test.tsx [2m([22m[2m15 tests[22m[2m)[22m[33m 12377[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m links to the conversation page [33m 629[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m opens dropdown menu when actions button is clicked [33m 1397[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m archives conversation when Archive is clicked [33m 1472[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m opens rename dialog when Rename is clicked [33m 1349[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renames conversation when form is submitted [33m 1815[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m opens delete confirmation when Delete is clicked [33m 684[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m deletes conversation when confirmed [33m 788[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m renames conversation when Enter key is pressed [33m 1487[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m closes rename dialog when Cancel is clicked [33m 716[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m closes delete dialog when Cancel is clicked [33m 731[2mms[22m[39m
-     [33m[2mΓ£ô[22m[39m sets empty title as undefined when renaming [33m 863[2mms[22m[39m
- [32mΓ£ô[39m src/app/auth/github/callback/route.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 83[2mms[22m[39m
+ [32mΓ£ô[39m src/app/mail/settings/page.test.tsx [2m([22m[2m22 tests[22m[2m)[22m[33m 9580[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m renders page title and back button [33m 604[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m toggles add account form when button is clicked [33m 554[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m closes form when cancel is clicked [33m 662[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m shows error when required fields are empty [33m 595[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m creates account with form data [33m 689[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m shows error when account creation fails [33m 673[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m closes form and reloads accounts after successful creation [33m 580[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m changes provider when selected [33m 1229[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m changes sync frequency when input is modified [33m 628[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m closes dialog when cancel is clicked [33m 429[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m deletes account when confirmed [33m 554[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m shows error when delete fails [33m 544[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m shows default error message when account creation returns no error message [33m 702[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m shows default error message when delete returns no error message [33m 519[2mms[22m[39m
+ [32mΓ£ô[39m src/lib/agent/agent.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 64[2mms[22m[39m
+stderr | src/modules/news-sources/components/source-list.test.tsx > SourceList > reloads page on successful edit
+Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+ [32mΓ£ô[39m src/app/chat/new/page.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 4995[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders the page header [33m 964[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders model selector with default model [33m 422[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m displays error message on failure [33m 376[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m passes system prompt when provided [33m 1696[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m disables button and shows loading state during submission [33m 375[2mms[22m[39m
+ [32mΓ£ô[39m src/components/dashboard-config-sheet.test.tsx [2m([22m[2m17 tests[22m[2m)[22m[33m 8808[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders the configure button [33m 688[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m opens sheet when clicking configure button [33m 762[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m displays all widgets in the sheet [33m 491[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m shows enabled count in description [33m 426[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders toggle switches for each widget [33m 514[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m shows tip about auto-saving [33m 364[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders drag handles for reordering [33m 362[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m toggles widget visibility when switch is clicked [33m 803[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m toggles disabled widget to enabled [33m 585[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m reverts toggle on server error [33m 738[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m resets local settings when sheet is reopened [33m 829[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m updates enabled count after toggle [33m 546[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m calls updateWidgetOrder when drag ends with reorder [33m 412[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m does not call updateWidgetOrder when drag ends with no over target [33m 317[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m reverts order on server error during drag [33m 488[2mms[22m[39m
+ [32mΓ£ô[39m src/app/account/page.test.tsx [2m([22m[2m18 tests[22m[2m)[22m[33m 7305[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders account settings form correctly [33m 2780[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders password change section [33m 1443[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/notifications/components/notification-item.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 795[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m calls onDismiss when dismiss button is clicked [33m 535[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/news-sources/components/source-list.test.tsx [2m([22m[2m24 tests[22m[2m)[22m[33m 6657[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders source list with table [33m 909[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders Add Source button [33m 563[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m opens add dialog when Add Source is clicked [33m 1089[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m opens edit dialog when clicking edit button [33m 572[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m closes edit dialog and clears editing source when dialog is closed [33m 973[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m reloads page on successful edit [33m 1010[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/chat/types.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 40[2mms[22m[39m
+ [32mΓ£ô[39m src/app/notifications/page.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 510[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders back button [33m 371[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/timers/components/create-timer-dialog.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 8015[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m opens dialog when trigger clicked [33m 903[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders form fields [33m 510[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders preset buttons [33m 480[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m updates duration when preset clicked [33m 506[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m creates timer on form submit [33m 1610[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m closes dialog after successful create [33m 1437[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m updates duration input correctly [33m 557[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m closes dialog when cancel clicked [33m 353[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m does not submit when duration is invalid [33m 937[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/notifications/components/notification-bell.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 4306[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders bell icon [33m 550[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m opens dropdown when clicked [33m 982[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m shows empty state when no notifications [33m 652[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m shows Clear all button when there are notifications [33m 647[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m calls onDismissAll when Clear all is clicked [33m 570[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m shows View all link when count exceeds 10 [33m 432[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m does not show View all link when count is 10 or less [33m 410[2mms[22m[39m
+ [32mΓ£ô[39m src/app/chat/conversation-list-item.test.tsx [2m([22m[2m11 tests[22m[2m)[22m[33m 9603[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m links to the conversation page [33m 487[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m opens dropdown menu when actions button is clicked [33m 1305[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m archives conversation when Archive is clicked [33m 1221[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m opens rename dialog when Rename is clicked [33m 1390[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renames conversation when form is submitted [33m 2758[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m opens delete confirmation when Delete is clicked [33m 899[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m deletes conversation when confirmed [33m 1036[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/notifications/components/notification-list.test.tsx [2m([22m[2m11 tests[22m[2m)[22m[33m 1502[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m shows Back to Dashboard link in empty state [33m 330[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/notifications/components/notification-bell-wrapper.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 3769[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders NotificationBell with notifications [33m 1238[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m calls dismissNotification when dismiss button clicked [33m 682[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m calls dismissAllNotifications when Clear all clicked [33m 624[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m refreshes router after dismiss [33m 551[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m refreshes router after dismiss all [33m 504[2mms[22m[39m
+ [32mΓ£ô[39m src/lib/agent/client.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 32[2mms[22m[39m
+ [32mΓ£ô[39m src/components/app-sidebar.test.tsx [2m([22m[2m20 tests[22m[2m)[22m[33m 8698[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders correctly [33m 388[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m highlights active link [33m 2011[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m shows inactive styling for non-active links [33m 868[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m has dropdown menu trigger for user section [33m 523[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m opens dropdown menu when user section is clicked [33m 1046[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m has account settings link pointing to /account [33m 743[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m highlights active Expenditures link [33m 458[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m has sign out button in dropdown menu [33m 563[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m sign out button is inside a form with signOut action [33m 521[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/expenditures/components/add-expenditure-form.test.tsx [2m([22m[2m18 tests[22m[2m)[22m[33m 10860[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m renders add button when closed [33m 774[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m opens form when button clicked [33m 415[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m closes form when cancel clicked [33m 496[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m submits form with valid data [33m 548[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m closes form and resets on success [33m 411[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m shows error message on failure [33m 425[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m submits with optional fields [33m 448[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m resets form when reopened [33m 481[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m shows billing month field when yearly cycle is selected [33m 950[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m hides billing month field when switching back to monthly [33m 1702[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m submits yearly billing with billing month [33m 1516[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m clears billing month when switching to monthly [33m 1675[2mms[22m[39m
+ [32mΓ£ô[39m src/app/chat/[id]/chat-interface.test.tsx [2m([22m[2m33 tests[22m[2m)[22m[33m 14663[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m should render conversation title [33m 789[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m should enable send button when input has text [33m 604[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m should send message on Enter key [33m 524[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m should not send on Shift+Enter (allow multiline) [33m 424[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m should clear input after sending [33m 415[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m should call runAgentAction after saving user message [33m 744[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m should save assistant response with token counts [33m 391[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m should update conversation title on first message [33m 1266[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m should show error when message fails to send [33m 352[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m should archive conversation when Archive is clicked [33m 1464[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m should redirect to /chat after successful archive [33m 1059[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m should show error when archive fails [33m 836[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m should show delete confirmation dialog [33m 772[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m should delete conversation when confirmed [33m 954[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m should close dialog when cancel is clicked [33m 899[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m should redirect to /chat after successful delete [33m 772[2mms[22m[39m
+       [33m[2mΓ£ô[22m[39m should show error when delete fails [33m 809[2mms[22m[39m
+ [32mΓ£ô[39m src/components/dashboard-grid.test.tsx [2m([22m[2m17 tests[22m[2m)[22m[32m 212[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/mail/components/account-card.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[32m 174[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/mail/components/mail-list.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 119[2mms[22m[39m
+ [32mΓ£ô[39m src/hooks/use-theme.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 82[2mms[22m[39m
 stderr | src/components/landing/landing-page.test.tsx > LandingPage > renders all sections
 React does not recognize the `whileHover` prop on a DOM element. If you intentionally want it to appear in the DOM as a custom attribute, spell it as lowercase `whilehover` instead. If you accidentally passed it from a parent component, remove it from the DOM element.
 React does not recognize the `whileInView` prop on a DOM element. If you intentionally want it to appear in the DOM as a custom attribute, spell it as lowercase `whileinview` instead. If you accidentally passed it from a parent component, remove it from the DOM element.
 
- [32mΓ£ô[39m src/components/landing/landing-page.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 192[2mms[22m[39m
- [32mΓ£ô[39m src/components/ui/table.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 73[2mms[22m[39m
-stderr | src/app/layout.test.tsx > RootLayout > renders correctly with children when logged in
-In HTML, <html> cannot be a child of <div>.
-This will cause a hydration error.
-
- [32mΓ£ô[39m src/app/layout.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 122[2mms[22m[39m
- [32mΓ£ô[39m src/modules/mail/components/account-card.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[32m 150[2mms[22m[39m
- [32mΓ£ô[39m src/modules/mail/components/account-tabs.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 110[2mms[22m[39m
- [32mΓ£ô[39m src/app/expenditures/page.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[32m 135[2mms[22m[39m
- [32mΓ£ô[39m src/modules/mail/components/mail-widget.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 143[2mms[22m[39m
- [32mΓ£ô[39m src/hooks/use-font.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 76[2mms[22m[39m
- [32mΓ£ô[39m src/modules/mail/components/mail-list.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 122[2mms[22m[39m
- [32mΓ£ô[39m src/modules/mail/components/bulk-action-bar.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 144[2mms[22m[39m
- [32mΓ£ô[39m src/lib/news-fetcher/index.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 87[2mms[22m[39m
- [32mΓ£ô[39m src/components/ui/progress.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 109[2mms[22m[39m
- [32mΓ£ô[39m src/hooks/use-mobile.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 70[2mms[22m[39m
+ [32mΓ£ô[39m src/components/landing/landing-page.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 230[2mms[22m[39m
+ [32mΓ£ô[39m src/components/ui/avatar.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 88[2mms[22m[39m
  [32mΓ£ô[39m src/components/ui/skeleton.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 93[2mms[22m[39m
+stderr | src/lib/resend.test.ts > resend > sendEmail > throws error when send fails
+Failed to send email: { message: 'Invalid API key' }
+
+ [32mΓ£ô[39m src/lib/resend.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 47[2mms[22m[39m
+ [32mΓ£ô[39m src/components/ui/card.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 98[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/mail/components/account-tabs.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 140[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/github-prs/actions.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 41[2mms[22m[39m
 stderr | src/modules/news-sources/actions.test.ts > news-sources actions > getNewsSources > includes inactive sources for admin
 Error in getNewsSources: TypeError: query.order is not a function
     at Module.getNewsSources (F:/github/HemSoft/dashboard/src/modules/news-sources/actions.ts:75:41)
@@ -663,10 +653,12 @@ Error in getSystemSettings: Error: Network error
 stderr | src/modules/news-sources/actions.test.ts > news-sources actions > getSystemSettings > catches and returns unknown error
 Error in getSystemSettings: Unknown failure
 
- [32mΓ£ô[39m src/modules/news-sources/actions.test.ts [2m([22m[2m56 tests[22m[2m)[22m[32m 91[2mms[22m[39m
- [32mΓ£ô[39m src/components/ui/avatar.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 110[2mms[22m[39m
- [32mΓ£ô[39m src/modules/github-prs/actions.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 49[2mms[22m[39m
- [32mΓ£ô[39m src/components/ui/card.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 117[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/news-sources/actions.test.ts [2m([22m[2m56 tests[22m[2m)[22m[32m 118[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/mail/components/mail-widget.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 251[2mms[22m[39m
+ [32mΓ£ô[39m src/app/auth/github/callback/route.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 94[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/mail/components/bulk-action-bar.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 190[2mms[22m[39m
+ [32mΓ£ô[39m src/app/page.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 116[2mms[22m[39m
+ [32mΓ£ô[39m src/lib/news-fetcher/index.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 112[2mms[22m[39m
 stderr | src/modules/mail/lib/imap-client.test.ts > imap-client > getImapUnreadCount > should return 0 when IMAP_HOST is not configured
 IMAP host not configured
 
@@ -735,137 +727,19 @@ Error fetching IMAP folders: Error: IMAP error
     at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
     at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
 
- [32mΓ£ô[39m src/modules/mail/lib/imap-client.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 65[2mms[22m[39m
- [32mΓ£ô[39m src/hooks/use-theme.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 103[2mms[22m[39m
- [32mΓ£ô[39m src/app/chat/[id]/page.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[32m 97[2mms[22m[39m
- [32mΓ£ô[39m src/lib/brightness.test.ts [2m([22m[2m64 tests[22m[2m)[22m[32m 61[2mms[22m[39m
- [32mΓ£ô[39m src/modules/expenditures/types.test.ts [2m([22m[2m24 tests[22m[2m)[22m[32m 78[2mms[22m[39m
-stderr | src/modules/mail/actions.test.ts > mail actions > getMailAccounts > should return error when database query fails
-Error fetching mail accounts: { message: 'DB error' }
-
-stderr | src/modules/mail/actions.test.ts > mail actions > createMailAccount > should return error when database insert fails
-Error creating mail account: { message: 'Insert failed' }
-
-stderr | src/modules/mail/actions.test.ts > mail actions > updateMailAccount > should return error when database update fails
-Error updating mail account: { message: 'Update failed' }
-
- [32mΓ£ô[39m src/modules/agent-tasks/types.test.ts [2m([22m[2m21 tests[22m[2m)[22m[32m 14[2mms[22m[39m
-stderr | src/modules/mail/actions.test.ts > mail actions > deleteMailAccount > should return error when database delete fails
-Error deleting mail account: { message: 'Delete failed' }
-
-stderr | src/modules/mail/actions.test.ts > mail actions > getMailSummary > should return error when getMailAccounts fails
-Error fetching mail accounts: { message: 'DB error' }
-
-stderr | src/modules/mail/actions.test.ts > mail actions > getMailSummary > should handle errors when fetching unread counts
-Error fetching unread count for acc-1: Error: API error
-    at F:/github/HemSoft/dashboard/src/modules/mail/actions.test.ts:395:58
-    at processTicksAndRejections (node:internal/process/task_queues:105:5)
-    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:20
-
- [32mΓ£ô[39m src/modules/chat/components/chat-widget.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 91[2mms[22m[39m
- [32mΓ£ô[39m src/modules/mail/lib/rate-limiter.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 117[2mms[22m[39m
- [32mΓ£ô[39m src/modules/mail/actions.test.ts [2m([22m[2m27 tests[22m[2m)[22m[32m 99[2mms[22m[39m
- [32mΓ£ô[39m src/components/ui/separator.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 84[2mms[22m[39m
- [32mΓ£ô[39m src/components/icons/google-icon.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 90[2mms[22m[39m
-stderr | src/modules/notifications/actions.test.ts > notifications actions > getNotifications > returns error on database failure
-Error fetching notifications: { message: 'DB error' }
-
-stderr | src/modules/notifications/actions.test.ts > notifications actions > getNotifications > catches and returns thrown Error
-Error in getNotifications: Error: Network error
-    at F:/github/HemSoft/dashboard/src/modules/notifications/actions.test.ts:123:37
-    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
-    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
-    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
-    at new Promise (<anonymous>)
-    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
-    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
-    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
-    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
-    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
-
-stderr | src/modules/notifications/actions.test.ts > notifications actions > getNotifications > catches and returns unknown error
-Error in getNotifications: Unknown failure
-
-stderr | src/modules/notifications/actions.test.ts > notifications actions > getUnreadCount > returns 0 on error
-Error fetching notification count: { message: 'DB error' }
-
-stderr | src/modules/notifications/actions.test.ts > notifications actions > getUnreadCount > catches and returns thrown Error
-Error in getUnreadCount: Error: Network error
-    at F:/github/HemSoft/dashboard/src/modules/notifications/actions.test.ts:185:37
-    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
-    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
-    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
-    at new Promise (<anonymous>)
-    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
-    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
-    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
-    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
-    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
-
-stderr | src/modules/notifications/actions.test.ts > notifications actions > getUnreadCount > catches and returns unknown error
-Error in getUnreadCount: Unknown failure
-
-stderr | src/modules/notifications/actions.test.ts > notifications actions > dismissNotification > returns error on database failure
-Error dismissing notification: { message: 'Delete failed' }
-
-stderr | src/modules/notifications/actions.test.ts > notifications actions > dismissNotification > catches and returns thrown Error
-Error in dismissNotification: Error: Network error
-    at F:/github/HemSoft/dashboard/src/modules/notifications/actions.test.ts:238:37
-    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
-    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
-    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
-    at new Promise (<anonymous>)
-    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
-    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
-    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
-    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
-    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
-
-stderr | src/modules/notifications/actions.test.ts > notifications actions > dismissNotification > catches and returns unknown error
-Error in dismissNotification: Unknown failure
-
-stderr | src/modules/notifications/actions.test.ts > notifications actions > dismissAllNotifications > returns error on database failure
-Error dismissing all notifications: { message: 'Delete failed' }
-
-stderr | src/modules/notifications/actions.test.ts > notifications actions > dismissAllNotifications > catches and returns thrown Error
-Error in dismissAllNotifications: Error: Network error
-    at F:/github/HemSoft/dashboard/src/modules/notifications/actions.test.ts:285:37
-    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
-    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
-    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
-    at new Promise (<anonymous>)
-    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
-    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
-    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
-    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
-    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
-
-stderr | src/modules/notifications/actions.test.ts > notifications actions > dismissAllNotifications > catches and returns unknown error
-Error in dismissAllNotifications: Unknown failure
-
-stderr | src/modules/notifications/actions.test.ts > notifications actions > dismissNotificationsByType > returns error on database failure
-Error dismissing notifications by type: { message: 'Delete failed' }
-
-stderr | src/modules/notifications/actions.test.ts > notifications actions > dismissNotificationsByType > catches and returns thrown Error
-Error in dismissNotificationsByType: Error: Network error
-    at F:/github/HemSoft/dashboard/src/modules/notifications/actions.test.ts:336:37
-    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
-    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
-    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
-    at new Promise (<anonymous>)
-    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
-    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
-    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
-    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
-    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
-
-stderr | src/modules/notifications/actions.test.ts > notifications actions > dismissNotificationsByType > catches and returns unknown error
-Error in dismissNotificationsByType: Unknown failure
-
+ [32mΓ£ô[39m src/modules/mail/lib/imap-client.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 71[2mms[22m[39m
+ [32mΓ£ô[39m src/components/ui/table.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 130[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/mail/lib/rate-limiter.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 116[2mms[22m[39m
+ [32mΓ£ô[39m src/hooks/use-sidebar-width.test.ts [2m([22m[2m24 tests[22m[2m)[22m[32m 127[2mms[22m[39m
+ [32mΓ£ô[39m src/app/expenditures/page.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[32m 244[2mms[22m[39m
+ [32mΓ£ô[39m src/hooks/use-font.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 99[2mms[22m[39m
+ [32mΓ£ô[39m src/components/icons/google-icon.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 159[2mms[22m[39m
+ [32mΓ£ô[39m src/lib/brightness.test.ts [2m([22m[2m61 tests[22m[2m)[22m[32m 89[2mms[22m[39m
+ [32mΓ£ô[39m src/inngest/client.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32mΓ£ô[39m src/lib/news-fetcher/parser.test.ts [2m([22m[2m24 tests[22m[2m)[22m[32m 44[2mms[22m[39m
 stderr | src/modules/news/actions.test.ts > News Actions > getNewsItems > returns empty array and error on database error
 Failed to fetch news items: { message: 'Database error' }
 
- [32mΓ£ô[39m src/modules/notifications/actions.test.ts [2m([22m[2m28 tests[22m[2m)[22m[32m 67[2mms[22m[39m
 stderr | src/modules/news/actions.test.ts > News Actions > markNewsAsRead > returns false when update fails
 Failed to mark news as read: Error: Update failed
     at F:/github/HemSoft/dashboard/src/modules/news/actions.test.ts:208:50
@@ -894,10 +768,37 @@ Failed to exclude source: { message: 'Upsert failed' }
 stderr | src/modules/news/actions.test.ts > News Actions > includeSource > returns failure when delete fails
 Failed to include source: { message: 'Delete failed' }
 
- [32mΓ£ô[39m src/modules/news/actions.test.ts [2m([22m[2m28 tests[22m[2m)[22m[32m 65[2mms[22m[39m
-stderr | src/app/api/mail/messages/route.test.ts > mail messages route > GET > should return 500 on unexpected error
-Error in /api/mail/messages: Error: Database error
-    at F:/github/HemSoft/dashboard/src/app/api/mail/messages/route.test.ts:262:42
+ [32mΓ£ô[39m src/modules/news/actions.test.ts [2m([22m[2m28 tests[22m[2m)[22m[32m 62[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/expenditures/types.test.ts [2m([22m[2m24 tests[22m[2m)[22m[32m 69[2mms[22m[39m
+stderr | src/modules/mail/actions.test.ts > mail actions > getMailAccounts > should return error when database query fails
+Error fetching mail accounts: { message: 'DB error' }
+
+stderr | src/modules/mail/actions.test.ts > mail actions > createMailAccount > should return error when database insert fails
+Error creating mail account: { message: 'Insert failed' }
+
+stderr | src/modules/mail/actions.test.ts > mail actions > updateMailAccount > should return error when database update fails
+Error updating mail account: { message: 'Update failed' }
+
+stderr | src/modules/mail/actions.test.ts > mail actions > deleteMailAccount > should return error when database delete fails
+Error deleting mail account: { message: 'Delete failed' }
+
+stderr | src/modules/mail/actions.test.ts > mail actions > getMailSummary > should return error when getMailAccounts fails
+Error fetching mail accounts: { message: 'DB error' }
+
+stderr | src/modules/mail/actions.test.ts > mail actions > getMailSummary > should handle errors when fetching unread counts
+Error fetching unread count for acc-1: Error: API error
+    at F:/github/HemSoft/dashboard/src/modules/mail/actions.test.ts:375:58
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:20
+
+ [32mΓ£ô[39m src/modules/news/components/auto-mark-as-read.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[32m 74[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/mail/actions.test.ts [2m([22m[2m24 tests[22m[2m)[22m[32m 72[2mms[22m[39m
+stderr | src/modules/notifications/actions.test.ts > notifications actions > getNotifications > returns error on database failure
+Error fetching notifications: { message: 'DB error' }
+
+stderr | src/modules/notifications/actions.test.ts > notifications actions > getNotifications > catches and returns thrown Error
+Error in getNotifications: Error: Network error
+    at F:/github/HemSoft/dashboard/src/modules/notifications/actions.test.ts:114:37
     at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
     at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
     at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
@@ -908,10 +809,15 @@ Error in /api/mail/messages: Error: Database error
     at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
     at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
 
- [32mΓ£ô[39m src/app/api/mail/messages/route.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 64[2mms[22m[39m
-stderr | src/app/api/mail/bulk-action/route.test.ts > mail bulk-action route > POST > should return 500 on unexpected error
-Error in /api/mail/bulk-action: Error: Database error
-    at F:/github/HemSoft/dashboard/src/app/api/mail/bulk-action/route.test.ts:249:42
+stderr | src/modules/notifications/actions.test.ts > notifications actions > getNotifications > catches and returns unknown error
+Error in getNotifications: Unknown failure
+
+stderr | src/modules/notifications/actions.test.ts > notifications actions > getUnreadCount > returns 0 on error
+Error fetching notification count: { message: 'DB error' }
+
+stderr | src/modules/notifications/actions.test.ts > notifications actions > getUnreadCount > catches and returns thrown Error
+Error in getUnreadCount: Error: Network error
+    at F:/github/HemSoft/dashboard/src/modules/notifications/actions.test.ts:165:37
     at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
     at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
     at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
@@ -922,6 +828,67 @@ Error in /api/mail/bulk-action: Error: Database error
     at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
     at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
 
+stderr | src/modules/notifications/actions.test.ts > notifications actions > getUnreadCount > catches and returns unknown error
+Error in getUnreadCount: Unknown failure
+
+stderr | src/modules/notifications/actions.test.ts > notifications actions > dismissNotification > returns error on database failure
+Error dismissing notification: { message: 'Delete failed' }
+
+stderr | src/modules/notifications/actions.test.ts > notifications actions > dismissNotification > catches and returns thrown Error
+Error in dismissNotification: Error: Network error
+    at F:/github/HemSoft/dashboard/src/modules/notifications/actions.test.ts:218:37
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+stderr | src/modules/notifications/actions.test.ts > notifications actions > dismissNotification > catches and returns unknown error
+Error in dismissNotification: Unknown failure
+
+stderr | src/modules/notifications/actions.test.ts > notifications actions > dismissAllNotifications > returns error on database failure
+Error dismissing all notifications: { message: 'Delete failed' }
+
+stderr | src/modules/notifications/actions.test.ts > notifications actions > dismissAllNotifications > catches and returns thrown Error
+Error in dismissAllNotifications: Error: Network error
+    at F:/github/HemSoft/dashboard/src/modules/notifications/actions.test.ts:265:37
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+stderr | src/modules/notifications/actions.test.ts > notifications actions > dismissAllNotifications > catches and returns unknown error
+Error in dismissAllNotifications: Unknown failure
+
+stderr | src/modules/notifications/actions.test.ts > notifications actions > dismissNotificationsByType > returns error on database failure
+Error dismissing notifications by type: { message: 'Delete failed' }
+
+stderr | src/modules/notifications/actions.test.ts > notifications actions > dismissNotificationsByType > catches and returns thrown Error
+Error in dismissNotificationsByType: Error: Network error
+    at F:/github/HemSoft/dashboard/src/modules/notifications/actions.test.ts:316:37
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+stderr | src/modules/notifications/actions.test.ts > notifications actions > dismissNotificationsByType > catches and returns unknown error
+Error in dismissNotificationsByType: Unknown failure
+
+ [32mΓ£ô[39m src/modules/notifications/actions.test.ts [2m([22m[2m26 tests[22m[2m)[22m[32m 56[2mms[22m[39m
 stderr | src/app/api/mail/oauth/callback/route.test.ts > mail oauth callback route > GET > should redirect to internal_error on unexpected error
 Error in /api/mail/oauth/callback: Error: Database error
     at F:/github/HemSoft/dashboard/src/app/api/mail/oauth/callback/route.test.ts:326:42
@@ -935,12 +902,141 @@ Error in /api/mail/oauth/callback: Error: Database error
     at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
     at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
 
- [32mΓ£ô[39m src/modules/news-sources/components/category-badge.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[32m 142[2mms[22m[39m
- [32mΓ£ô[39m src/app/api/mail/bulk-action/route.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 59[2mms[22m[39m
- [32mΓ£ô[39m src/app/api/mail/oauth/callback/route.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 63[2mms[22m[39m
-stderr | src/lib/resend.test.ts > resend > sendEmail > throws error when send fails
-Failed to send email: { message: 'Invalid API key' }
+ [32mΓ£ô[39m src/app/api/mail/oauth/callback/route.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 59[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/chat/components/chat-widget.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 98[2mms[22m[39m
+ [32mΓ£ô[39m src/hooks/use-mobile.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 75[2mms[22m[39m
+stderr | src/lib/redis.test.ts > redis > getRedisClient > should return null when credentials are not configured
+Redis credentials not configured. Caching will be disabled.
 
+stderr | src/lib/redis.test.ts > redis > getRedisClient > should return null when URL is missing
+Redis credentials not configured. Caching will be disabled.
+
+stderr | src/lib/redis.test.ts > redis > getRedisClient > should return null when token is missing
+Redis credentials not configured. Caching will be disabled.
+
+stderr | src/lib/redis.test.ts > redis > getCache > should return null when Redis client is unavailable
+Redis credentials not configured. Caching will be disabled.
+
+stderr | src/lib/redis.test.ts > redis > getCache > should return null when Redis get throws error
+Redis get error: Error: Redis error
+    at F:/github/HemSoft/dashboard/src/lib/redis.test.ts:90:33
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+stderr | src/lib/redis.test.ts > redis > setCache > should return false when Redis client is unavailable
+Redis credentials not configured. Caching will be disabled.
+
+stderr | src/lib/redis.test.ts > redis > setCache > should return false when Redis set throws error
+Redis set error: Error: Redis error
+    at F:/github/HemSoft/dashboard/src/lib/redis.test.ts:124:33
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+stderr | src/lib/redis.test.ts > redis > deleteCache > should return false when Redis client is unavailable
+Redis credentials not configured. Caching will be disabled.
+
+stderr | src/lib/redis.test.ts > redis > deleteCache > should return false when Redis delete throws error
+Redis delete error: Error: Redis error
+    at F:/github/HemSoft/dashboard/src/lib/redis.test.ts:149:33
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+stderr | src/app/api/mail/search/route.test.ts > mail search route > POST > should return 500 on unexpected error
+Error in /api/mail/search: Error: Database error
+    at F:/github/HemSoft/dashboard/src/app/api/mail/search/route.test.ts:226:42
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+ [32mΓ£ô[39m src/components/ui/progress.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 132[2mms[22m[39m
+stderr | src/lib/redis.test.ts > redis > deleteCachePattern > should return 0 when Redis client is unavailable
+Redis credentials not configured. Caching will be disabled.
+
+stderr | src/lib/redis.test.ts > redis > deleteCachePattern > should return 0 when Redis throws error
+Redis delete pattern error: Error: Redis error
+    at F:/github/HemSoft/dashboard/src/lib/redis.test.ts:187:34
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+stderr | src/modules/chat/actions.test.ts > chat actions > getConversations > returns error on database failure
+Error fetching conversations: { message: 'Database error' }
+
+ [32mΓ£ô[39m src/app/api/mail/search/route.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 63[2mms[22m[39m
+stderr | src/modules/chat/actions.test.ts > chat actions > getConversation > returns error on conversation fetch failure
+Error fetching conversation: { code: 'OTHER', message: 'DB error' }
+
+ [32mΓ£ô[39m src/modules/agent-tasks/types.test.ts [2m([22m[2m21 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+stderr | src/modules/chat/actions.test.ts > chat actions > getConversation > returns error on messages fetch failure
+Error fetching messages: { message: 'Message fetch error' }
+
+stderr | src/modules/chat/actions.test.ts > chat actions > createConversation > returns error on database failure
+Error creating conversation: { message: 'Insert failed' }
+
+stderr | src/modules/chat/actions.test.ts > chat actions > updateConversation > returns error on database failure
+Error updating conversation: { message: 'Update failed' }
+
+stderr | src/modules/chat/actions.test.ts > chat actions > deleteConversation > returns error on database failure
+Error deleting conversation: { message: 'Delete failed' }
+
+stderr | src/modules/chat/actions.test.ts > chat actions > archiveConversation > returns error on database failure
+Error archiving conversation: { message: 'Archive failed' }
+
+stderr | src/modules/chat/actions.test.ts > chat actions > unarchiveConversation > returns error on database failure
+Error unarchiving conversation: { message: 'Unarchive failed' }
+
+stderr | src/modules/chat/actions.test.ts > chat actions > addMessage > returns error on insert failure
+Error adding message: { message: 'Insert failed' }
+
+stderr | src/modules/timers/actions.test.ts > timers actions > getTimers > returns error on database failure
+Error fetching timers: { message: 'Database error' }
+
+ [32mΓ£ô[39m src/lib/redis.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 46[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/agent-tasks/components/agent-tasks-widget.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 91[2mms[22m[39m
+stderr | src/modules/timers/actions.test.ts > timers actions > createTimer > handles database error on create
+Error creating timer: { message: 'Insert failed' }
+
+stderr | src/modules/timers/actions.test.ts > timers actions > updateTimer > handles database error on update
+Error updating timer: { message: 'Update failed' }
+
+stderr | src/modules/timers/actions.test.ts > timers actions > deleteTimer > handles database error on delete
+Error deleting timer: { message: 'Delete failed' }
+
+ [32mΓ£ô[39m src/modules/chat/actions.test.ts [2m([22m[2m37 tests[22m[2m)[22m[32m 51[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/news-sources/components/category-badge.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[32m 139[2mms[22m[39m
 stderr | src/modules/mail/lib/outlook-client.test.ts > outlook-client > getOutlookUnreadCount > should return 0 on exception
 Error fetching Outlook unread count: Error: Token error
     at F:/github/HemSoft/dashboard/src/modules/mail/lib/outlook-client.test.ts:61:38
@@ -980,6 +1076,9 @@ Error performing Outlook bulk action: Error: Network error
     at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
     at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
 
+stderr | src/modules/mail/lib/token-manager.test.ts > token-manager > storeToken > should handle insert error
+Error inserting token: { message: 'Insert failed' }
+
 stderr | src/modules/mail/lib/outlook-client.test.ts > outlook-client > searchOutlookMessages > should return error on exception
 Error searching Outlook messages: Error: Search failed
     at F:/github/HemSoft/dashboard/src/modules/mail/lib/outlook-client.test.ts:191:38
@@ -993,6 +1092,10 @@ Error searching Outlook messages: Error: Search failed
     at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
     at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
 
+stderr | src/modules/mail/lib/token-manager.test.ts > token-manager > storeToken > should handle update error
+Error updating token: { message: 'Update failed' }
+
+ [32mΓ£ô[39m src/modules/timers/actions.test.ts [2m([22m[2m33 tests[22m[2m)[22m[32m 63[2mms[22m[39m
 stderr | src/modules/mail/lib/outlook-client.test.ts > outlook-client > getOutlookFolders > should return empty array on exception
 Error fetching Outlook folders: Error: API error
     at F:/github/HemSoft/dashboard/src/modules/mail/lib/outlook-client.test.ts:229:38
@@ -1006,66 +1109,10 @@ Error fetching Outlook folders: Error: API error
     at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
     at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
 
-stderr | src/modules/timers/actions.test.ts > timers actions > getTimers > returns error on database failure
-Error fetching timers: { message: 'Database error' }
-
-stderr | src/modules/timers/actions.test.ts > timers actions > createTimer > handles database error on create
-Error creating timer: { message: 'Insert failed' }
-
-stderr | src/modules/timers/actions.test.ts > timers actions > updateTimer > handles database error on update
-Error updating timer: { message: 'Update failed' }
-
- [32mΓ£ô[39m src/lib/resend.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 121[2mms[22m[39m
-stderr | src/modules/timers/actions.test.ts > timers actions > deleteTimer > handles database error on delete
-Error deleting timer: { message: 'Delete failed' }
-
- [32mΓ£ô[39m src/modules/mail/lib/outlook-client.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 51[2mms[22m[39m
- [32mΓ£ô[39m src/modules/timers/actions.test.ts [2m([22m[2m34 tests[22m[2m)[22m[32m 50[2mms[22m[39m
-stderr | src/modules/chat/actions.test.ts > chat actions > getConversations > returns error on database failure
-Error fetching conversations: { message: 'Database error' }
-
-stderr | src/modules/chat/actions.test.ts > chat actions > getConversation > returns error on conversation fetch failure
-Error fetching conversation: { code: 'OTHER', message: 'DB error' }
-
-stderr | src/modules/chat/actions.test.ts > chat actions > getConversation > returns error on messages fetch failure
-Error fetching messages: { message: 'Message fetch error' }
-
-stderr | src/modules/expenditures/actions.test.ts > expenditures actions > getExpenditures > returns error when database query fails
-Error fetching expenditures: { message: 'DB error' }
-
- [32mΓ£ô[39m src/app/page.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 134[2mms[22m[39m
-stderr | src/modules/chat/actions.test.ts > chat actions > createConversation > returns error on database failure
-Error creating conversation: { message: 'Insert failed' }
-
-stderr | src/modules/expenditures/actions.test.ts > expenditures actions > createExpenditureSource > returns error when insert fails
-Error creating expenditure source: { message: 'Insert failed' }
-
-stderr | src/modules/chat/actions.test.ts > chat actions > updateConversation > returns error on database failure
-Error updating conversation: { message: 'Update failed' }
-
-stderr | src/modules/expenditures/actions.test.ts > expenditures actions > updateExpenditureSource > returns error when update fails
-Error updating expenditure source: { message: 'Update failed' }
-
-stderr | src/modules/chat/actions.test.ts > chat actions > deleteConversation > returns error on database failure
-Error deleting conversation: { message: 'Delete failed' }
-
-stderr | src/modules/expenditures/actions.test.ts > expenditures actions > deleteExpenditureSource > returns error when delete fails
-Error deleting expenditure source: { message: 'Delete failed' }
-
-stderr | src/modules/chat/actions.test.ts > chat actions > archiveConversation > returns error on database failure
-Error archiving conversation: { message: 'Archive failed' }
-
-stderr | src/modules/chat/actions.test.ts > chat actions > unarchiveConversation > returns error on database failure
-Error unarchiving conversation: { message: 'Unarchive failed' }
-
-stderr | src/modules/chat/actions.test.ts > chat actions > addMessage > returns error on insert failure
-Error adding message: { message: 'Insert failed' }
-
- [32mΓ£ô[39m src/modules/expenditures/actions.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 32[2mms[22m[39m
- [32mΓ£ô[39m src/modules/chat/actions.test.ts [2m([22m[2m37 tests[22m[2m)[22m[32m 65[2mms[22m[39m
-stderr | src/app/api/mail/search/route.test.ts > mail search route > POST > should return 500 on unexpected error
-Error in /api/mail/search: Error: Database error
-    at F:/github/HemSoft/dashboard/src/app/api/mail/search/route.test.ts:226:42
+ [32mΓ£ô[39m src/components/ui/separator.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 89[2mms[22m[39m
+stderr | src/app/api/mail/empty-folder/route.test.ts > mail empty-folder route > DELETE > should return 500 on unexpected error
+Error in /api/mail/empty-folder: Error: Database error
+    at F:/github/HemSoft/dashboard/src/app/api/mail/empty-folder/route.test.ts:158:42
     at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
     at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
     at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
@@ -1075,74 +1122,6 @@ Error in /api/mail/search: Error: Database error
     at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
     at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
     at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
-
-stderr | src/lib/redis.test.ts > redis > getRedisClient > should return null when credentials are not configured
-Redis credentials not configured. Caching will be disabled.
-
-stderr | src/lib/redis.test.ts > redis > getRedisClient > should return null when URL is missing
-Redis credentials not configured. Caching will be disabled.
-
-stderr | src/lib/redis.test.ts > redis > getRedisClient > should return null when token is missing
-Redis credentials not configured. Caching will be disabled.
-
-stderr | src/lib/redis.test.ts > redis > getCache > should return null when Redis client is unavailable
-Redis credentials not configured. Caching will be disabled.
-
-stderr | src/lib/redis.test.ts > redis > getCache > should return null when Redis get throws error
-Redis get error: Error: Redis error
-    at F:/github/HemSoft/dashboard/src/lib/redis.test.ts:90:33
-    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
-    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
-    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
-    at new Promise (<anonymous>)
-    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
-    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
-    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
-    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
-    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
-
-stderr | src/modules/mail/lib/token-manager.test.ts > token-manager > storeToken > should handle insert error
-Error inserting token: { message: 'Insert failed' }
-
-stderr | src/lib/redis.test.ts > redis > setCache > should return false when Redis client is unavailable
-Redis credentials not configured. Caching will be disabled.
-
- [32mΓ£ô[39m src/app/api/mail/search/route.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 58[2mms[22m[39m
-stderr | src/modules/mail/lib/token-manager.test.ts > token-manager > storeToken > should handle update error
-Error updating token: { message: 'Update failed' }
-
-stderr | src/lib/redis.test.ts > redis > setCache > should return false when Redis set throws error
-Redis set error: Error: Redis error
-    at F:/github/HemSoft/dashboard/src/lib/redis.test.ts:124:33
-    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
-    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
-    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
-    at new Promise (<anonymous>)
-    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
-    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
-    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
-    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
-    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
-
-stderr | src/lib/redis.test.ts > redis > deleteCache > should return false when Redis client is unavailable
-Redis credentials not configured. Caching will be disabled.
-
- [32mΓ£ô[39m src/lib/news-fetcher/parser.test.ts [2m([22m[2m24 tests[22m[2m)[22m[32m 48[2mms[22m[39m
-stderr | src/lib/redis.test.ts > redis > deleteCache > should return false when Redis delete throws error
-Redis delete error: Error: Redis error
-    at F:/github/HemSoft/dashboard/src/lib/redis.test.ts:149:33
-    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
-    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
-    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
-    at new Promise (<anonymous>)
-    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
-    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
-    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
-    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
-    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
-
-stderr | src/lib/redis.test.ts > redis > deleteCachePattern > should return 0 when Redis client is unavailable
-Redis credentials not configured. Caching will be disabled.
 
 stderr | src/modules/mail/lib/token-manager.test.ts > token-manager > storeToken > should handle exception during token storage
 Error storing token: Error: Connection error
@@ -1157,19 +1136,7 @@ Error storing token: Error: Connection error
     at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
     at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
 
-stderr | src/lib/redis.test.ts > redis > deleteCachePattern > should return 0 when Redis throws error
-Redis delete pattern error: Error: Redis error
-    at F:/github/HemSoft/dashboard/src/lib/redis.test.ts:187:34
-    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
-    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
-    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
-    at new Promise (<anonymous>)
-    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
-    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
-    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
-    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
-    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
-
+ [32mΓ£ô[39m src/app/auth/actions.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 52[2mms[22m[39m
 stderr | src/modules/mail/lib/token-manager.test.ts > token-manager > getToken > should return null when token not found
 Error fetching token: { message: 'Not found' }
 
@@ -1202,10 +1169,10 @@ Error deleting token: Error: Connection lost
     at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
     at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
 
- [32mΓ£ô[39m src/app/account/actions.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 42[2mms[22m[39m
- [32mΓ£ô[39m src/lib/redis.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 42[2mms[22m[39m
- [32mΓ£ô[39m src/modules/mail/lib/token-manager.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 57[2mms[22m[39m
- [32mΓ£ô[39m src/hooks/use-sidebar-width.test.ts [2m([22m[2m24 tests[22m[2m)[22m[32m 95[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/mail/lib/outlook-client.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 43[2mms[22m[39m
+ [32mΓ£ô[39m src/app/api/mail/empty-folder/route.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 84[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/mail/lib/token-manager.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 60[2mms[22m[39m
+ [32mΓ£ô[39m src/app/chat/[id]/page.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[32m 103[2mms[22m[39m
 stderr | src/modules/mail/lib/gmail-client.test.ts > gmail-client > getGmailUnreadCount > should return 0 on exception
 Error fetching Gmail unread count: Error: Token error
     at F:/github/HemSoft/dashboard/src/modules/mail/lib/gmail-client.test.ts:61:38
@@ -1271,8 +1238,36 @@ Error fetching Gmail folders: Error: API error
     at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
     at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
 
- [32mΓ£ô[39m src/modules/agent-tasks/components/agent-tasks-widget.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 74[2mms[22m[39m
- [32mΓ£ô[39m src/app/auth/actions.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 34[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/mail/lib/gmail-client.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 29[2mms[22m[39m
+stderr | src/app/api/mail/bulk-action/route.test.ts > mail bulk-action route > POST > should return 500 on unexpected error
+Error in /api/mail/bulk-action: Error: Database error
+    at F:/github/HemSoft/dashboard/src/app/api/mail/bulk-action/route.test.ts:249:42
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+stderr | src/app/api/mail/messages/route.test.ts > mail messages route > GET > should return 500 on unexpected error
+Error in /api/mail/messages: Error: Database error
+    at F:/github/HemSoft/dashboard/src/app/api/mail/messages/route.test.ts:262:42
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+ [32mΓ£ô[39m src/app/account/actions.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 36[2mms[22m[39m
+ [32mΓ£ô[39m src/app/api/mail/bulk-action/route.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 57[2mms[22m[39m
+ [32mΓ£ô[39m src/app/api/mail/messages/route.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 53[2mms[22m[39m
 stderr | src/app/api/cron/fetch-news/route.test.ts > fetch-news route > POST > should handle unexpected errors
 Fetch news cron error: Error: Database connection failed
     at F:/github/HemSoft/dashboard/src/app/api/cron/fetch-news/route.test.ts:181:15
@@ -1289,9 +1284,7 @@ Fetch news cron error: Error: Database connection failed
 stderr | src/app/api/cron/fetch-news/route.test.ts > fetch-news route > POST > should handle non-Error thrown values
 Fetch news cron error: String error
 
- [32mΓ£ô[39m src/modules/mail/lib/gmail-client.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 36[2mms[22m[39m
- [32mΓ£ô[39m src/app/api/cron/fetch-news/route.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 47[2mms[22m[39m
- [32mΓ£ô[39m src/fonts/index.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 30[2mms[22m[39m
+ [32mΓ£ô[39m src/app/api/cron/fetch-news/route.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 43[2mms[22m[39m
 stderr | src/modules/agent-tasks/actions.test.ts > agent-tasks actions > getAgentRuns > returns error on database failure
 Error fetching agent runs: { message: 'Database error' }
 
@@ -1301,7 +1294,6 @@ Error fetching agent run: { code: 'OTHER', message: 'DB error' }
 stderr | src/modules/agent-tasks/actions.test.ts > agent-tasks actions > queueAgentRun > returns error on database insert failure
 Error creating agent run: { message: 'Insert failed' }
 
- [32mΓ£ô[39m src/modules/news/components/auto-mark-as-read.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[32m 67[2mms[22m[39m
 stderr | src/modules/agent-tasks/actions.test.ts > agent-tasks actions > queueAgentRun > handles Inngest failure and marks task as failed
 Error sending to Inngest: Error: Inngest error
     at F:/github/HemSoft/dashboard/src/modules/agent-tasks/actions.test.ts:316:45
@@ -1315,24 +1307,24 @@ Error sending to Inngest: Error: Inngest error
     at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
     at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
 
- [32mΓ£ô[39m src/modules/agent-tasks/actions.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 40[2mms[22m[39m
- [32mΓ£ô[39m src/lib/supabase/server.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 27[2mms[22m[39m
-stderr | src/app/api/mail/empty-folder/route.test.ts > mail empty-folder route > DELETE > should return 500 on unexpected error
-Error in /api/mail/empty-folder: Error: Database error
-    at F:/github/HemSoft/dashboard/src/app/api/mail/empty-folder/route.test.ts:158:42
-    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:145:11
-    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:915:26
-    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1243:20
-    at new Promise (<anonymous>)
-    at runWithTimeout (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1209:10)
-    at file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:37
-    at Traces.$ (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
-    at trace (file:///F:/github/HemSoft/dashboard/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
-    at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
+ [32mΓ£ô[39m src/modules/agent-tasks/actions.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 37[2mms[22m[39m
+ [32mΓ£ô[39m src/fonts/index.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 30[2mms[22m[39m
+stderr | src/modules/expenditures/actions.test.ts > expenditures actions > getExpenditures > returns error when database query fails
+Error fetching expenditures: { message: 'DB error' }
 
- [32mΓ£ô[39m src/app/api/mail/empty-folder/route.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 35[2mms[22m[39m
- [32mΓ£ô[39m src/lib/crypto.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 20[2mms[22m[39m
- [32mΓ£ô[39m src/proxy.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+stderr | src/modules/expenditures/actions.test.ts > expenditures actions > createExpenditureSource > returns error when insert fails
+Error creating expenditure source: { message: 'Insert failed' }
+
+stderr | src/modules/expenditures/actions.test.ts > expenditures actions > updateExpenditureSource > returns error when update fails
+Error updating expenditure source: { message: 'Update failed' }
+
+stderr | src/modules/expenditures/actions.test.ts > expenditures actions > deleteExpenditureSource > returns error when delete fails
+Error deleting expenditure source: { message: 'Delete failed' }
+
+ [32mΓ£ô[39m src/modules/expenditures/actions.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 34[2mms[22m[39m
+ [32mΓ£ô[39m src/lib/supabase/server.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 38[2mms[22m[39m
+ [32mΓ£ô[39m src/themes/index.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+ [32mΓ£ô[39m src/lib/utils.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 20[2mms[22m[39m
 stderr | src/app/api/mail/summary/route.test.ts > mail summary route > GET > should return 500 on unexpected error
 Error in /api/mail/summary: Error: Database error
     at F:/github/HemSoft/dashboard/src/app/api/mail/summary/route.test.ts:134:42
@@ -1347,47 +1339,52 @@ Error in /api/mail/summary: Error: Database error
     at runTest (file:///F:/github/HemSoft/dashboard/node_modules/@vitest/runner/dist/index.js:1653:12)
 
  [32mΓ£ô[39m src/app/api/mail/summary/route.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 27[2mms[22m[39m
- [32mΓ£ô[39m src/app/actions.dashboard.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 22[2mms[22m[39m
- [32mΓ£ô[39m src/lib/gravatar.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 8[2mms[22m[39m
- [32mΓ£ô[39m src/modules/github-prs/lib/github-client.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 19[2mms[22m[39m
- [32mΓ£ô[39m src/app/auth/callback/route.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 21[2mms[22m[39m
- [32mΓ£ô[39m src/lib/utils.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 17[2mms[22m[39m
- [32mΓ£ô[39m src/themes/index.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 19[2mms[22m[39m
- [32mΓ£ô[39m src/modules/notifications/components/notification-bell-server.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 56[2mms[22m[39m
- [32mΓ£ô[39m src/lib/supabase/admin.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 14[2mms[22m[39m
- [32mΓ£ô[39m src/lib/supabase/client.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 15[2mms[22m[39m
- [32mΓ£ô[39m src/modules/mail/lib/cache.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 15[2mms[22m[39m
- [32mΓ£ô[39m src/lib/env.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 9[2mms[22m[39m
- [32mΓ£ô[39m src/modules/github-prs/types.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 10[2mms[22m[39m
- [32mΓ£ô[39m src/app/news-sources/page.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[32m 15[2mms[22m[39m
- [32mΓ£ô[39m src/lib/widgets/registry.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 13[2mms[22m[39m
- [32mΓ£ô[39m src/modules/timers/types.test.ts [2m([22m[2m28 tests[22m[2m)[22m[32m 13[2mms[22m[39m
- [32mΓ£ô[39m src/lib/news-fetcher/types.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 8[2mms[22m[39m
- [32mΓ£ô[39m src/app/actions.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 11[2mms[22m[39m
- [32mΓ£ô[39m src/modules/news-sources/icons.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+stderr | src/app/layout.test.tsx > RootLayout > renders correctly with children when logged in
+In HTML, <html> cannot be a child of <div>.
+This will cause a hydration error.
+
+ [32mΓ£ô[39m src/proxy.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+ [32mΓ£ô[39m src/app/layout.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 144[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/github-prs/lib/github-client.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32mΓ£ô[39m src/app/auth/callback/route.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 35[2mms[22m[39m
+ [32mΓ£ô[39m src/app/actions.dashboard.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 29[2mms[22m[39m
+ [32mΓ£ô[39m src/lib/supabase/client.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32mΓ£ô[39m src/app/news-sources/page.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/notifications/components/notification-bell-server.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 51[2mms[22m[39m
+ [32mΓ£ô[39m src/lib/crypto.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 15[2mms[22m[39m
  [32mΓ£ô[39m src/lib/widgets/types.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 13[2mms[22m[39m
- [32mΓ£ô[39m src/modules/notifications/types.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 9[2mms[22m[39m
- [32mΓ£ô[39m src/app/api/inngest/route.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32mΓ£ô[39m src/lib/supabase/admin.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32mΓ£ô[39m src/app/actions.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/news-sources/icons.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32mΓ£ô[39m src/lib/widgets/registry.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/timers/types.test.ts [2m([22m[2m28 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/mail/lib/cache.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 14[2mms[22m[39m
  [32mΓ£ô[39m src/modules/news-sources/types.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/github-prs/types.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32mΓ£ô[39m src/lib/news-fetcher/types.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32mΓ£ô[39m src/lib/gravatar.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32mΓ£ô[39m src/lib/env.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/notifications/types.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32mΓ£ô[39m src/app/api/inngest/route.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 6[2mms[22m[39m
  [32mΓ£ô[39m src/modules/mail/types.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 8[2mms[22m[39m
- [32mΓ£ô[39m src/modules/news-sources/index.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 6[2mms[22m[39m
- [32mΓ£ô[39m src/modules/timers/index.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 7[2mms[22m[39m
- [32mΓ£ô[39m src/modules/expenditures/index.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 5[2mms[22m[39m
- [32mΓ£ô[39m src/modules/github-prs/index.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/news-sources/index.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/expenditures/index.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/timers/index.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32mΓ£ô[39m src/modules/github-prs/index.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 6[2mms[22m[39m
  [32mΓ£ô[39m src/modules/news/index.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 6[2mms[22m[39m
- [32mΓ£ô[39m src/components/landing/index.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32mΓ£ô[39m src/components/landing/index.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 5[2mms[22m[39m
  [32mΓ£ô[39m src/modules/notifications/index.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 6[2mms[22m[39m
 
 [2m Test Files [22m [1m[32m161 passed[39m[22m[90m (161)[39m
-[2m      Tests [22m [1m[32m1949 passed[39m[22m[90m (1949)[39m
-[2m   Start at [22m 23:39:56
-[2m   Duration [22m 55.30s[2m (transform 18.31s, setup 125.34s, import 228.90s, tests 197.54s, environment 2259.48s)[22m
+[2m      Tests [22m [1m[32m1916 passed[39m[22m[90m (1916)[39m
+[2m   Start at [22m 23:03:57
+[2m   Duration [22m 57.85s[2m (transform 21.31s, setup 131.40s, import 244.92s, tests 204.96s, environment 2344.90s)[22m
 
 [34m % [39m[2mCoverage report from [22m[33mv8[39m
 -------------------|---------|----------|---------|---------|-------------------
 File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
 -------------------|---------|----------|---------|---------|-------------------
-All files          |   98.64 |    95.03 |   98.35 |   99.26 |                   
+All files          |   98.45 |    93.89 |   98.12 |   99.11 |                   
  src               |     100 |      100 |     100 |     100 |                   
   proxy.ts         |     100 |      100 |     100 |     100 |                   
  src/app           |    98.9 |    97.36 |     100 |   98.86 |                   
@@ -1395,8 +1392,8 @@ All files          |   98.64 |    95.03 |   98.35 |   99.26 |
   actions.ts       |     100 |      100 |     100 |     100 |                   
   layout.tsx       |     100 |      100 |     100 |     100 |                   
   page.tsx         |     100 |      100 |     100 |     100 |                   
- src/app/account   |     100 |      100 |     100 |     100 |                   
-  actions.ts       |     100 |      100 |     100 |     100 |                   
+ src/app/account   |     100 |     93.1 |     100 |     100 |                   
+  actions.ts       |     100 |    88.88 |     100 |     100 | 53-56             
   page.tsx         |     100 |      100 |     100 |     100 |                   
  ...account/github |     100 |    88.88 |     100 |     100 |                   
   ...unts-list.tsx |     100 |     87.5 |     100 |     100 | 30                
@@ -1421,15 +1418,15 @@ All files          |   98.64 |    95.03 |   98.35 |   99.26 |
   route.ts         |     100 |      100 |     100 |     100 |                   
  src/app/auth      |     100 |    96.77 |     100 |     100 |                   
   actions.ts       |     100 |    96.77 |     100 |     100 | 23                
- .../auth/callback |     100 |      100 |     100 |     100 |                   
-  route.ts         |     100 |      100 |     100 |     100 |                   
+ .../auth/callback |     100 |     87.5 |     100 |     100 |                   
+  route.ts         |     100 |     87.5 |     100 |     100 | 15                
  ...ithub/callback |     100 |    92.85 |     100 |     100 |                   
   route.ts         |     100 |    92.85 |     100 |     100 | 98                
- src/app/chat      |     100 |      100 |     100 |     100 |                   
-  ...list-item.tsx |     100 |      100 |     100 |     100 |                   
+ src/app/chat      |   89.28 |     87.5 |    87.5 |   89.28 |                   
+  ...list-item.tsx |      88 |    83.33 |   85.71 |      88 | 140-173           
   page.tsx         |     100 |      100 |     100 |     100 |                   
- src/app/chat/[id] |   97.93 |    87.91 |   95.23 |     100 |                   
-  ...interface.tsx |   97.77 |    87.05 |      95 |     100 | ...84,196,359-360 
+ src/app/chat/[id] |   95.87 |    84.61 |   95.23 |   97.77 |                   
+  ...interface.tsx |   95.55 |    83.52 |      95 |   97.59 | 178-179           
   page.tsx         |     100 |      100 |     100 |     100 |                   
  src/app/chat/new  |     100 |      100 |     100 |     100 |                   
   page.tsx         |     100 |      100 |     100 |     100 |                   
@@ -1473,7 +1470,7 @@ All files          |   98.64 |    95.03 |   98.35 |   99.26 |
   hero-section.tsx |     100 |      100 |     100 |     100 |                   
   ...ng-footer.tsx |     100 |      100 |     100 |     100 |                   
   landing-page.tsx |     100 |      100 |     100 |     100 |                   
- src/components/ui |   98.39 |    97.22 |   98.42 |   98.91 |                   
+ src/components/ui |   98.39 |    95.37 |   98.42 |   98.91 |                   
   alert-dialog.tsx |    90.9 |      100 |    90.9 |    90.9 | 18                
   alert.tsx        |     100 |      100 |     100 |     100 |                   
   avatar.tsx       |     100 |      100 |     100 |     100 |                   
@@ -1486,7 +1483,7 @@ All files          |   98.64 |    95.03 |   98.35 |   99.26 |
   input.tsx        |     100 |      100 |     100 |     100 |                   
   label.tsx        |     100 |      100 |     100 |     100 |                   
   progress.tsx     |     100 |      100 |     100 |     100 |                   
-  select.tsx       |     100 |      100 |     100 |     100 |                   
+  select.tsx       |     100 |    71.42 |     100 |     100 | 66-78             
   separator.tsx    |     100 |      100 |     100 |     100 |                   
   sheet.tsx        |     100 |      100 |     100 |     100 |                   
   sidebar.tsx      |   97.53 |    95.89 |   96.96 |   98.71 | 185               
@@ -1504,13 +1501,13 @@ All files          |   98.64 |    95.03 |   98.35 |   99.26 |
  src/inngest       |     100 |      100 |     100 |     100 |                   
   client.ts        |     100 |      100 |     100 |     100 |                   
   functions.ts     |     100 |      100 |     100 |     100 |                   
- src/lib           |      96 |     89.2 |      98 |   97.29 |                   
-  brightness.ts    |   94.26 |    86.59 |     100 |   97.77 | 151,359,371       
+ src/lib           |   95.75 |    87.05 |      98 |   97.29 |                   
+  brightness.ts    |   93.63 |    84.53 |     100 |   97.77 | 151,359,371       
   crypto.ts        |     100 |      100 |     100 |     100 |                   
   env.ts           |       0 |        0 |       0 |       0 | 4-37              
   gravatar.ts      |     100 |      100 |     100 |     100 |                   
   redis.ts         |     100 |      100 |     100 |     100 |                   
-  resend.ts        |     100 |      100 |     100 |     100 |                   
+  resend.ts        |     100 |    88.88 |     100 |     100 | 8                 
   utils.ts         |     100 |      100 |     100 |     100 |                   
   version.ts       |     100 |      100 |     100 |     100 |                   
  src/lib/agent     |     100 |      100 |     100 |     100 |                   
@@ -1541,16 +1538,16 @@ All files          |   98.64 |    95.03 |   98.35 |   99.26 |
   ...ture-form.tsx |   95.91 |    96.66 |   85.71 |   95.91 | 118,160           
   ...ture-item.tsx |   97.72 |    92.85 |    92.3 |   97.72 | 108               
   ...es-widget.tsx |     100 |      100 |     100 |     100 |                   
- ...les/github-prs |     100 |       95 |     100 |     100 |                   
-  actions.ts       |     100 |       95 |     100 |     100 | 72                
+ ...les/github-prs |     100 |       85 |     100 |     100 |                   
+  actions.ts       |     100 |       85 |     100 |     100 | 38,72,123         
  ...prs/components |     100 |      100 |     100 |     100 |                   
   pr-item.tsx      |     100 |      100 |     100 |     100 |                   
   pr-tree.tsx      |     100 |      100 |     100 |     100 |                   
   pr-widget.tsx    |     100 |      100 |     100 |     100 |                   
  ...github-prs/lib |     100 |      100 |     100 |     100 |                   
   github-client.ts |     100 |      100 |     100 |     100 |                   
- src/modules/mail  |     100 |    97.87 |     100 |     100 |                   
-  actions.ts       |     100 |    97.87 |     100 |     100 | 48                
+ src/modules/mail  |   98.96 |    89.36 |     100 |     100 |                   
+  actions.ts       |   98.96 |    89.36 |     100 |     100 | ...23-124,126,276 
  ...ail/components |     100 |    98.11 |     100 |     100 |                   
   account-card.tsx |     100 |      100 |     100 |     100 |                   
   account-tabs.tsx |     100 |      100 |     100 |     100 |                   
@@ -1575,26 +1572,28 @@ All files          |   98.64 |    95.03 |   98.35 |   99.26 |
   ...ory-badge.tsx |     100 |      100 |     100 |     100 |                   
   source-form.tsx  |     100 |    95.83 |     100 |     100 | 87                
   source-list.tsx  |   94.54 |    96.87 |    92.3 |   95.91 | 85-86             
- ...ews/components |     100 |    96.61 |     100 |     100 |                   
+ ...ews/components |     100 |    94.91 |     100 |     100 |                   
   ...k-as-read.tsx |     100 |      100 |     100 |     100 |                   
   ...ad-button.tsx |     100 |      100 |     100 |     100 |                   
   news-item.tsx    |     100 |    95.45 |     100 |     100 | 46                
   news-widget.tsx  |     100 |      100 |     100 |     100 |                   
   ...sh-button.tsx |     100 |      100 |     100 |     100 |                   
-  ...-settings.tsx |     100 |       90 |     100 |     100 | 106               
- .../notifications |     100 |      100 |     100 |     100 |                   
-  actions.ts       |     100 |      100 |     100 |     100 |                   
+  ...-settings.tsx |     100 |       80 |     100 |     100 | 50,106            
+ .../notifications |     100 |    94.28 |     100 |     100 |                   
+  actions.ts       |     100 |    94.28 |     100 |     100 | 41,78             
  ...ons/components |     100 |      100 |     100 |     100 |                   
   ...ll-server.tsx |     100 |      100 |     100 |     100 |                   
   ...l-wrapper.tsx |     100 |      100 |     100 |     100 |                   
   ...tion-bell.tsx |     100 |      100 |     100 |     100 |                   
   ...tion-item.tsx |     100 |      100 |     100 |     100 |                   
   ...tion-list.tsx |     100 |      100 |     100 |     100 |                   
- ...modules/timers |     100 |      100 |     100 |     100 |                   
-  actions.ts       |     100 |      100 |     100 |     100 |                   
- ...ers/components |   97.91 |    93.18 |     100 |   99.55 |                   
-  ...er-dialog.tsx |   96.15 |     92.3 |     100 |   96.15 | 36                
+ ...modules/timers |     100 |    99.09 |     100 |     100 |                   
+  actions.ts       |     100 |    99.09 |     100 |     100 | 38                
+ ...ers/components |   97.91 |    92.42 |     100 |   99.55 |                   
+  ...er-dialog.tsx |   96.15 |    84.61 |     100 |   96.15 | 36                
   ...-provider.tsx |   98.24 |    96.15 |     100 |     100 | 21                
   timer-card.tsx   |    98.8 |    94.54 |     100 |     100 | 46,69,226         
   ...rs-widget.tsx |   97.26 |    89.47 |     100 |     100 | 106,150-154,175   
 -------------------|---------|----------|---------|---------|-------------------
+ERROR: Coverage for branches (93.89%) does not meet global threshold (95%)
+error: script "test:coverage" exited with code 1

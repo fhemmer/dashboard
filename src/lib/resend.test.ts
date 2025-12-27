@@ -43,6 +43,13 @@ describe("resend", () => {
       const { getResend } = await importResend();
       expect(() => getResend()).toThrow("RESEND_API_KEY is not configured");
     });
+
+    it("returns cached instance on subsequent calls", async () => {
+      const { getResend } = await importResend();
+      const resend1 = getResend();
+      const resend2 = getResend();
+      expect(resend1).toBe(resend2);
+    });
   });
 
   describe("sendEmail", () => {
