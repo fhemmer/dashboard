@@ -8,13 +8,14 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { DEFAULT_MODEL, getAvailableModels } from "@/lib/agent";
-import { createConversation } from "@/modules/chat/actions";
+import { DEFAULT_MODEL } from "@/lib/agent";
+import { type ModelWithPricing } from "@/lib/openrouter";
+import { createConversation, getAvailableModelsWithPricing, getHiddenModels } from "@/modules/chat/actions";
+import { ModelPicker } from "@/modules/chat/components/model-picker";
 import { Bot, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 
 export default function NewChatPage() {
   const router = useRouter();
@@ -22,8 +23,22 @@ export default function NewChatPage() {
   const [model, setModel] = useState(DEFAULT_MODEL);
   const [systemPrompt, setSystemPrompt] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [models, setModels] = useState<ModelWithPricing[]>([]);
+  const [hiddenModelIds, setHiddenModelIds] = useState<string[]>([]);
+  const [isLoadingModels, setIsLoadingModels] = useState(true);
 
-  const models = getAvailableModels();
+  useEffect(() => {
+    Promise.all([getAvailableModelsWithPricing(), getHiddenModels()])
+      .then(([modelsResult, hiddenResult]) => {
+        setModels(modelsResult);
+        setHiddenModelIds(hiddenResult.hiddenModels);
+      })
+      .catch((err) => {
+        console.error("Failed to load models:", err);
+        setError("Failed to load available models");
+      })
+      .finally(() => setIsLoadingModels(false));
+  }, []);
 
   function handleStartChat() {
     setError(null);
@@ -63,18 +78,21 @@ export default function NewChatPage() {
         <CardContent className="space-y-6">
           <div className="space-y-2">
             <Label htmlFor="model">AI Model</Label>
-            <Select value={model} onValueChange={setModel}>
-              <SelectTrigger id="model">
-                <SelectValue placeholder="Select a model" />
-              </SelectTrigger>
-              <SelectContent>
-                {models.map((m) => (
-                  <SelectItem key={m.id} value={m.id}>
-                    {m.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            {isLoadingModels ? (
+              <div className="flex items-center gap-2 text-sm text-muted-foreground py-2">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Loading models...
+              </div>
+            ) : (
+              <ModelPicker
+                models={models}
+                value={model}
+                onChange={setModel}
+                disabled={isPending}
+                hiddenModelIds={hiddenModelIds}
+                onHiddenModelsChange={setHiddenModelIds}
+              />
+            )}
           </div>
 
           <div className="space-y-2">
@@ -97,7 +115,7 @@ export default function NewChatPage() {
 
           <Button
             onClick={handleStartChat}
-            disabled={isPending}
+            disabled={isPending || isLoadingModels}
             className="w-full"
           >
             {isPending ? (

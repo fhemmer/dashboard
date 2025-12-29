@@ -4,11 +4,11 @@
 import { describe, expect, it } from "vitest";
 
 import {
-  calculateRunCost,
-  formatCost,
-  formatDuration,
-  getStatusColor,
-  getStatusLabel,
+    calculateRunCost,
+    formatCost,
+    formatDuration,
+    getStatusColor,
+    getStatusLabel,
 } from "./types";
 
 describe("agent-tasks types", () => {
@@ -77,7 +77,7 @@ describe("agent-tasks types", () => {
         userId: "user-1",
         prompt: "Hello",
         systemPrompt: null,
-        model: "anthropic/claude-sonnet-4-20250514",
+        model: "anthropic/claude-sonnet-4",
         status: "completed" as const,
         result: "Hi there!",
         error: null,

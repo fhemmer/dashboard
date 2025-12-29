@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
-  getAgentRun,
-  getAgentRuns,
-  getAgentTasksSummary,
-  queueAgentRun,
+    getAgentRun,
+    getAgentRuns,
+    getAgentTasksSummary,
+    queueAgentRun,
 } from "./actions";
 
 vi.mock("next/cache", () => ({
@@ -355,7 +355,7 @@ describe("agent-tasks actions", () => {
           user_id: "user-123",
           prompt: "Test",
           system_prompt: null,
-          model: "anthropic/claude-sonnet-4-20250514",
+          model: "anthropic/claude-sonnet-4",
           status: "completed",
           result: "Done",
           error: null,
@@ -375,7 +375,7 @@ describe("agent-tasks actions", () => {
       // Cost data chain
       const costData = [
         {
-          model: "anthropic/claude-sonnet-4-20250514",
+          model: "anthropic/claude-sonnet-4",
           input_tokens: 100,
           output_tokens: 50,
         },

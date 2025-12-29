@@ -5,12 +5,17 @@ import {
     archiveConversation,
     createConversation,
     deleteConversation,
+    getAvailableModelsWithPricing,
     getChatSummary,
     getConversation,
     getConversations,
+    getHiddenModels,
+    getUserChatSpending,
+    recordMessageCost,
     runAgentAction,
     unarchiveConversation,
     updateConversation,
+    updateHiddenModels,
 } from "./actions";
 
 vi.mock("next/cache", () => ({
@@ -36,12 +41,108 @@ vi.mock("@/lib/agent", () => ({
   runAgent: (...args: unknown[]) => mockExecuteAgent(...args),
 }));
 
+const mockGetModelsWithPricing = vi.fn();
+const mockCalculateCostWithMargin = vi.fn();
+
+vi.mock("@/lib/openrouter", () => ({
+  getModelsWithPricing: () => mockGetModelsWithPricing(),
+  calculateCostWithMargin: (...args: unknown[]) => mockCalculateCostWithMargin(...args),
+}));
+
 describe("chat actions", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockGetUser.mockResolvedValue({
       data: { user: { id: "user-123", email: "test@example.com" } },
       error: null,
+    });
+  });
+
+  describe("getHiddenModels", () => {
+    it("returns error when not authenticated", async () => {
+      mockGetUser.mockResolvedValue({ data: { user: null }, error: null });
+      const result = await getHiddenModels();
+      expect(result).toEqual({ hiddenModels: [], error: "Not authenticated" });
+    });
+
+    it("returns hidden models for authenticated user", async () => {
+      mockFrom.mockReturnValue({
+        select: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockReturnThis(),
+        single: vi.fn().mockResolvedValue({
+          data: { hidden_chat_models: ["openai/gpt-4o", "anthropic/claude-3"] },
+          error: null,
+        }),
+      });
+
+      const result = await getHiddenModels();
+
+      expect(result.error).toBeUndefined();
+      expect(result.hiddenModels).toEqual(["openai/gpt-4o", "anthropic/claude-3"]);
+    });
+
+    it("returns empty array when hidden_chat_models is null", async () => {
+      mockFrom.mockReturnValue({
+        select: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockReturnThis(),
+        single: vi.fn().mockResolvedValue({
+          data: { hidden_chat_models: null },
+          error: null,
+        }),
+      });
+
+      const result = await getHiddenModels();
+
+      expect(result.hiddenModels).toEqual([]);
+    });
+
+    it("returns error on database failure", async () => {
+      mockFrom.mockReturnValue({
+        select: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockReturnThis(),
+        single: vi.fn().mockResolvedValue({
+          data: null,
+          error: { message: "Database error" },
+        }),
+      });
+
+      const result = await getHiddenModels();
+
+      expect(result.error).toBe("Database error");
+      expect(result.hiddenModels).toEqual([]);
+    });
+  });
+
+  describe("updateHiddenModels", () => {
+    it("returns error when not authenticated", async () => {
+      mockGetUser.mockResolvedValue({ data: { user: null }, error: null });
+      const result = await updateHiddenModels(["openai/gpt-4o"]);
+      expect(result).toEqual({ success: false, error: "Not authenticated" });
+    });
+
+    it("updates hidden models successfully", async () => {
+      const chain = {
+        update: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockResolvedValue({ error: null }),
+      };
+      mockFrom.mockReturnValue(chain);
+
+      const result = await updateHiddenModels(["openai/gpt-4o", "anthropic/claude-3"]);
+
+      expect(result.success).toBe(true);
+    });
+
+    it("returns error on database failure", async () => {
+      const chain = {
+        update: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockResolvedValue({ error: { message: "Update failed" } }),
+      };
+      mockFrom.mockReturnValue(chain);
+
+      const result = await updateHiddenModels(["openai/gpt-4o"]);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("Update failed");
     });
   });
 
@@ -694,6 +795,149 @@ describe("chat actions", () => {
         prompt: "Hello",
         model: "gpt-4",
       });
+    });
+  });
+
+  describe("getAvailableModelsWithPricing", () => {
+    it("returns models from openrouter", async () => {
+      const mockModels = [
+        {
+          id: "anthropic/claude-sonnet-4-20250514",
+          name: "Claude Sonnet 4",
+          description: "Test",
+          contextLength: 200000,
+          inputPricePerMillion: 3.3,
+          outputPricePerMillion: 16.5,
+          reasoningPricePerMillion: 0,
+          inputModalities: ["text"],
+          outputModalities: ["text"],
+        },
+      ];
+      mockGetModelsWithPricing.mockResolvedValue(mockModels);
+
+      const result = await getAvailableModelsWithPricing();
+
+      expect(result).toEqual(mockModels);
+    });
+
+    it("returns fallback model on error", async () => {
+      mockGetModelsWithPricing.mockRejectedValue(new Error("API error"));
+
+      const result = await getAvailableModelsWithPricing();
+
+      expect(result).toHaveLength(1);
+      expect(result[0].id).toBe("anthropic/claude-sonnet-4-20250514");
+    });
+  });
+
+  describe("recordMessageCost", () => {
+    it("returns error when not authenticated", async () => {
+      mockGetUser.mockResolvedValue({ data: { user: null }, error: null });
+
+      const result = await recordMessageCost({
+        conversationId: "conv-1",
+        messageId: "msg-1",
+        model: "gpt-4",
+        inputTokens: 100,
+        outputTokens: 50,
+      });
+
+      expect(result).toEqual({ success: false, error: "Not authenticated" });
+    });
+
+    it("records cost successfully", async () => {
+      mockCalculateCostWithMargin.mockResolvedValue(0.005);
+      mockFrom.mockReturnValue({
+        insert: vi.fn().mockResolvedValue({ error: null }),
+      });
+
+      const result = await recordMessageCost({
+        conversationId: "conv-1",
+        messageId: "msg-1",
+        model: "gpt-4",
+        inputTokens: 100,
+        outputTokens: 50,
+        reasoningTokens: 0,
+      });
+
+      expect(result.success).toBe(true);
+      expect(mockCalculateCostWithMargin).toHaveBeenCalledWith("gpt-4", 100, 50, 0);
+    });
+
+    it("returns error on database failure", async () => {
+      mockCalculateCostWithMargin.mockResolvedValue(0.005);
+      mockFrom.mockReturnValue({
+        insert: vi.fn().mockResolvedValue({ error: { message: "Insert failed" } }),
+      });
+
+      const result = await recordMessageCost({
+        conversationId: "conv-1",
+        messageId: "msg-1",
+        model: "gpt-4",
+        inputTokens: 100,
+        outputTokens: 50,
+      });
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("Insert failed");
+    });
+  });
+
+  describe("getUserChatSpending", () => {
+    it("returns 0 when not authenticated", async () => {
+      mockGetUser.mockResolvedValue({ data: { user: null }, error: null });
+
+      const result = await getUserChatSpending();
+
+      expect(result.totalSpent).toBe(0);
+      expect(result.error).toBe("Not authenticated");
+    });
+
+    it("returns user spending", async () => {
+      mockFrom.mockReturnValue({
+        select: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockReturnThis(),
+        single: vi.fn().mockResolvedValue({
+          data: { total_chat_spent: 1.25 },
+          error: null,
+        }),
+      });
+
+      const result = await getUserChatSpending();
+
+      expect(result.totalSpent).toBe(1.25);
+      expect(result.error).toBeUndefined();
+    });
+
+    it("returns 0 on null data", async () => {
+      mockFrom.mockReturnValue({
+        select: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockReturnThis(),
+        single: vi.fn().mockResolvedValue({
+          data: null,
+          error: null,
+        }),
+      });
+
+      const result = await getUserChatSpending();
+
+      expect(result.totalSpent).toBe(0);
+    });
+
+    it("returns error on database failure", async () => {
+      mockFrom.mockReturnValue({
+        select: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockReturnThis(),
+        single: vi.fn().mockResolvedValue({
+          data: null,
+          error: { message: "DB error" },
+        }),
+      });
+
+      const result = await getUserChatSpending();
+
+      expect(result.totalSpent).toBe(0);
+      expect(result.error).toBe("DB error");
     });
   });
 });

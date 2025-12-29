@@ -23,6 +23,12 @@ vi.mock("@/modules/news-sources", () => ({
   ),
 }));
 
+// Mock chat actions
+const mockGetUserChatSpending = vi.fn();
+vi.mock("@/modules/chat/actions", () => ({
+  getUserChatSpending: () => mockGetUserChatSpending(),
+}));
+
 // Mock supabase server
 const mockGetUser = vi.fn();
 vi.mock("@/lib/supabase/server", () => ({
@@ -66,6 +72,10 @@ describe("AccountPage", () => {
       notificationRetentionDays: 30,
       lastFetchAt: null,
       error: null,
+    });
+    mockGetUserChatSpending.mockResolvedValue({
+      totalSpent: 1.2345,
+      error: undefined,
     });
   });
 

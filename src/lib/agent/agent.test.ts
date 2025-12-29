@@ -13,7 +13,7 @@ vi.mock("ai", () => ({
 const mockChatModel = vi.fn((model) => ({ model }));
 vi.mock("./client", () => ({
   getOpenRouter: vi.fn(() => ({ chat: mockChatModel })),
-  DEFAULT_MODEL: "anthropic/claude-sonnet-4-20250514",
+  DEFAULT_MODEL: "anthropic/claude-sonnet-4",
 }));
 
 // Mock the tools module
@@ -191,7 +191,7 @@ describe("agent runner", () => {
       const { runAgent } = await import("./agent");
       await runAgent({ prompt: "Test" });
 
-      expect(mockChatModel).toHaveBeenCalledWith("anthropic/claude-sonnet-4-20250514");
+      expect(mockChatModel).toHaveBeenCalledWith("anthropic/claude-sonnet-4");
     });
 
     it("should use default maxSteps of 10 when none provided", async () => {

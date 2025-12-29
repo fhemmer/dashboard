@@ -14,15 +14,51 @@ vi.mock("next/navigation", () => ({
 // Mock chat actions
 vi.mock("@/modules/chat/actions", () => ({
   createConversation: vi.fn(),
+  getAvailableModelsWithPricing: vi.fn().mockResolvedValue([
+    {
+      id: "openrouter/anthropic/claude-3",
+      name: "Claude 3",
+      description: "Test model",
+      contextLength: 200000,
+      inputPricePerMillion: 3.0,
+      outputPricePerMillion: 15.0,
+      reasoningPricePerMillion: 0,
+      inputModalities: ["text"],
+      outputModalities: ["text"],
+      providerId: "openrouter",
+      isFree: false,
+      supportsTools: true,
+    },
+    {
+      id: "openrouter/openai/gpt-4",
+      name: "GPT-4",
+      description: "Test model",
+      contextLength: 128000,
+      inputPricePerMillion: 5.0,
+      outputPricePerMillion: 15.0,
+      reasoningPricePerMillion: 0,
+      inputModalities: ["text"],
+      outputModalities: ["text"],
+      providerId: "openrouter",
+      isFree: false,
+      supportsTools: true,
+    },
+  ]),
+  getHiddenModels: vi.fn().mockResolvedValue({ hiddenModels: [] }),
+  updateHiddenModels: vi.fn().mockResolvedValue({ success: true }),
 }));
 
 // Mock agent lib
 vi.mock("@/lib/agent", () => ({
-  getAvailableModels: () => [
-    { id: "openrouter/anthropic/claude-3", name: "Claude 3" },
-    { id: "openrouter/openai/gpt-4", name: "GPT-4" },
-  ],
   DEFAULT_MODEL: "openrouter/anthropic/claude-3",
+}));
+
+// Mock openrouter lib
+vi.mock("@/lib/openrouter", () => ({
+  formatPrice: (price: number) => price === 0 ? "Free" : `$${price.toFixed(2)}`,
+  MODEL_PROVIDERS: {
+    openrouter: { id: "openrouter", name: "OpenRouter" },
+  },
 }));
 
 import { createConversation } from "@/modules/chat/actions";
@@ -41,17 +77,40 @@ describe("NewChatPage", () => {
     expect(screen.getByText(/configure your ai conversation settings/i)).toBeInTheDocument();
   });
 
-  it("renders chat settings card", () => {
+  it("renders chat settings card", async () => {
     render(<NewChatPage />);
 
     expect(screen.getByText("Chat Settings")).toBeInTheDocument();
     expect(screen.getByText(/choose your ai model/i)).toBeInTheDocument();
+
+    // Wait for models to load
+    await waitFor(() => {
+      expect(screen.queryByText(/loading models/i)).not.toBeInTheDocument();
+    });
   });
 
-  it("renders model selector with default model", () => {
+  it("renders model selector with default model", async () => {
     render(<NewChatPage />);
 
-    expect(screen.getByRole("combobox", { name: /ai model/i })).toBeInTheDocument();
+    // Wait for models to load
+    await waitFor(() => {
+      expect(screen.getByText("AI Model")).toBeInTheDocument();
+    });
+
+    // Model picker should be rendered
+    await waitFor(() => {
+      expect(screen.queryByText(/loading models/i)).not.toBeInTheDocument();
+    });
+  });
+
+  it("displays model pricing information", async () => {
+    render(<NewChatPage />);
+
+    // Wait for models to load
+    await waitFor(() => {
+      expect(screen.getByText(/input price/i)).toBeInTheDocument();
+      expect(screen.getByText(/output price/i)).toBeInTheDocument();
+    });
   });
 
   it("renders system prompt textarea", () => {
@@ -71,6 +130,11 @@ describe("NewChatPage", () => {
     mockCreateConversation.mockResolvedValue({ success: true, id: "new-conv-123" });
 
     render(<NewChatPage />);
+
+    // Wait for models to load
+    await waitFor(() => {
+      expect(screen.queryByText(/loading models/i)).not.toBeInTheDocument();
+    });
 
     const startButton = screen.getByRole("button", { name: /start chat/i });
     fireEvent.click(startButton);
@@ -92,6 +156,11 @@ describe("NewChatPage", () => {
 
     render(<NewChatPage />);
 
+    // Wait for models to load
+    await waitFor(() => {
+      expect(screen.queryByText(/loading models/i)).not.toBeInTheDocument();
+    });
+
     const startButton = screen.getByRole("button", { name: /start chat/i });
     fireEvent.click(startButton);
 
@@ -107,6 +176,11 @@ describe("NewChatPage", () => {
 
     render(<NewChatPage />);
 
+    // Wait for models to load
+    await waitFor(() => {
+      expect(screen.queryByText(/loading models/i)).not.toBeInTheDocument();
+    });
+
     const startButton = screen.getByRole("button", { name: /start chat/i });
     fireEvent.click(startButton);
 
@@ -120,6 +194,11 @@ describe("NewChatPage", () => {
     const user = userEvent.setup();
 
     render(<NewChatPage />);
+
+    // Wait for models to load
+    await waitFor(() => {
+      expect(screen.queryByText(/loading models/i)).not.toBeInTheDocument();
+    });
 
     const systemPromptInput = screen.getByRole("textbox", { name: /system prompt/i });
     await user.type(systemPromptInput, "You are a helpful assistant");
@@ -144,6 +223,11 @@ describe("NewChatPage", () => {
     );
 
     render(<NewChatPage />);
+
+    // Wait for models to load
+    await waitFor(() => {
+      expect(screen.queryByText(/loading models/i)).not.toBeInTheDocument();
+    });
 
     const startButton = screen.getByRole("button", { name: /start chat/i });
     fireEvent.click(startButton);

@@ -25,7 +25,7 @@ export function getOpenRouter() {
   return _openrouter;
 }
 
-export const DEFAULT_MODEL = "anthropic/claude-sonnet-4-20250514";
+export const DEFAULT_MODEL = "anthropic/claude-sonnet-4";
 
 export interface ModelPricing {
   input: number;
@@ -34,8 +34,8 @@ export interface ModelPricing {
 }
 
 export const MODEL_PRICES: Record<string, ModelPricing> = {
-  "anthropic/claude-sonnet-4-20250514": { input: 0.003, output: 0.015, contextWindow: 200000 },
-  "anthropic/claude-opus-4-20250514": { input: 0.015, output: 0.075, contextWindow: 200000 },
+  "anthropic/claude-sonnet-4": { input: 0.003, output: 0.015, contextWindow: 1000000 },
+  "anthropic/claude-opus-4": { input: 0.015, output: 0.075, contextWindow: 200000 },
   "openai/gpt-4o": { input: 0.005, output: 0.015, contextWindow: 128000 },
   "openai/gpt-4o-mini": { input: 0.00015, output: 0.0006, contextWindow: 128000 },
   "google/gemini-2.0-flash-001": { input: 0.0001, output: 0.0004, contextWindow: 1000000 },
@@ -52,8 +52,8 @@ export function getContextWindow(model: string): number {
 
 export function getAvailableModels(): Array<{ id: string; name: string }> {
   return [
-    { id: "anthropic/claude-sonnet-4-20250514", name: "Claude Sonnet 4" },
-    { id: "anthropic/claude-opus-4-20250514", name: "Claude Opus 4" },
+    { id: "anthropic/claude-sonnet-4", name: "Claude Sonnet 4" },
+    { id: "anthropic/claude-opus-4", name: "Claude Opus 4" },
     { id: "openai/gpt-4o", name: "GPT-4o" },
     { id: "openai/gpt-4o-mini", name: "GPT-4o Mini" },
     { id: "google/gemini-2.0-flash-001", name: "Gemini 2.0 Flash" },

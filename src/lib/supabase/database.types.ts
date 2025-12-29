@@ -453,12 +453,14 @@ export type Database = {
           fg_brightness_dark: number | null
           fg_brightness_light: number | null
           font: string | null
+          hidden_chat_models: string[] | null
           id: string
           last_login: string | null
           news_last_seen_at: string | null
           role: string | null
           sidebar_width: number | null
           theme: string | null
+          total_chat_spent: number
           updated_at: string | null
           widget_settings: Json | null
         }
@@ -470,12 +472,14 @@ export type Database = {
           fg_brightness_dark?: number | null
           fg_brightness_light?: number | null
           font?: string | null
+          hidden_chat_models?: string[] | null
           id: string
           last_login?: string | null
           news_last_seen_at?: string | null
           role?: string | null
           sidebar_width?: number | null
           theme?: string | null
+          total_chat_spent?: number
           updated_at?: string | null
           widget_settings?: Json | null
         }
@@ -487,12 +491,14 @@ export type Database = {
           fg_brightness_dark?: number | null
           fg_brightness_light?: number | null
           font?: string | null
+          hidden_chat_models?: string[] | null
           id?: string
           last_login?: string | null
           news_last_seen_at?: string | null
           role?: string | null
           sidebar_width?: number | null
           theme?: string | null
+          total_chat_spent?: number
           updated_at?: string | null
           widget_settings?: Json | null
         }

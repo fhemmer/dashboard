@@ -9,6 +9,11 @@
  */
 
 import { DEFAULT_MODEL, runAgent as executeAgent, type AgentOptions, type AgentResult } from "@/lib/agent";
+import {
+    calculateCostWithMargin,
+    getModelsWithPricing,
+    type ModelWithPricing,
+} from "@/lib/openrouter";
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 
@@ -24,6 +29,68 @@ import type {
     CreateConversationResult,
     UpdateResult,
 } from "./types";
+
+// ============================================================================
+// Hidden Models Preferences
+// ============================================================================
+
+/**
+ * Get the user's hidden model IDs
+ */
+export async function getHiddenModels(): Promise<{ hiddenModels: string[]; error?: string }> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { hiddenModels: [], error: "Not authenticated" };
+  }
+
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("hidden_chat_models")
+    .eq("id", user.id)
+    .single();
+
+  if (error) {
+    console.error("Error fetching hidden models:", error);
+    return { hiddenModels: [], error: error.message };
+  }
+
+  return { hiddenModels: (data?.hidden_chat_models as string[]) ?? [] };
+}
+
+/**
+ * Update the user's hidden model IDs
+ */
+export async function updateHiddenModels(hiddenModels: string[]): Promise<UpdateResult> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { success: false, error: "Not authenticated" };
+  }
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({ hidden_chat_models: hiddenModels } as Record<string, unknown>)
+    .eq("id", user.id);
+
+  if (error) {
+    console.error("Error updating hidden models:", error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/chat");
+  return { success: true };
+}
+
+// ============================================================================
+// Conversation Types (Temporary)
+// ============================================================================
 
 // Temporary types until migration is applied
 interface ConversationRow {
@@ -442,4 +509,112 @@ export async function runAgentAction(options: AgentOptions): Promise<AgentResult
   }
 
   return executeAgent(options);
+}
+
+/**
+ * Get available models with pricing from OpenRouter
+ * Cached server-side for performance
+ */
+export async function getAvailableModelsWithPricing(): Promise<ModelWithPricing[]> {
+  try {
+    return await getModelsWithPricing();
+  } catch (error) {
+    console.error("Error fetching models:", error);
+    // Return fallback models if API fails
+    return [
+      {
+        id: "anthropic/claude-sonnet-4-20250514",
+        name: "Claude Sonnet 4",
+        description: "Anthropic's balanced model for most tasks",
+        contextLength: 200000,
+        inputPricePerMillion: 3.3,
+        outputPricePerMillion: 16.5,
+        reasoningPricePerMillion: 0,
+        inputModalities: ["text"],
+        outputModalities: ["text"],
+        providerId: "anthropic",
+        isFree: false,
+        supportsTools: true,
+      },
+    ];
+  }
+}
+
+/**
+ * Record cost for a message
+ * Called after an AI response is received
+ */
+export async function recordMessageCost(params: {
+  conversationId: string;
+  messageId: string;
+  model: string;
+  inputTokens: number;
+  outputTokens: number;
+  reasoningTokens?: number;
+}): Promise<UpdateResult> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { success: false, error: "Not authenticated" };
+  }
+
+  // Calculate cost with margin
+  const cost = await calculateCostWithMargin(
+    params.model,
+    params.inputTokens,
+    params.outputTokens,
+    params.reasoningTokens ?? 0
+  );
+
+  // Insert cost record - the trigger will update total_chat_spent
+  const { error } = await (supabase
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    .from("chat_costs" as "demo") as any)
+    .insert({
+      user_id: user.id,
+      conversation_id: params.conversationId,
+      message_id: params.messageId,
+      model: params.model,
+      input_tokens: params.inputTokens,
+      output_tokens: params.outputTokens,
+      reasoning_tokens: params.reasoningTokens ?? 0,
+      cost_usd: cost,
+    });
+
+  if (error) {
+    console.error("Error recording message cost:", error);
+    return { success: false, error: error.message };
+  }
+
+  return { success: true };
+}
+
+/**
+ * Get user's total chat spending
+ */
+export async function getUserChatSpending(): Promise<{ totalSpent: number; error?: string }> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { totalSpent: 0, error: "Not authenticated" };
+  }
+
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("total_chat_spent")
+    .eq("id", user.id)
+    .single();
+
+  if (error) {
+    console.error("Error fetching user spending:", error);
+    return { totalSpent: 0, error: error.message };
+  }
+
+  return { totalSpent: data?.total_chat_spent ?? 0 };
 }

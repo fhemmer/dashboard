@@ -43,14 +43,14 @@ describe("agent client", () => {
     it("should calculate cost for known model", async () => {
       const { calculateCost } = await import("./client");
       // Claude Sonnet 4: input $0.003, output $0.015 per 1000 tokens
-      const cost = calculateCost("anthropic/claude-sonnet-4-20250514", 1000, 1000);
+      const cost = calculateCost("anthropic/claude-sonnet-4", 1000, 1000);
       expect(cost).toBeCloseTo(0.018);
     });
 
     it("should calculate cost for Claude Opus model", async () => {
       const { calculateCost } = await import("./client");
       // Claude Opus 4: input $0.015, output $0.075 per 1000 tokens
-      const cost = calculateCost("anthropic/claude-opus-4-20250514", 1000, 1000);
+      const cost = calculateCost("anthropic/claude-opus-4", 1000, 1000);
       expect(cost).toBeCloseTo(0.09);
     });
 
@@ -94,15 +94,15 @@ describe("agent client", () => {
       const { getAvailableModels } = await import("./client");
       const models = getAvailableModels();
       expect(models).toHaveLength(5);
-      expect(models[0]).toEqual({ id: "anthropic/claude-sonnet-4-20250514", name: "Claude Sonnet 4" });
+      expect(models[0]).toEqual({ id: "anthropic/claude-sonnet-4", name: "Claude Sonnet 4" });
     });
 
     it("should include all expected models", async () => {
       const { getAvailableModels } = await import("./client");
       const models = getAvailableModels();
       const ids = models.map((m) => m.id);
-      expect(ids).toContain("anthropic/claude-sonnet-4-20250514");
-      expect(ids).toContain("anthropic/claude-opus-4-20250514");
+      expect(ids).toContain("anthropic/claude-sonnet-4");
+      expect(ids).toContain("anthropic/claude-opus-4");
       expect(ids).toContain("openai/gpt-4o");
       expect(ids).toContain("openai/gpt-4o-mini");
       expect(ids).toContain("google/gemini-2.0-flash-001");
@@ -112,14 +112,14 @@ describe("agent client", () => {
   describe("DEFAULT_MODEL", () => {
     it("should be Claude Sonnet 4", async () => {
       const { DEFAULT_MODEL } = await import("./client");
-      expect(DEFAULT_MODEL).toBe("anthropic/claude-sonnet-4-20250514");
+      expect(DEFAULT_MODEL).toBe("anthropic/claude-sonnet-4");
     });
   });
 
   describe("MODEL_PRICES", () => {
     it("should have correct prices for Claude Sonnet 4", async () => {
       const { MODEL_PRICES } = await import("./client");
-      expect(MODEL_PRICES["anthropic/claude-sonnet-4-20250514"]).toEqual({ input: 0.003, output: 0.015, contextWindow: 200000 });
+      expect(MODEL_PRICES["anthropic/claude-sonnet-4"]).toEqual({ input: 0.003, output: 0.015, contextWindow: 1000000 });
     });
 
     it("should have correct prices for all models", async () => {
@@ -138,8 +138,8 @@ describe("agent client", () => {
   describe("getContextWindow", () => {
     it("should return context window for known model", async () => {
       const { getContextWindow } = await import("./client");
-      expect(getContextWindow("anthropic/claude-sonnet-4-20250514")).toBe(200000);
-      expect(getContextWindow("anthropic/claude-opus-4-20250514")).toBe(200000);
+      expect(getContextWindow("anthropic/claude-sonnet-4")).toBe(1000000);
+      expect(getContextWindow("anthropic/claude-opus-4")).toBe(200000);
       expect(getContextWindow("openai/gpt-4o")).toBe(128000);
       expect(getContextWindow("openai/gpt-4o-mini")).toBe(128000);
       expect(getContextWindow("google/gemini-2.0-flash-001")).toBe(1000000);
