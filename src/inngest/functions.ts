@@ -33,7 +33,7 @@ export const agentRun = inngest.createFunction(
   },
   { event: "agent/run" },
   async ({ event, step }) => {
-    // userId is part of event data but not needed in the function (used for auditing in DB)
+    // Note: userId is intentionally not destructured - it's stored with the task record for auditing
     const { taskId, prompt, model, systemPrompt } = event.data as AgentRunEventData;
 
     // Update status to running (using admin client for background tasks)
