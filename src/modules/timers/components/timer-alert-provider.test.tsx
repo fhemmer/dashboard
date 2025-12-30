@@ -155,6 +155,9 @@ describe("TimerAlertProvider", () => {
       configurable: true,
     });
 
+    // Ensure AudioContext mock is set (may be cleared by other tests)
+    globalThis.AudioContext = MockAudioContextClass as unknown as typeof AudioContext;
+
     const { container } = render(<TimerAlertProvider />);
 
     // Wait for the async permission check via setTimeout
