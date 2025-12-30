@@ -67,7 +67,7 @@ export function ColorPicker({ variableName, label, oklchValue, onChange }: Color
         {/* Native color picker */}
         <input
           type="color"
-          value={hexInput.startsWith("#") ? hexInput : `#${hexInput}`}
+          value={hexInput.startsWith("#") ? hexInput : `#${hexInput.replace(/^#/, "")}`}
           onChange={handleColorInputChange}
           className="h-9 w-12 cursor-pointer rounded border border-input bg-transparent p-0.5"
           aria-label={`Color picker for ${label}`}
@@ -83,7 +83,7 @@ export function ColorPicker({ variableName, label, oklchValue, onChange }: Color
         />
       </div>
       {/* OKLCH display */}
-      <p className="text-[10px] text-muted-foreground font-mono truncate" title={oklchValue}>
+      <p className="truncate font-mono text-[10px] text-muted-foreground" title={oklchValue}>
         {oklchValue}
       </p>
     </div>

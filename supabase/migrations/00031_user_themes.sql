@@ -48,7 +48,7 @@ AS $$
 BEGIN
   IF NEW.is_active = true THEN
     UPDATE public.user_themes
-    SET is_active = false, updated_at = now()
+    SET is_active = false
     WHERE user_id = NEW.user_id AND id != NEW.id AND is_active = true;
   END IF;
   RETURN NEW;

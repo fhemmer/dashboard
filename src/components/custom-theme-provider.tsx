@@ -42,9 +42,13 @@ export function CustomThemeProvider({ children }: CustomThemeProviderProps) {
 
   // Fetch active custom theme on mount
   useEffect(() => {
+    let isMounted = true;
+
     async function loadActiveTheme() {
       try {
         const theme = await getActiveCustomTheme();
+        if (!isMounted) return;
+
         if (theme) {
           setActiveCustomThemeId(theme.id);
           setLightVariables(theme.light_variables);
@@ -54,13 +58,20 @@ export function CustomThemeProvider({ children }: CustomThemeProviderProps) {
           localStorage.setItem("theme-name", makeCustomThemeName(theme.id));
         }
       } catch (error) {
+        if (!isMounted) return;
         console.error("Error loading active custom theme:", error);
       } finally {
-        setIsLoading(false);
+        if (isMounted) {
+          setIsLoading(false);
+        }
       }
     }
 
     loadActiveTheme();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   // Apply variables when theme or dark mode changes

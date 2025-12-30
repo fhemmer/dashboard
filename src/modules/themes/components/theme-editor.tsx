@@ -13,7 +13,7 @@ import {
   type ThemeVariables,
 } from "@/lib/theme-utils";
 import { ChevronDown, Moon, Sun } from "lucide-react";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ColorPicker } from "./color-picker";
 import { ThemePreviewCard } from "./theme-preview";
 
@@ -29,32 +29,50 @@ interface ThemeEditorProps {
 }
 
 /**
- * Extract theme variables from the document for both light and dark modes
+ * Extract theme variables from a hidden element with specific class applied.
+ * This avoids mutating the visible DOM during render.
  */
-function extractBothModeVariables(): { light: ThemeVariables; dark: ThemeVariables } {
+function extractThemeVariablesForMode(isDark: boolean): ThemeVariables {
   if (typeof document === "undefined") {
-    // SSR fallback - will be overridden on client
-    return { light: {} as ThemeVariables, dark: {} as ThemeVariables };
+    return {} as ThemeVariables;
   }
 
+  // Create a hidden element to extract computed styles without affecting the visible DOM
+  const tempElement = document.createElement("div");
+  tempElement.style.position = "absolute";
+  tempElement.style.visibility = "hidden";
+  tempElement.style.pointerEvents = "none";
+
+  // Apply the appropriate class
+  if (isDark) {
+    tempElement.classList.add("dark");
+  }
+
+  document.body.appendChild(tempElement);
+
+  // Get computed styles from the temp element
+  // Note: CSS variables cascade, so we need to read from the root for the current mode
   const wasInDarkMode = document.documentElement.classList.contains("dark");
 
-  // Extract light mode
-  if (wasInDarkMode) {
+  // Temporarily switch mode to extract variables
+  if (isDark && !wasInDarkMode) {
+    document.documentElement.classList.add("dark");
+  } else if (!isDark && wasInDarkMode) {
     document.documentElement.classList.remove("dark");
   }
-  const light = extractCurrentThemeVariables();
 
-  // Extract dark mode
-  document.documentElement.classList.add("dark");
-  const dark = extractCurrentThemeVariables();
+  const variables = extractCurrentThemeVariables();
 
   // Restore original mode
-  if (!wasInDarkMode) {
+  if (isDark && !wasInDarkMode) {
     document.documentElement.classList.remove("dark");
+  } else if (!isDark && wasInDarkMode) {
+    document.documentElement.classList.add("dark");
   }
 
-  return { light, dark };
+  document.body.removeChild(tempElement);
+
+  return variables;
 }
 
 /**
@@ -70,23 +88,36 @@ export function ThemeEditor({
   error,
   mode = "create",
 }: ThemeEditorProps) {
-  // Initialize variables once using lazy initializer
-  const defaultVariables = useMemo(() => {
-    if (initialLightVariables && initialDarkVariables) {
-      return { light: initialLightVariables, dark: initialDarkVariables };
-    }
-    return extractBothModeVariables();
-  }, [initialLightVariables, initialDarkVariables]);
-
   const [name, setName] = useState(initialName);
   const [editingMode, setEditingMode] = useState<"light" | "dark">("light");
   const [lightVariables, setLightVariables] = useState<ThemeVariables>(
-    initialLightVariables ?? defaultVariables.light
+    initialLightVariables ?? ({} as ThemeVariables)
   );
   const [darkVariables, setDarkVariables] = useState<ThemeVariables>(
-    initialDarkVariables ?? defaultVariables.dark
+    initialDarkVariables ?? ({} as ThemeVariables)
   );
   const [advancedOpen, setAdvancedOpen] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(
+    !!(initialLightVariables && initialDarkVariables)
+  );
+
+  // Extract theme variables on mount using useEffect to avoid render-time DOM mutation
+  useEffect(() => {
+    if (initialLightVariables && initialDarkVariables) {
+      // Already have initial variables, no need to extract
+      return;
+    }
+
+    // Extract variables after mount to avoid hydration issues
+    const light = extractThemeVariablesForMode(false);
+    const dark = extractThemeVariablesForMode(true);
+
+    // One-time initialization is an acceptable use of setState in useEffect
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- One-time init from external DOM measurement
+    setLightVariables(light);
+    setDarkVariables(dark);
+    setIsInitialized(true);
+  }, [initialLightVariables, initialDarkVariables]);
 
   const currentVariables = editingMode === "light" ? lightVariables : darkVariables;
   const setCurrentVariables = editingMode === "light" ? setLightVariables : setDarkVariables;
@@ -112,6 +143,15 @@ export function ThemeEditor({
   };
 
   const editingModeLabel = editingMode === "light" ? "Light" : "Dark";
+
+  // Show loading state while extracting theme variables
+  if (!isInitialized) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <p className="text-muted-foreground">Loading theme variables...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="grid gap-6 lg:grid-cols-2">

@@ -23,7 +23,11 @@ export function ThemePicker({ defaultValue, name = "theme" }: ThemePickerProps) 
 
   // Load custom themes
   useEffect(() => {
-    getUserThemes().then(setCustomThemes);
+    getUserThemes()
+      .then(setCustomThemes)
+      .catch((error) => {
+        console.error("Error loading custom themes:", error);
+      });
   }, []);
 
   // Sync server theme to localStorage only once on initial mount

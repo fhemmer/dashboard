@@ -103,9 +103,14 @@ export async function getActiveCustomTheme(): Promise<UserTheme | null> {
     .select("*")
     .eq("user_id", user.id)
     .eq("is_active", true)
-    .single();
+    .maybeSingle();
 
-  if (error || !data) {
+  if (error) {
+    console.error("Error fetching active custom theme:", error);
+    return null;
+  }
+
+  if (!data) {
     return null;
   }
 
@@ -130,12 +135,17 @@ export async function createTheme(
   }
 
   // Check for duplicate name
-  const { data: existing } = await supabase
+  const { data: existing, error: existingError } = await supabase
     .from("user_themes")
     .select("id")
     .eq("user_id", user.id)
     .eq("name", name)
-    .single();
+    .maybeSingle();
+
+  if (existingError) {
+    console.error("Error checking for existing theme:", existingError);
+    return { success: false, error: "Failed to check for existing theme" };
+  }
 
   if (existing) {
     return { success: false, error: "A theme with this name already exists" };
@@ -186,13 +196,18 @@ export async function updateTheme(
 
   // If renaming, check for duplicate
   if (name) {
-    const { data: existing } = await supabase
+    const { data: existing, error: existingError } = await supabase
       .from("user_themes")
       .select("id")
       .eq("user_id", user.id)
       .eq("name", name)
       .neq("id", id)
-      .single();
+      .maybeSingle();
+
+    if (existingError) {
+      console.error("Error checking for duplicate theme name:", existingError);
+      return { success: false, error: "Failed to check for duplicate theme name" };
+    }
 
     if (existing) {
       return { success: false, error: "A theme with this name already exists" };
@@ -269,7 +284,15 @@ export async function setActiveTheme(id: string | null): Promise<ThemeActionResu
   }
 
   // First deactivate all themes for this user
-  await supabase.from("user_themes").update({ is_active: false }).eq("user_id", user.id);
+  const { error: deactivateError } = await supabase
+    .from("user_themes")
+    .update({ is_active: false })
+    .eq("user_id", user.id);
+
+  if (deactivateError) {
+    console.error("Error deactivating themes:", deactivateError);
+    return { success: false, error: deactivateError.message };
+  }
 
   // If id is null, we just want to deactivate (switch to preset theme)
   if (!id) {

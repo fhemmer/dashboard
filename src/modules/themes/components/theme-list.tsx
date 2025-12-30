@@ -1,6 +1,17 @@
 "use client";
 
 import { deleteTheme, setActiveTheme } from "@/app/themes/actions";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useCustomTheme } from "@/components/custom-theme-provider";
@@ -88,8 +99,6 @@ function ThemeCard({ theme, isActive, onActivate, onDeactivate, onDeleted }: The
   }, [onDeactivate]);
 
   const handleDelete = useCallback(() => {
-    if (!confirm(`Delete "${theme.name}"? This cannot be undone.`)) return;
-
     startTransition(async () => {
       const result = await deleteTheme(theme.id);
       if (result.success) {
@@ -101,7 +110,7 @@ function ThemeCard({ theme, isActive, onActivate, onDeactivate, onDeleted }: The
         setDeleteError(result.error ?? "Failed to delete theme");
       }
     });
-  }, [theme.id, theme.name, isActive, onDeactivate, onDeleted]);
+  }, [theme.id, isActive, onDeactivate, onDeleted]);
 
   // Get preview colors from light mode variables
   const primaryHex = oklchToHex(theme.light_variables.primary) ?? "#333";
@@ -168,19 +177,37 @@ function ThemeCard({ theme, isActive, onActivate, onDeactivate, onDeleted }: The
               Activate
             </Button>
           )}
-          <Button variant="outline" size="icon-sm" asChild>
+          <Button variant="outline" size="icon-sm" asChild aria-label={`Edit ${theme.name}`}>
             <Link href={`/themes/${theme.id}/edit`}>
               <Pencil className="h-3.5 w-3.5" />
             </Link>
           </Button>
-          <Button
-            variant="outline"
-            size="icon-sm"
-            onClick={handleDelete}
-            disabled={isPending}
-          >
-            <Trash2 className="h-3.5 w-3.5" />
-          </Button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button
+                variant="outline"
+                size="icon-sm"
+                disabled={isPending}
+                aria-label={`Delete ${theme.name}`}
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Delete &ldquo;{theme.name}&rdquo;?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. This will permanently delete your custom theme.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={handleDelete} disabled={isPending}>
+                  Delete
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       </CardContent>
     </Card>
