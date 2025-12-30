@@ -363,5 +363,37 @@ describe("agent runner", () => {
 
       expect(result.text).toBe("I processed your request but couldn't generate a response. Please try again.");
     });
+
+    it("should handle steps that is not an array", async () => {
+      const mockResult = {
+        text: "",
+        usage: { inputTokens: 50, outputTokens: 25, totalTokens: 75 },
+        finishReason: "stop",
+        steps: "not-an-array",
+      };
+
+      vi.mocked(generateText).mockResolvedValueOnce(mockResult as never);
+
+      const { runAgent } = await import("./agent");
+      const result = await runAgent({ prompt: "Test" });
+
+      expect(result.text).toBe("I processed your request but couldn't generate a response. Please try again.");
+    });
+
+    it("should handle steps with undefined toolResults", async () => {
+      const mockResult = {
+        text: "",
+        usage: { inputTokens: 50, outputTokens: 25, totalTokens: 75 },
+        finishReason: "stop",
+        steps: [{}],
+      };
+
+      vi.mocked(generateText).mockResolvedValueOnce(mockResult as never);
+
+      const { runAgent } = await import("./agent");
+      const result = await runAgent({ prompt: "Test" });
+
+      expect(result.text).toBe("I processed your request but couldn't generate a response. Please try again.");
+    });
   });
 });
