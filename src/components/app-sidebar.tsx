@@ -33,6 +33,7 @@ import {
     Mail,
     MessageSquare,
     Newspaper,
+    Palette,
     User,
     Wallet,
     Zap,
@@ -50,6 +51,7 @@ const navigation = [
   { name: "Timers", href: "/timers", icon: Clock },
   { name: "Chat", href: "/chat", icon: MessageSquare },
   { name: "Agent Tasks", href: "/agent-tasks", icon: Bot },
+  { name: "Themes", href: "/themes", icon: Palette },
 ];
 
 const adminNavigation: { name: string; href: string; icon: typeof LayoutDashboard }[] = [];

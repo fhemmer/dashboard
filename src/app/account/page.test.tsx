@@ -49,6 +49,25 @@ vi.mock("next/navigation", () => ({
   redirect: (url: string) => mockRedirect(url),
 }));
 
+// Mock the useCustomTheme hook
+vi.mock("@/components/custom-theme-provider", () => ({
+  useCustomTheme: () => ({
+    customThemes: [],
+    activeCustomTheme: null,
+    isLoading: false,
+    applyCustomTheme: vi.fn(),
+    clearCustomTheme: vi.fn(),
+    refreshThemes: vi.fn(),
+  }),
+}));
+
+// Mock the theme actions to prevent Supabase calls
+vi.mock("@/app/themes/actions", () => ({
+  getUserThemes: vi.fn().mockResolvedValue([]),
+  getActiveCustomTheme: vi.fn().mockResolvedValue(null),
+  setActiveTheme: vi.fn().mockResolvedValue({ success: true }),
+}));
+
 import AccountPage from "./page";
 
 describe("AccountPage", () => {
