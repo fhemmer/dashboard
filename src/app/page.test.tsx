@@ -1,8 +1,9 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import Home from "./page";
 
 const mockGetUser = vi.fn();
+const mockGetWidgetSettings = vi.fn();
 
 vi.mock("@/lib/supabase/server", () => ({
   createClient: vi.fn(() =>
@@ -15,18 +16,7 @@ vi.mock("@/lib/supabase/server", () => ({
 }));
 
 vi.mock("@/app/actions.dashboard", () => ({
-  getWidgetSettings: vi.fn(() =>
-    Promise.resolve({
-      settings: {
-        widgets: [
-          { id: "pull-requests", enabled: true, order: 0 },
-          { id: "news", enabled: true, order: 1 },
-          { id: "expenditures", enabled: true, order: 2 },
-        ],
-      },
-      isAdmin: true,
-    })
-  ),
+  getWidgetSettings: () => mockGetWidgetSettings(),
 }));
 
 vi.mock("@/modules/news", () => ({
@@ -76,6 +66,20 @@ vi.mock("@/components/dashboard-grid", () => ({
 }));
 
 describe("Home Page", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockGetWidgetSettings.mockResolvedValue({
+      settings: {
+        widgets: [
+          { id: "pull-requests", enabled: true, order: 0 },
+          { id: "news", enabled: true, order: 1 },
+          { id: "expenditures", enabled: true, order: 2 },
+        ],
+      },
+      isAdmin: true,
+    });
+  });
+
   it("renders the dashboard with widgets when authenticated", async () => {
     mockGetUser.mockResolvedValue({
       data: { user: { id: "user-123", email: "test@example.com" } },
@@ -105,5 +109,31 @@ describe("Home Page", () => {
 
     expect(screen.getByTestId("landing-page")).toBeDefined();
     expect(screen.queryByText("Dashboard")).toBeNull();
+  });
+
+  it("hides expenditures widget for non-admin users", async () => {
+    mockGetUser.mockResolvedValue({
+      data: { user: { id: "user-123", email: "test@example.com" } },
+      error: null,
+    });
+    mockGetWidgetSettings.mockResolvedValue({
+      settings: {
+        widgets: [
+          { id: "pull-requests", enabled: true, order: 0 },
+          { id: "news", enabled: true, order: 1 },
+          { id: "expenditures", enabled: true, order: 2 },
+        ],
+      },
+      isAdmin: false,
+    });
+
+    const Page = await Home();
+    render(Page);
+
+    expect(screen.getByText("Dashboard")).toBeDefined();
+    expect(screen.getByTestId("news-widget")).toBeDefined();
+    expect(screen.getByTestId("pr-widget")).toBeDefined();
+    // Expenditures widget should not render for non-admin
+    expect(screen.queryByTestId("expenditures-widget")).toBeNull();
   });
 });

@@ -180,4 +180,26 @@ describe("SourceExclusionSettings", () => {
       expect(bbcRow.className).toContain("opacity-50");
     });
   });
+
+  it("does not update UI when toggle fails", async () => {
+    mockToggleSourceExclusion.mockResolvedValue({ success: false, error: "Failed" });
+
+    render(<SourceExclusionSettings sources={mockSources} />);
+
+    fireEvent.click(screen.getByRole("button", { name: /manage sources/i }));
+
+    await waitFor(() => {
+      const hnSwitch = screen.getByRole("switch", { name: /toggle hacker news/i });
+      expect(hnSwitch.getAttribute("data-state")).toBe("checked");
+      fireEvent.click(hnSwitch);
+    });
+
+    await waitFor(() => {
+      expect(mockToggleSourceExclusion).toHaveBeenCalled();
+    });
+
+    // UI should remain unchanged since toggle failed
+    const hnSwitch = screen.getByRole("switch", { name: /toggle hacker news/i });
+    expect(hnSwitch.getAttribute("data-state")).toBe("checked");
+  });
 });

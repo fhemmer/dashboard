@@ -5,12 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { createClient } from "@/lib/supabase/server";
+import { getUserChatSpending } from "@/modules/chat/actions";
 import {
     AdminSettingsForm,
     getCurrentUserRole,
     getSystemSettings,
 } from "@/modules/news-sources";
-import { ArrowLeft, Check } from "lucide-react";
+import { ArrowLeft, Bot, Check } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { changePassword, getProfile, updateProfile } from "./actions";
@@ -33,6 +34,7 @@ export default async function AccountPage({
   const params = await searchParams;
   const role = await getCurrentUserRole();
   const isAdmin = role === "admin";
+  const chatSpending = await getUserChatSpending();
 
   // Fetch system settings for admin users
   const systemSettings = isAdmin ? await getSystemSettings() : null;
@@ -144,6 +146,35 @@ export default async function AccountPage({
 
             <Button type="submit">Save Changes</Button>
           </form>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <Bot className="h-5 w-5 text-muted-foreground" />
+            <CardTitle>AI Usage</CardTitle>
+          </div>
+          <CardDescription>Your AI chat consumption and spending.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="rounded-lg border bg-muted/50 p-4">
+            <p className="text-sm text-muted-foreground">Total Spent</p>
+            <p className="text-3xl font-bold">
+              ${chatSpending.totalSpent.toFixed(4)}
+            </p>
+            <p className="text-xs text-muted-foreground mt-1">
+              Accumulated from all AI chat conversations
+            </p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline" asChild className="flex-1">
+              <Link href="/chat">View Chats</Link>
+            </Button>
+            <Button variant="outline" asChild className="flex-1">
+              <Link href="/chat/new">New Chat</Link>
+            </Button>
+          </div>
         </CardContent>
       </Card>
 

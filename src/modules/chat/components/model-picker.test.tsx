@@ -1,0 +1,468 @@
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
+import { ModelPicker } from "./model-picker";
+
+// Mock the openrouter module
+vi.mock("@/lib/openrouter", () => ({
+  formatPrice: (price: number) => (price === 0 ? "Free" : `$${price.toFixed(2)}`),
+  MODEL_PROVIDERS: {
+    anthropic: { id: "anthropic", name: "Anthropic" },
+    openai: { id: "openai", name: "OpenAI" },
+    google: { id: "google", name: "Google" },
+  },
+}));
+
+// Mock the actions
+const mockUpdateHiddenModels = vi.fn().mockResolvedValue({ success: true });
+vi.mock("../actions", () => ({
+  updateHiddenModels: (...args: unknown[]) => mockUpdateHiddenModels(...args),
+}));
+
+const mockModels = [
+  {
+    id: "anthropic/claude-sonnet-4",
+    name: "Claude Sonnet 4",
+    description: "Anthropic's balanced model",
+    contextLength: 200000,
+    inputPricePerMillion: 3.0,
+    outputPricePerMillion: 15.0,
+    reasoningPricePerMillion: 0,
+    inputModalities: ["text"],
+    outputModalities: ["text"],
+    providerId: "anthropic",
+    isFree: false,
+    supportsTools: true,
+  },
+  {
+    id: "openai/gpt-4o",
+    name: "GPT-4o",
+    description: "OpenAI's multimodal model",
+    contextLength: 128000,
+    inputPricePerMillion: 5.0,
+    outputPricePerMillion: 15.0,
+    reasoningPricePerMillion: 0,
+    inputModalities: ["text", "image"],
+    outputModalities: ["text"],
+    providerId: "openai",
+    isFree: false,
+    supportsTools: true,
+  },
+  {
+    id: "google/gemini-2.0-flash-exp:free",
+    name: "Gemini 2.0 Flash Exp (Free)",
+    description: "Google's free experimental model",
+    contextLength: 1000000,
+    inputPricePerMillion: 0,
+    outputPricePerMillion: 0,
+    reasoningPricePerMillion: 0,
+    inputModalities: ["text"],
+    outputModalities: ["text"],
+    providerId: "google",
+    isFree: true,
+    supportsTools: true,
+  },
+];
+
+describe("ModelPicker", () => {
+  it("renders provider groups alphabetically", () => {
+    const onChange = vi.fn();
+    render(
+      <ModelPicker
+        models={mockModels}
+        value="anthropic/claude-sonnet-4"
+        onChange={onChange}
+      />
+    );
+
+    expect(screen.getByText("Anthropic")).toBeInTheDocument();
+    expect(screen.getByText("OpenAI")).toBeInTheDocument();
+    expect(screen.getByText("Google")).toBeInTheDocument();
+
+    // Check alphabetical order: Anthropic, Google, OpenAI
+    const buttons = screen.getAllByRole("button");
+    const providerButtons = buttons.filter(
+      (b) =>
+        b.textContent?.includes("Anthropic") ||
+        b.textContent?.includes("Google") ||
+        b.textContent?.includes("OpenAI")
+    );
+    expect(providerButtons[0]).toHaveTextContent("Anthropic");
+    expect(providerButtons[1]).toHaveTextContent("Google");
+    expect(providerButtons[2]).toHaveTextContent("OpenAI");
+  });
+
+  it("shows model count for each provider", () => {
+    const onChange = vi.fn();
+    render(
+      <ModelPicker
+        models={mockModels}
+        value="anthropic/claude-sonnet-4"
+        onChange={onChange}
+      />
+    );
+
+    // Each provider should show count - use getAllByText since there are multiple
+    const counts = screen.getAllByText("(1)");
+    expect(counts.length).toBeGreaterThan(0);
+  });
+
+  it("displays selected model details", () => {
+    const onChange = vi.fn();
+    render(
+      <ModelPicker
+        models={mockModels}
+        value="anthropic/claude-sonnet-4"
+        onChange={onChange}
+      />
+    );
+
+    // Use getAllByText since model name appears in both details and list
+    const modelNames = screen.getAllByText("Claude Sonnet 4");
+    expect(modelNames.length).toBeGreaterThan(0);
+    expect(screen.getByText("Anthropic's balanced model")).toBeInTheDocument();
+    expect(screen.getByText("$3.00 / 1M tokens")).toBeInTheDocument();
+    expect(screen.getByText("$15.00 / 1M tokens")).toBeInTheDocument();
+    expect(screen.getByText("200K tokens")).toBeInTheDocument();
+  });
+
+  it("shows FREE badge for free models in details", () => {
+    const onChange = vi.fn();
+    render(
+      <ModelPicker
+        models={mockModels}
+        value="google/gemini-2.0-flash-exp:free"
+        onChange={onChange}
+      />
+    );
+
+    // Should have FREE badge in details and in list
+    const freeBadges = screen.getAllByText("FREE");
+    expect(freeBadges.length).toBeGreaterThan(0);
+  });
+
+  it("expands provider with selected model by default", () => {
+    const onChange = vi.fn();
+    render(
+      <ModelPicker
+        models={mockModels}
+        value="anthropic/claude-sonnet-4"
+        onChange={onChange}
+      />
+    );
+
+    // Anthropic's model should be visible (expanded) - appears in both details and list
+    const modelNames = screen.getAllByText("Claude Sonnet 4");
+    expect(modelNames.length).toBe(2); // Once in details, once in treeview
+  });
+
+  it("toggles provider expansion on click", () => {
+    const onChange = vi.fn();
+    render(
+      <ModelPicker
+        models={mockModels}
+        value="anthropic/claude-sonnet-4"
+        onChange={onChange}
+      />
+    );
+
+    // Click on OpenAI to expand it
+    const openaiButton = screen.getByRole("button", { name: /openai/i });
+    fireEvent.click(openaiButton);
+
+    // GPT-4o should now be visible
+    expect(screen.getByText("GPT-4o")).toBeInTheDocument();
+  });
+
+  it("calls onChange when model is selected", () => {
+    const onChange = vi.fn();
+    render(
+      <ModelPicker
+        models={mockModels}
+        value="anthropic/claude-sonnet-4"
+        onChange={onChange}
+      />
+    );
+
+    // Expand OpenAI
+    const openaiButton = screen.getByRole("button", { name: /openai/i });
+    fireEvent.click(openaiButton);
+
+    // Select GPT-4o
+    const gpt4Button = screen.getByRole("button", { name: /gpt-4o/i });
+    fireEvent.click(gpt4Button);
+
+    expect(onChange).toHaveBeenCalledWith("openai/gpt-4o");
+  });
+
+  it("disables provider buttons when disabled prop is true", () => {
+    const onChange = vi.fn();
+    render(
+      <ModelPicker
+        models={mockModels}
+        value="anthropic/claude-sonnet-4"
+        onChange={onChange}
+        disabled
+      />
+    );
+
+    // Provider buttons should be disabled (not the filter button)
+    const anthropicButton = screen.getByRole("button", { name: /anthropic/i });
+    expect(anthropicButton).toBeDisabled();
+  });
+
+  it("shows check mark for selected model", () => {
+    const onChange = vi.fn();
+    render(
+      <ModelPicker
+        models={mockModels}
+        value="anthropic/claude-sonnet-4"
+        onChange={onChange}
+      />
+    );
+
+    // The selected model row should have the check mark (via muted background class)
+    const modelButton = screen.getByRole("button", { name: /claude sonnet 4/i });
+    expect(modelButton).toHaveClass("bg-muted");
+  });
+
+  it("displays pricing for paid models in list", () => {
+    const onChange = vi.fn();
+    render(
+      <ModelPicker
+        models={mockModels}
+        value="anthropic/claude-sonnet-4"
+        onChange={onChange}
+      />
+    );
+
+    // Expand OpenAI to see pricing
+    const openaiButton = screen.getByRole("button", { name: /openai/i });
+    fireEvent.click(openaiButton);
+
+    // Should show input/output prices
+    expect(screen.getByText("$5.00 / $15.00")).toBeInTheDocument();
+  });
+
+  it("shows Free text for free models in list", () => {
+    const onChange = vi.fn();
+    render(
+      <ModelPicker
+        models={mockModels}
+        value="anthropic/claude-sonnet-4"
+        onChange={onChange}
+      />
+    );
+
+    // Expand Google to see free model
+    const googleButton = screen.getByRole("button", { name: /google/i });
+    fireEvent.click(googleButton);
+
+    // Free text should appear in the model row
+    const freeTexts = screen.getAllByText("Free");
+    expect(freeTexts.length).toBeGreaterThan(0);
+  });
+
+  it("renders with empty models list", () => {
+    const onChange = vi.fn();
+    render(<ModelPicker models={[]} value="" onChange={onChange} />);
+
+    // Should show the "All models are hidden" message
+    expect(
+      screen.getByText(/all models are hidden/i)
+    ).toBeInTheDocument();
+  });
+
+  it("shows filter models button", () => {
+    const onChange = vi.fn();
+    render(
+      <ModelPicker
+        models={mockModels}
+        value="anthropic/claude-sonnet-4"
+        onChange={onChange}
+      />
+    );
+
+    expect(screen.getByRole("button", { name: /filter models/i })).toBeInTheDocument();
+  });
+
+  it("hides models when hiddenModelIds is provided", () => {
+    const onChange = vi.fn();
+    render(
+      <ModelPicker
+        models={mockModels}
+        value="anthropic/claude-sonnet-4"
+        onChange={onChange}
+        hiddenModelIds={["openai/gpt-4o"]}
+      />
+    );
+
+    // OpenAI provider should not be visible since its only model is hidden
+    expect(screen.queryByText("OpenAI")).not.toBeInTheDocument();
+  });
+
+  it("shows hidden count badge when models are hidden", () => {
+    const onChange = vi.fn();
+    render(
+      <ModelPicker
+        models={mockModels}
+        value="anthropic/claude-sonnet-4"
+        onChange={onChange}
+        hiddenModelIds={["openai/gpt-4o"]}
+      />
+    );
+
+    expect(screen.getByText("1 hidden")).toBeInTheDocument();
+  });
+
+  it("opens settings sheet when filter button is clicked", () => {
+    const onChange = vi.fn();
+    render(
+      <ModelPicker
+        models={mockModels}
+        value="anthropic/claude-sonnet-4"
+        onChange={onChange}
+      />
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: /filter models/i }));
+
+    expect(screen.getByText("Model Visibility")).toBeInTheDocument();
+    expect(
+      screen.getByText(/toggle which models appear/i)
+    ).toBeInTheDocument();
+  });
+
+  it("toggles model visibility in settings and calls onHiddenModelsChange", async () => {
+    const onChange = vi.fn();
+    const onHiddenModelsChange = vi.fn();
+    mockUpdateHiddenModels.mockClear();
+
+    render(
+      <ModelPicker
+        models={mockModels}
+        value="anthropic/claude-sonnet-4"
+        onChange={onChange}
+        onHiddenModelsChange={onHiddenModelsChange}
+      />
+    );
+
+    // Open settings
+    fireEvent.click(screen.getByRole("button", { name: /filter models/i }));
+
+    // Toggle off a model (Claude Sonnet 4)
+    const claudeSwitch = screen.getByRole("switch", {
+      name: /toggle claude sonnet 4 visibility/i,
+    });
+    fireEvent.click(claudeSwitch);
+
+    // Should call updateHiddenModels with the hidden model
+    await waitFor(() => {
+      expect(mockUpdateHiddenModels).toHaveBeenCalled();
+    });
+  });
+
+  it("shows reasoning price when model has reasoning pricing", () => {
+    const modelsWithReasoning = [
+      {
+        ...mockModels[0],
+        reasoningPricePerMillion: 30.0,
+      },
+    ];
+    const onChange = vi.fn();
+    render(
+      <ModelPicker
+        models={modelsWithReasoning}
+        value="anthropic/claude-sonnet-4"
+        onChange={onChange}
+      />
+    );
+
+    expect(screen.getByText("Reasoning Price")).toBeInTheDocument();
+    expect(screen.getByText("$30.00 / 1M tokens")).toBeInTheDocument();
+  });
+
+  it("expands provider when selecting a model from collapsed provider", () => {
+    const onChange = vi.fn();
+    // Render with a model selected from a collapsed provider
+    render(
+      <ModelPicker
+        models={mockModels}
+        value="openai/gpt-4o"
+        onChange={onChange}
+      />
+    );
+
+    // OpenAI should be initially expanded since it's the selected model's provider
+    const gpt4Elements = screen.getAllByText("GPT-4o");
+    expect(gpt4Elements.length).toBeGreaterThan(0);
+
+    // Collapse OpenAI
+    const openaiButton = screen.getByRole("button", { name: /openai/i });
+    fireEvent.click(openaiButton);
+
+    // GPT-4o button should now be hidden (the text in details panel remains)
+    const gpt4Buttons = screen.queryAllByRole("button", { name: /gpt-4o/i });
+    expect(gpt4Buttons.length).toBe(0);
+
+    // Select a model from Google (which is collapsed)
+    const googleButton = screen.getByRole("button", { name: /google/i });
+    fireEvent.click(googleButton);
+
+    // Now select the Google model
+    const geminiButton = screen.getByRole("button", { name: /gemini/i });
+    fireEvent.click(geminiButton);
+
+    expect(onChange).toHaveBeenCalledWith("google/gemini-2.0-flash-exp:free");
+  });
+
+  it("handles model without matching provider gracefully", () => {
+    const modelsWithUnknownProvider = [
+      {
+        ...mockModels[0],
+        providerId: "unknown-provider",
+        id: "unknown-provider/some-model",
+      },
+    ];
+    const onChange = vi.fn();
+    render(
+      <ModelPicker
+        models={modelsWithUnknownProvider}
+        value="unknown-provider/some-model"
+        onChange={onChange}
+      />
+    );
+
+    // Should use providerId as fallback name
+    expect(screen.getByText("unknown-provider")).toBeInTheDocument();
+  });
+
+  it("calls onHiddenModelsChange when toggling visibility back on", async () => {
+    const onChange = vi.fn();
+    const onHiddenModelsChange = vi.fn();
+    mockUpdateHiddenModels.mockClear();
+
+    render(
+      <ModelPicker
+        models={mockModels}
+        value="anthropic/claude-sonnet-4"
+        onChange={onChange}
+        hiddenModelIds={["openai/gpt-4o"]}
+        onHiddenModelsChange={onHiddenModelsChange}
+      />
+    );
+
+    // Open settings
+    fireEvent.click(screen.getByRole("button", { name: /filter models/i }));
+
+    // Toggle GPT-4o back on (it was hidden)
+    const gptSwitch = screen.getByRole("switch", {
+      name: /toggle gpt-4o visibility/i,
+    });
+    fireEvent.click(gptSwitch);
+
+    // Should call updateHiddenModels
+    await waitFor(() => {
+      expect(mockUpdateHiddenModels).toHaveBeenCalled();
+    });
+  });
+});

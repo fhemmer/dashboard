@@ -18,6 +18,29 @@
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Prerequisites
+
+- [Bun](https://bun.sh/) (v1.0+)
+- [Supabase](https://supabase.com/) project (for auth and database)
+
+### Environment Variables
+
+Create a `.env.local` file in the root directory with the following variables:
+
+```bash
+# Required - Supabase
+NEXT_PUBLIC_SUPABASE_PROJECT_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-anon-key
+SUPABASE_SECRET_SERVICE_ROLE_KEY=your-service-role-key
+
+# Optional
+NEXT_PUBLIC_SITE_URL=http://localhost:5001
+GITHUB_DASHBOARD_CLIENT_ID=your-github-oauth-client-id
+GITHUB_DASHBOARD_CLIENT_SECRET=your-github-oauth-client-secret
+RESEND_API_KEY=your-resend-api-key
+CRON_SECRET=your-cron-secret
+```
+
 ## Getting Started
 
 First, install dependencies and run the development server:

@@ -87,4 +87,21 @@ describe("auth callback route", () => {
     );
     expect(mockExchangeCodeForSession).not.toHaveBeenCalled();
   });
+
+  it("skips profile update when data.user is null", async () => {
+    mockExchangeCodeForSession.mockResolvedValue({
+      error: null,
+      data: { user: null }
+    });
+
+    const request = new Request(
+      "http://localhost:3000/auth/callback?code=test-code"
+    );
+    const response = await GET(request);
+
+    expect(mockExchangeCodeForSession).toHaveBeenCalledWith("test-code");
+    expect(mockUpdate).not.toHaveBeenCalled();
+    expect(response.status).toBe(307);
+    expect(response.headers.get("location")).toBe("http://localhost:3000/");
+  });
 });

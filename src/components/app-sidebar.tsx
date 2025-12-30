@@ -25,11 +25,13 @@ import {
 import { getGravatarUrl } from "@/lib/gravatar";
 import { APP_NAME, APP_VERSION } from "@/lib/version";
 import {
+    Bot,
     ChevronUp,
     Clock,
     GitPullRequest,
     LayoutDashboard,
     Mail,
+    MessageSquare,
     Newspaper,
     User,
     Wallet,
@@ -46,6 +48,8 @@ const navigation = [
   { name: "Mail", href: "/mail", icon: Mail },
   { name: "Expenditures", href: "/expenditures", icon: Wallet },
   { name: "Timers", href: "/timers", icon: Clock },
+  { name: "Chat", href: "/chat", icon: MessageSquare },
+  { name: "Agent Tasks", href: "/agent-tasks", icon: Bot },
 ];
 
 const adminNavigation: { name: string; href: string; icon: typeof LayoutDashboard }[] = [];

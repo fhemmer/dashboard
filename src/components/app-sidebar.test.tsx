@@ -208,4 +208,32 @@ describe('AppSidebar', () => {
       expect(screen.queryByText('Admin')).toBeNull()
     })
   })
+
+  describe('Sign out functionality', () => {
+    it('has sign out button in dropdown menu', async () => {
+      vi.mocked(usePathname).mockReturnValue('/')
+      render(<AppSidebar userEmail="test@example.com" />, { wrapper: TestWrapper })
+
+      const userButton = screen.getByRole('button', { name: /user/i })
+      fireEvent.pointerDown(userButton, { pointerId: 1, buttons: 1 })
+      fireEvent.pointerUp(userButton, { pointerId: 1, buttons: 1 })
+
+      const signOutButton = await screen.findByText('Sign Out')
+      expect(signOutButton).toBeDefined()
+      expect(signOutButton).toHaveClass('text-destructive')
+    })
+
+    it('sign out button is inside a form with signOut action', async () => {
+      vi.mocked(usePathname).mockReturnValue('/')
+      render(<AppSidebar userEmail="test@example.com" />, { wrapper: TestWrapper })
+
+      const userButton = screen.getByRole('button', { name: /user/i })
+      fireEvent.pointerDown(userButton, { pointerId: 1, buttons: 1 })
+      fireEvent.pointerUp(userButton, { pointerId: 1, buttons: 1 })
+
+      const signOutButton = await screen.findByText('Sign Out')
+      const form = signOutButton.closest('form')
+      expect(form).toBeDefined()
+    })
+  })
 })

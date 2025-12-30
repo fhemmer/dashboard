@@ -317,4 +317,115 @@ describe("TimerWidget", () => {
 
     expect(screen.getByText("1:04")).toBeInTheDocument();
   });
+
+  it("does not decrement below zero", async () => {
+    vi.useFakeTimers();
+    mockGetTimers.mockResolvedValue({
+      timers: [
+        {
+          id: "timer-1",
+          userId: "user-1",
+          name: "Almost Done",
+          durationSeconds: 300,
+          remainingSeconds: 1,
+          state: "running",
+          endTime: new Date(Date.now() + 1000),
+          enableCompletionColor: false,
+          completionColor: "#4CAF50",
+          enableAlarm: true,
+          alarmSound: "default",
+          displayOrder: 0,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ],
+      error: undefined,
+    });
+
+    render(<TimerWidget />);
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    expect(screen.getByText("0:01")).toBeInTheDocument();
+
+    // Advance by 2 seconds to go past zero
+    act(() => {
+      vi.advanceTimersByTime(2000);
+    });
+
+    // Should show 0:00, not go negative
+    expect(screen.getByText("0:00")).toBeInTheDocument();
+  });
+
+  it("shows singular timer text when exactly 5 timers (1 hidden)", async () => {
+    mockGetTimers.mockResolvedValue({
+      timers: Array.from({ length: 5 }, (_, i) => ({
+        id: `timer-${i}`,
+        userId: "user-1",
+        name: `Timer ${i + 1}`,
+        durationSeconds: 300,
+        remainingSeconds: 300,
+        state: "stopped" as const,
+        endTime: null,
+        enableCompletionColor: false,
+        completionColor: "#4CAF50",
+        enableAlarm: true,
+        alarmSound: "default",
+        displayOrder: i,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      })),
+      error: undefined,
+    });
+
+    render(<TimerWidget />);
+
+    await waitFor(() => {
+      expect(screen.getByText("+1 more timer")).toBeInTheDocument();
+    });
+  });
+
+  it("stops countdown interval when no running timers", async () => {
+    vi.useFakeTimers();
+    mockGetTimers.mockResolvedValue({
+      timers: [
+        {
+          id: "timer-1",
+          userId: "user-1",
+          name: "Stopped Timer",
+          durationSeconds: 300,
+          remainingSeconds: 300,
+          state: "stopped",
+          endTime: null,
+          enableCompletionColor: false,
+          completionColor: "#4CAF50",
+          enableAlarm: true,
+          alarmSound: "default",
+          displayOrder: 0,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ],
+      error: undefined,
+    });
+
+    render(<TimerWidget />);
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    // Should show 5:00 (300 seconds) and stay there
+    expect(screen.getByText("5:00")).toBeInTheDocument();
+
+    // Advance time - should not change since timer is stopped
+    act(() => {
+      vi.advanceTimersByTime(5000);
+    });
+
+    // Still 5:00
+    expect(screen.getByText("5:00")).toBeInTheDocument();
+  });
 });

@@ -91,6 +91,21 @@ describe("github-prs actions", () => {
       expect(consoleSpy).toHaveBeenCalled();
       consoleSpy.mockRestore();
     });
+
+    it("returns empty array when data is null but no error", async () => {
+      mockSupabase.from.mockReturnValueOnce({
+        select: vi.fn(() => ({
+          eq: vi.fn(() => ({
+            order: vi.fn().mockResolvedValue({ data: null, error: null }),
+          })),
+        })),
+      });
+
+      const { getGitHubAccounts } = await import("./actions");
+      const result = await getGitHubAccounts();
+
+      expect(result).toEqual([]);
+    });
   });
 
   describe("getPullRequests", () => {
@@ -165,6 +180,24 @@ describe("github-prs actions", () => {
 
       expect(result.errors).toHaveLength(1);
       expect(result.errors[0].message).toBe("API rate limit");
+      expect(result.errors[0].accountId).toBe("acc-1");
+    });
+
+    it("handles non-Error thrown values", async () => {
+      mockSupabase.from.mockReturnValue({
+        select: vi.fn(() => ({
+          eq: vi.fn().mockResolvedValue({ data: mockAccounts, error: null }),
+        })),
+      });
+
+      const { fetchReviewRequestedPRs } = await import("./lib/github-client");
+      vi.mocked(fetchReviewRequestedPRs).mockRejectedValueOnce("String error");
+
+      const { getPullRequests } = await import("./actions");
+      const result = await getPullRequests();
+
+      expect(result.errors).toHaveLength(1);
+      expect(result.errors[0].message).toBe("Unknown error");
       expect(result.errors[0].accountId).toBe("acc-1");
     });
   });

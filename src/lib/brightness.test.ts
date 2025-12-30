@@ -238,6 +238,26 @@ describe("brightness utilities", () => {
       expect(parseLab("lab(invalid)")).toBeNull();
       expect(parseLab("#ff0000")).toBeNull();
     });
+
+    it("ignores invalid alpha values after slash", () => {
+      const result = parseLab("lab(50% 10 20 / invalid)");
+      expect(result).toEqual({
+        l: 50,
+        a: 10,
+        b: 20,
+        // alpha should be undefined since "invalid" is NaN
+      });
+      expect(result?.alpha).toBeUndefined();
+    });
+
+    it("returns null for wrong number of components", () => {
+      expect(parseLab("lab(50% 10)")).toBeNull();  // only 2 components
+      expect(parseLab("lab(50%)")).toBeNull();  // only 1 component
+    });
+
+    it("returns null when L is not a percentage", () => {
+      expect(parseLab("lab(50 10 20)")).toBeNull();  // missing % sign
+    });
   });
 
   describe("adjustLabColor", () => {
