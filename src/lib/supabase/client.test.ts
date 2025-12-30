@@ -14,7 +14,6 @@ const mockClient = {
   },
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- Mock signature must match real function
 const mockCreateBrowserClient = vi.fn((_url: string, _key: string) => {
   return mockClient;
 });

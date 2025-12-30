@@ -100,7 +100,6 @@ export function DashboardGrid({
     useSensor(KeyboardSensor)
   );
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   function handleDragStart(_event: DragStartEvent) {
     setIsDragMode(true);
   }

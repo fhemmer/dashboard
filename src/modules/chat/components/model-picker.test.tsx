@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { ModelPicker } from "./model-picker";
 
@@ -13,8 +13,9 @@ vi.mock("@/lib/openrouter", () => ({
 }));
 
 // Mock the actions
+const mockUpdateHiddenModels = vi.fn().mockResolvedValue({ success: true });
 vi.mock("../actions", () => ({
-  updateHiddenModels: vi.fn().mockResolvedValue({ success: true }),
+  updateHiddenModels: (...args: unknown[]) => mockUpdateHiddenModels(...args),
 }));
 
 const mockModels = [
@@ -329,5 +330,139 @@ describe("ModelPicker", () => {
     expect(
       screen.getByText(/toggle which models appear/i)
     ).toBeInTheDocument();
+  });
+
+  it("toggles model visibility in settings and calls onHiddenModelsChange", async () => {
+    const onChange = vi.fn();
+    const onHiddenModelsChange = vi.fn();
+    mockUpdateHiddenModels.mockClear();
+
+    render(
+      <ModelPicker
+        models={mockModels}
+        value="anthropic/claude-sonnet-4"
+        onChange={onChange}
+        onHiddenModelsChange={onHiddenModelsChange}
+      />
+    );
+
+    // Open settings
+    fireEvent.click(screen.getByRole("button", { name: /filter models/i }));
+
+    // Toggle off a model (Claude Sonnet 4)
+    const claudeSwitch = screen.getByRole("switch", {
+      name: /toggle claude sonnet 4 visibility/i,
+    });
+    fireEvent.click(claudeSwitch);
+
+    // Should call updateHiddenModels with the hidden model
+    await waitFor(() => {
+      expect(mockUpdateHiddenModels).toHaveBeenCalled();
+    });
+  });
+
+  it("shows reasoning price when model has reasoning pricing", () => {
+    const modelsWithReasoning = [
+      {
+        ...mockModels[0],
+        reasoningPricePerMillion: 30.0,
+      },
+    ];
+    const onChange = vi.fn();
+    render(
+      <ModelPicker
+        models={modelsWithReasoning}
+        value="anthropic/claude-sonnet-4"
+        onChange={onChange}
+      />
+    );
+
+    expect(screen.getByText("Reasoning Price")).toBeInTheDocument();
+    expect(screen.getByText("$30.00 / 1M tokens")).toBeInTheDocument();
+  });
+
+  it("expands provider when selecting a model from collapsed provider", () => {
+    const onChange = vi.fn();
+    // Render with a model selected from a collapsed provider
+    render(
+      <ModelPicker
+        models={mockModels}
+        value="openai/gpt-4o"
+        onChange={onChange}
+      />
+    );
+
+    // OpenAI should be initially expanded since it's the selected model's provider
+    const gpt4Elements = screen.getAllByText("GPT-4o");
+    expect(gpt4Elements.length).toBeGreaterThan(0);
+
+    // Collapse OpenAI
+    const openaiButton = screen.getByRole("button", { name: /openai/i });
+    fireEvent.click(openaiButton);
+
+    // GPT-4o button should now be hidden (the text in details panel remains)
+    const gpt4Buttons = screen.queryAllByRole("button", { name: /gpt-4o/i });
+    expect(gpt4Buttons.length).toBe(0);
+
+    // Select a model from Google (which is collapsed)
+    const googleButton = screen.getByRole("button", { name: /google/i });
+    fireEvent.click(googleButton);
+
+    // Now select the Google model
+    const geminiButton = screen.getByRole("button", { name: /gemini/i });
+    fireEvent.click(geminiButton);
+
+    expect(onChange).toHaveBeenCalledWith("google/gemini-2.0-flash-exp:free");
+  });
+
+  it("handles model without matching provider gracefully", () => {
+    const modelsWithUnknownProvider = [
+      {
+        ...mockModels[0],
+        providerId: "unknown-provider",
+        id: "unknown-provider/some-model",
+      },
+    ];
+    const onChange = vi.fn();
+    render(
+      <ModelPicker
+        models={modelsWithUnknownProvider}
+        value="unknown-provider/some-model"
+        onChange={onChange}
+      />
+    );
+
+    // Should use providerId as fallback name
+    expect(screen.getByText("unknown-provider")).toBeInTheDocument();
+  });
+
+  it("calls onHiddenModelsChange when toggling visibility back on", async () => {
+    const onChange = vi.fn();
+    const onHiddenModelsChange = vi.fn();
+    mockUpdateHiddenModels.mockClear();
+
+    render(
+      <ModelPicker
+        models={mockModels}
+        value="anthropic/claude-sonnet-4"
+        onChange={onChange}
+        hiddenModelIds={["openai/gpt-4o"]}
+        onHiddenModelsChange={onHiddenModelsChange}
+      />
+    );
+
+    // Open settings
+    fireEvent.click(screen.getByRole("button", { name: /filter models/i }));
+
+    // Toggle GPT-4o back on (it was hidden)
+    const gptSwitch = screen.getByRole("switch", {
+      name: /toggle gpt-4o visibility/i,
+    });
+    fireEvent.click(gptSwitch);
+
+    // Should call updateHiddenModels
+    await waitFor(() => {
+      expect(mockUpdateHiddenModels).toHaveBeenCalled();
+    });
   });
 });

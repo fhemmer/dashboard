@@ -359,4 +359,509 @@ describe("openrouter/models", () => {
       expect(MODEL_PROVIDERS.perplexity).toEqual({ id: "perplexity", name: "Perplexity" });
     });
   });
+
+  describe("refreshModelsCache", () => {
+    it("should fetch fresh models and update cache", async () => {
+      const { getCache, setCache } = await import("@/lib/redis");
+      vi.mocked(getCache).mockResolvedValue(null);
+
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            data: [
+              {
+                id: "anthropic/claude-sonnet-4",
+                name: "Claude Sonnet 4",
+                description: "Refreshed model",
+                context_length: 200000,
+                pricing: {
+                  prompt: "0.000003",
+                  completion: "0.000015",
+                  request: "0",
+                  image: "0",
+                  web_search: "0",
+                  internal_reasoning: "0",
+                  input_cache_read: "0",
+                  input_cache_write: "0",
+                },
+                architecture: {
+                  input_modalities: ["text"],
+                  output_modalities: ["text"],
+                  tokenizer: "claude",
+                  instruct_type: null,
+                },
+                top_provider: {
+                  context_length: 200000,
+                  max_completion_tokens: 4096,
+                  is_moderated: false,
+                },
+                supported_parameters: ["tools", "tool_choice"],
+              },
+            ],
+          }),
+      });
+
+      const { refreshModelsCache } = await import("./models");
+      const result = await refreshModelsCache();
+
+      expect(result.length).toBeGreaterThan(0);
+      expect(setCache).toHaveBeenCalled();
+    });
+  });
+
+  describe("free model detection", () => {
+    it("should mark models ending with :free as free", async () => {
+      const { getCache } = await import("@/lib/redis");
+      vi.mocked(getCache).mockResolvedValueOnce(null);
+
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            data: [
+              {
+                id: "meta-llama/llama-3.3-70b-instruct:free",
+                name: "Llama 3.3 70B Free",
+                description: "Free Llama model",
+                context_length: 128000,
+                pricing: {
+                  prompt: "0",
+                  completion: "0",
+                  request: "0",
+                  image: "0",
+                  web_search: "0",
+                  internal_reasoning: "0",
+                  input_cache_read: "0",
+                  input_cache_write: "0",
+                },
+                architecture: {
+                  input_modalities: ["text"],
+                  output_modalities: ["text"],
+                  tokenizer: "llama",
+                  instruct_type: "llama",
+                },
+                top_provider: {
+                  context_length: 128000,
+                  max_completion_tokens: 4096,
+                  is_moderated: false,
+                },
+                supported_parameters: ["tools"],
+              },
+            ],
+          }),
+      });
+
+      const { getModelsWithPricing } = await import("./models");
+      const result = await getModelsWithPricing();
+
+      const freeModel = result.find((m) => m.id === "meta-llama/llama-3.3-70b-instruct:free");
+      expect(freeModel).toBeDefined();
+      expect(freeModel?.isFree).toBe(true);
+      expect(freeModel?.inputPricePerMillion).toBe(0);
+      expect(freeModel?.outputPricePerMillion).toBe(0);
+    });
+
+    it("should mark models with zero pricing as free", async () => {
+      const { getCache } = await import("@/lib/redis");
+      vi.mocked(getCache).mockResolvedValueOnce(null);
+
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            data: [
+              {
+                id: "anthropic/claude-sonnet-4",
+                name: "Claude Sonnet 4 Free Trial",
+                description: "Zero priced model",
+                context_length: 200000,
+                pricing: {
+                  prompt: "0",
+                  completion: "0",
+                  request: "0",
+                  image: "0",
+                  web_search: "0",
+                  internal_reasoning: "0",
+                  input_cache_read: "0",
+                  input_cache_write: "0",
+                },
+                architecture: {
+                  input_modalities: ["text"],
+                  output_modalities: ["text"],
+                  tokenizer: "claude",
+                  instruct_type: null,
+                },
+                top_provider: {
+                  context_length: 200000,
+                  max_completion_tokens: 4096,
+                  is_moderated: false,
+                },
+                supported_parameters: ["tools"],
+              },
+            ],
+          }),
+      });
+
+      const { getModelsWithPricing } = await import("./models");
+      const result = await getModelsWithPricing();
+
+      const freeModel = result.find((m) => m.id === "anthropic/claude-sonnet-4");
+      expect(freeModel?.isFree).toBe(true);
+    });
+
+    it("should exclude free models from unreliable providers (google, deepseek) from tools support", async () => {
+      const { getCache } = await import("@/lib/redis");
+      vi.mocked(getCache).mockResolvedValueOnce(null);
+
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            data: [
+              {
+                id: "google/gemini-2.0-flash-exp:free",
+                name: "Gemini Free",
+                description: "Google free model",
+                context_length: 1000000,
+                pricing: {
+                  prompt: "0",
+                  completion: "0",
+                  request: "0",
+                  image: "0",
+                  web_search: "0",
+                  internal_reasoning: "0",
+                  input_cache_read: "0",
+                  input_cache_write: "0",
+                },
+                architecture: {
+                  input_modalities: ["text"],
+                  output_modalities: ["text"],
+                  tokenizer: "gemini",
+                  instruct_type: null,
+                },
+                top_provider: {
+                  context_length: 1000000,
+                  max_completion_tokens: 8192,
+                  is_moderated: false,
+                },
+                supported_parameters: ["tools"],
+              },
+              {
+                id: "deepseek/deepseek-r1:free",
+                name: "DeepSeek R1 Free",
+                description: "DeepSeek free model",
+                context_length: 64000,
+                pricing: {
+                  prompt: "0",
+                  completion: "0",
+                  request: "0",
+                  image: "0",
+                  web_search: "0",
+                  internal_reasoning: "0",
+                  input_cache_read: "0",
+                  input_cache_write: "0",
+                },
+                architecture: {
+                  input_modalities: ["text"],
+                  output_modalities: ["text"],
+                  tokenizer: "deepseek",
+                  instruct_type: null,
+                },
+                top_provider: {
+                  context_length: 64000,
+                  max_completion_tokens: 4096,
+                  is_moderated: false,
+                },
+                supported_parameters: ["tools"],
+              },
+            ],
+          }),
+      });
+
+      const { getModelsWithPricing } = await import("./models");
+      const result = await getModelsWithPricing();
+
+      // Both Google and DeepSeek free models should be excluded due to unreliable tools
+      expect(result.find((m) => m.id === "google/gemini-2.0-flash-exp:free")).toBeUndefined();
+      expect(result.find((m) => m.id === "deepseek/deepseek-r1:free")).toBeUndefined();
+    });
+
+    it("should include free models from reliable providers (meta)", async () => {
+      const { getCache } = await import("@/lib/redis");
+      vi.mocked(getCache).mockResolvedValueOnce(null);
+
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            data: [
+              {
+                id: "meta-llama/llama-3.3-70b-instruct:free",
+                name: "Llama Free",
+                description: "Meta free model",
+                context_length: 128000,
+                pricing: {
+                  prompt: "0",
+                  completion: "0",
+                  request: "0",
+                  image: "0",
+                  web_search: "0",
+                  internal_reasoning: "0",
+                  input_cache_read: "0",
+                  input_cache_write: "0",
+                },
+                architecture: {
+                  input_modalities: ["text"],
+                  output_modalities: ["text"],
+                  tokenizer: "llama",
+                  instruct_type: "llama",
+                },
+                top_provider: {
+                  context_length: 128000,
+                  max_completion_tokens: 4096,
+                  is_moderated: false,
+                },
+                supported_parameters: ["tools"],
+              },
+            ],
+          }),
+      });
+
+      const { getModelsWithPricing } = await import("./models");
+      const result = await getModelsWithPricing();
+
+      const metaFree = result.find((m) => m.id === "meta-llama/llama-3.3-70b-instruct:free");
+      expect(metaFree).toBeDefined();
+      expect(metaFree?.supportsTools).toBe(true);
+    });
+  });
+
+  describe("model transformation edge cases", () => {
+    it("should handle missing architecture modalities", async () => {
+      const { getCache } = await import("@/lib/redis");
+      vi.mocked(getCache).mockResolvedValueOnce(null);
+
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            data: [
+              {
+                id: "anthropic/claude-sonnet-4",
+                name: "Claude Sonnet 4",
+                description: "Model with missing modalities",
+                context_length: 200000,
+                pricing: {
+                  prompt: "0.000003",
+                  completion: "0.000015",
+                  request: "0",
+                  image: "0",
+                  web_search: "0",
+                  internal_reasoning: "0",
+                  input_cache_read: "0",
+                  input_cache_write: "0",
+                },
+                architecture: {
+                  tokenizer: "claude",
+                  instruct_type: null,
+                  // Missing input_modalities and output_modalities
+                },
+                top_provider: {
+                  context_length: 200000,
+                  max_completion_tokens: 4096,
+                  is_moderated: false,
+                },
+                supported_parameters: ["tools"],
+              },
+            ],
+          }),
+      });
+
+      const { getModelsWithPricing } = await import("./models");
+      const result = await getModelsWithPricing();
+
+      const model = result.find((m) => m.id === "anthropic/claude-sonnet-4");
+      expect(model?.inputModalities).toEqual(["text"]);
+      expect(model?.outputModalities).toEqual(["text"]);
+    });
+
+    it("should filter out models without tools support", async () => {
+      const { getCache } = await import("@/lib/redis");
+      vi.mocked(getCache).mockResolvedValueOnce(null);
+
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            data: [
+              {
+                id: "anthropic/claude-sonnet-4",
+                name: "Claude without tools",
+                description: "Model without tools",
+                context_length: 200000,
+                pricing: {
+                  prompt: "0.000003",
+                  completion: "0.000015",
+                  request: "0",
+                  image: "0",
+                  web_search: "0",
+                  internal_reasoning: "0",
+                  input_cache_read: "0",
+                  input_cache_write: "0",
+                },
+                architecture: {
+                  input_modalities: ["text"],
+                  output_modalities: ["text"],
+                  tokenizer: "claude",
+                  instruct_type: null,
+                },
+                top_provider: {
+                  context_length: 200000,
+                  max_completion_tokens: 4096,
+                  is_moderated: false,
+                },
+                supported_parameters: ["temperature"], // No tools support
+              },
+            ],
+          }),
+      });
+
+      const { getModelsWithPricing } = await import("./models");
+      const result = await getModelsWithPricing();
+
+      expect(result.find((m) => m.id === "anthropic/claude-sonnet-4")).toBeUndefined();
+    });
+
+    it("should handle undefined supported_parameters", async () => {
+      const { getCache } = await import("@/lib/redis");
+      vi.mocked(getCache).mockResolvedValueOnce(null);
+
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            data: [
+              {
+                id: "anthropic/claude-sonnet-4",
+                name: "Claude no params",
+                description: "Model without supported_parameters",
+                context_length: 200000,
+                pricing: {
+                  prompt: "0.000003",
+                  completion: "0.000015",
+                  request: "0",
+                  image: "0",
+                  web_search: "0",
+                  internal_reasoning: "0",
+                  input_cache_read: "0",
+                  input_cache_write: "0",
+                },
+                architecture: {
+                  input_modalities: ["text"],
+                  output_modalities: ["text"],
+                  tokenizer: "claude",
+                  instruct_type: null,
+                },
+                top_provider: {
+                  context_length: 200000,
+                  max_completion_tokens: 4096,
+                  is_moderated: false,
+                },
+                // No supported_parameters field
+              },
+            ],
+          }),
+      });
+
+      const { getModelsWithPricing } = await import("./models");
+      const result = await getModelsWithPricing();
+
+      // Model should be filtered out because it doesn't support tools
+      expect(result.find((m) => m.id === "anthropic/claude-sonnet-4")).toBeUndefined();
+    });
+
+    it("should sort models by curated order", async () => {
+      const { getCache } = await import("@/lib/redis");
+      vi.mocked(getCache).mockResolvedValueOnce(null);
+
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            data: [
+              {
+                id: "openai/gpt-4o",
+                name: "GPT-4o",
+                description: "OpenAI model",
+                context_length: 128000,
+                pricing: {
+                  prompt: "0.000005",
+                  completion: "0.000015",
+                  request: "0",
+                  image: "0",
+                  web_search: "0",
+                  internal_reasoning: "0",
+                  input_cache_read: "0",
+                  input_cache_write: "0",
+                },
+                architecture: {
+                  input_modalities: ["text", "image"],
+                  output_modalities: ["text"],
+                  tokenizer: "openai",
+                  instruct_type: null,
+                },
+                top_provider: {
+                  context_length: 128000,
+                  max_completion_tokens: 4096,
+                  is_moderated: false,
+                },
+                supported_parameters: ["tools"],
+              },
+              {
+                id: "anthropic/claude-opus-4",
+                name: "Claude Opus 4",
+                description: "Anthropic Opus",
+                context_length: 200000,
+                pricing: {
+                  prompt: "0.000015",
+                  completion: "0.000075",
+                  request: "0",
+                  image: "0",
+                  web_search: "0",
+                  internal_reasoning: "0",
+                  input_cache_read: "0",
+                  input_cache_write: "0",
+                },
+                architecture: {
+                  input_modalities: ["text"],
+                  output_modalities: ["text"],
+                  tokenizer: "claude",
+                  instruct_type: null,
+                },
+                top_provider: {
+                  context_length: 200000,
+                  max_completion_tokens: 4096,
+                  is_moderated: false,
+                },
+                supported_parameters: ["tools"],
+              },
+            ],
+          }),
+      });
+
+      const { getModelsWithPricing, CURATED_MODEL_IDS } = await import("./models");
+      const result = await getModelsWithPricing();
+
+      // Claude Opus 4 should come before GPT-4o in curated list
+      const opusIndex = CURATED_MODEL_IDS.indexOf("anthropic/claude-opus-4");
+      const gptIndex = CURATED_MODEL_IDS.indexOf("openai/gpt-4o");
+      expect(opusIndex).toBeLessThan(gptIndex);
+
+      // Result should be sorted accordingly
+      const resultOpusIndex = result.findIndex((m) => m.id === "anthropic/claude-opus-4");
+      const resultGptIndex = result.findIndex((m) => m.id === "openai/gpt-4o");
+      expect(resultOpusIndex).toBeLessThan(resultGptIndex);
+    });
+  });
 });

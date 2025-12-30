@@ -61,7 +61,6 @@ export async function getOutlookMessages(
   _folder: string = "inbox",
   _maxResults: number = 50
 ): Promise<MailMessage[]> {
-  // Parameters prefixed with _ are reserved for future Outlook API implementation
   try {
     const token = await getToken(accountId);
     if (!token || isTokenExpired(token)) {
@@ -87,7 +86,6 @@ export async function performOutlookBulkAction(
   messageIds: string[],
   _action: BulkActionType
 ): Promise<{ success: boolean; processedCount: number }> {
-  // Parameter prefixed with _ is reserved for future Outlook API implementation
   try {
     const token = await getToken(accountId);
     if (!token || isTokenExpired(token)) {

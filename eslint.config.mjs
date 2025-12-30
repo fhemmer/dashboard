@@ -16,6 +16,15 @@ const eslintConfig = defineConfig([
     "coverage/**",
     "next-env.d.ts",
   ]),
+  // Allow underscore-prefixed parameters (common pattern for intentionally unused params)
+  {
+    rules: {
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
+      ],
+    },
+  },
   // Disable nested functions rule for test files (vitest/jest naturally nest describe/it/beforeEach)
   {
     files: ["**/*.test.ts", "**/*.test.tsx"],

@@ -72,7 +72,6 @@ export async function getImapMessages(
   _folder: string = "INBOX",
   _maxResults: number = 50
 ): Promise<MailMessage[]> {
-  // Parameters prefixed with _ are reserved for future IMAP implementation
   try {
     const token = await getToken(accountId);
     if (!token) {
@@ -102,7 +101,6 @@ export async function performImapBulkAction(
   messageIds: string[],
   _action: BulkActionType
 ): Promise<{ success: boolean; processedCount: number }> {
-  // Parameter prefixed with _ is reserved for future IMAP implementation
   try {
     const token = await getToken(accountId);
     if (!token) {
