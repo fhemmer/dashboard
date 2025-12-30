@@ -26,9 +26,7 @@ CREATE POLICY "Users can insert own agent runs"
   ON public.agent_runs FOR INSERT
   WITH CHECK (auth.uid() = user_id);
 
-CREATE POLICY "Users can update own agent runs"
-  ON public.agent_runs FOR UPDATE
-  USING (auth.uid() = user_id);
+-- No UPDATE policy needed - background workers use service role which bypasses RLS
 
 -- Chat Conversations Table
 CREATE TABLE public.chat_conversations (
