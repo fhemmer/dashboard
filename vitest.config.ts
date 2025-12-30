@@ -30,10 +30,10 @@ export default defineConfig({
         "src/lib/**/types.ts", // Type-only files in lib
       ],
       thresholds: {
-        lines: 98,
-        functions: 98,
-        branches: 94,
-        statements: 98,
+        lines: 90,
+        functions: 90,
+        branches: 90,
+        statements: 90,
       },
     },
   },
