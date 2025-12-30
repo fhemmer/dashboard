@@ -12,9 +12,33 @@ vi.mock("@/hooks/use-theme", () => ({
   }),
 }));
 
+// Mock the theme actions to prevent Supabase calls
+vi.mock("@/app/themes/actions", () => ({
+  getUserThemes: vi.fn().mockResolvedValue([]),
+  getActiveCustomTheme: vi.fn().mockResolvedValue(null),
+  setActiveTheme: vi.fn().mockResolvedValue({ success: true }),
+}));
+
+// Mock the useCustomTheme hook
+const mockApplyCustomTheme = vi.fn();
+const mockClearCustomTheme = vi.fn();
+
+vi.mock("@/components/custom-theme-provider", () => ({
+  useCustomTheme: () => ({
+    customThemes: [],
+    activeCustomTheme: null,
+    isLoading: false,
+    applyCustomTheme: mockApplyCustomTheme,
+    clearCustomTheme: mockClearCustomTheme,
+    refreshThemes: vi.fn(),
+  }),
+}));
+
 describe("ThemePicker", () => {
   beforeEach(() => {
     mockSetTheme.mockClear();
+    mockApplyCustomTheme.mockClear();
+    mockClearCustomTheme.mockClear();
   });
 
   afterEach(() => {
