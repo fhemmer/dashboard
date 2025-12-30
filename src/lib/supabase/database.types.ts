@@ -61,6 +61,7 @@ export type Database = {
       }
       chat_conversations: {
         Row: {
+          archived_at: string | null
           created_at: string
           id: string
           model: string
@@ -70,6 +71,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          archived_at?: string | null
           created_at?: string
           id?: string
           model?: string
@@ -79,6 +81,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          archived_at?: string | null
           created_at?: string
           id?: string
           model?: string
@@ -88,6 +91,60 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      chat_costs: {
+        Row: {
+          conversation_id: string
+          cost_usd: number
+          created_at: string
+          id: string
+          input_tokens: number
+          message_id: string
+          model: string
+          output_tokens: number
+          reasoning_tokens: number
+          user_id: string
+        }
+        Insert: {
+          conversation_id: string
+          cost_usd?: number
+          created_at?: string
+          id?: string
+          input_tokens?: number
+          message_id: string
+          model: string
+          output_tokens?: number
+          reasoning_tokens?: number
+          user_id: string
+        }
+        Update: {
+          conversation_id?: string
+          cost_usd?: number
+          created_at?: string
+          id?: string
+          input_tokens?: number
+          message_id?: string
+          model?: string
+          output_tokens?: number
+          reasoning_tokens?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_costs_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "chat_conversations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chat_costs_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "chat_messages"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       chat_messages: {
         Row: {
@@ -616,34 +673,34 @@ export type Database = {
       }
       user_themes: {
         Row: {
-          id: string
-          user_id: string
-          name: string
-          light_variables: Json
-          dark_variables: Json
-          is_active: boolean | null
           created_at: string | null
+          dark_variables: Json
+          id: string
+          is_active: boolean | null
+          light_variables: Json
+          name: string
           updated_at: string | null
+          user_id: string
         }
         Insert: {
-          id?: string
-          user_id: string
-          name: string
-          light_variables: Json
-          dark_variables: Json
-          is_active?: boolean | null
           created_at?: string | null
+          dark_variables: Json
+          id?: string
+          is_active?: boolean | null
+          light_variables: Json
+          name: string
           updated_at?: string | null
+          user_id: string
         }
         Update: {
-          id?: string
-          user_id?: string
-          name?: string
-          light_variables?: Json
-          dark_variables?: Json
-          is_active?: boolean | null
           created_at?: string | null
+          dark_variables?: Json
+          id?: string
+          is_active?: boolean | null
+          light_variables?: Json
+          name?: string
           updated_at?: string | null
+          user_id?: string
         }
         Relationships: [
           {
