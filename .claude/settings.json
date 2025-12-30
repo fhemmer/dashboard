@@ -1,0 +1,34 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -ExecutionPolicy Bypass -File \".claude\\hooks\\Stop\\tts.ps1\" -Text \"Claude has finished responding\" -Voice \"en-US-AriaNeural\" -Rate 10"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -ExecutionPolicy Bypass -File \".claude\\hooks\\SubagentStop\\tts.ps1\" -Text \"Subagent has completed its work\" -Voice \"en-US-AriaNeural\" -Rate 10"
+          }
+        ]
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -ExecutionPolicy Bypass -File \".claude\\hooks\\PermissionRequest\\tts.ps1\" -Text \"Claude needs your input\" -Voice \"en-US-AriaNeural\" -Rate 10"
+          }
+        ]
+      }
+    ]
+  }
+}

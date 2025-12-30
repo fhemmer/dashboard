@@ -28,7 +28,7 @@ import { Progress } from "@/components/ui/progress";
 import { Textarea } from "@/components/ui/textarea";
 import { calculateCost, getContextWindow } from "@/lib/agent";
 import { cn } from "@/lib/utils";
-import { addMessage, archiveConversation, deleteConversation, runAgentAction, updateConversation } from "@/modules/chat/actions";
+import { addMessage, archiveConversation, deleteConversation, recordMessageCost, runAgentAction, updateConversation } from "@/modules/chat/actions";
 import { Archive, Bot, Loader2, MoreVertical, Send, Trash2, User } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -190,6 +190,18 @@ export function ChatInterface({ conversation }: ChatInterfaceProps) {
           createdAt: new Date(),
         };
         setMessages((prev) => [...prev, assistantMessage]);
+
+        // Record cost to database (updates total_chat_spent via trigger)
+        if (assistantResult.id && agentResult.usage) {
+          await recordMessageCost({
+            conversationId: conversation.id,
+            messageId: assistantResult.id,
+            model: conversation.model,
+            inputTokens: agentResult.usage.promptTokens ?? 0,
+            outputTokens: agentResult.usage.completionTokens ?? 0,
+            reasoningTokens: 0,
+          });
+        }
 
         // Update conversation title if this is the first exchange
         if (messages.length === 0) {

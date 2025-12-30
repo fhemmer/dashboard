@@ -213,5 +213,84 @@ describe("agent runner", () => {
         })
       );
     });
+
+    it("should extract tool results when model returns empty text", async () => {
+      const mockResult = {
+        text: "",
+        usage: { inputTokens: 50, outputTokens: 25, totalTokens: 75 },
+        finishReason: "stop",
+        steps: [
+          {
+            toolResults: [
+              {
+                result: {
+                  query: "weather in London",
+                  answer: "It is currently 15°C and cloudy in London.",
+                  results: [],
+                },
+              },
+            ],
+          },
+        ],
+      };
+
+      vi.mocked(generateText).mockResolvedValueOnce(mockResult as never);
+
+      const { runAgent } = await import("./agent");
+      const result = await runAgent({ prompt: "What's the weather in London?" });
+
+      expect(result.text).toBe("It is currently 15°C and cloudy in London.");
+    });
+
+    it("should build summary from search results when no answer available", async () => {
+      const mockResult = {
+        text: "",
+        usage: { inputTokens: 50, outputTokens: 25, totalTokens: 75 },
+        finishReason: "stop",
+        steps: [
+          {
+            toolResults: [
+              {
+                result: {
+                  query: "weather in London",
+                  results: [
+                    {
+                      title: "London Weather",
+                      url: "https://weather.com",
+                      content: "The current temperature in London is 15 degrees Celsius with cloudy skies expected throughout the day.",
+                      score: 0.9,
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        ],
+      };
+
+      vi.mocked(generateText).mockResolvedValueOnce(mockResult as never);
+
+      const { runAgent } = await import("./agent");
+      const result = await runAgent({ prompt: "What's the weather in London?" });
+
+      expect(result.text).toContain("Here's what I found:");
+      expect(result.text).toContain("London Weather");
+    });
+
+    it("should return fallback message when no text and no tool results", async () => {
+      const mockResult = {
+        text: "",
+        usage: { inputTokens: 50, outputTokens: 25, totalTokens: 75 },
+        finishReason: "stop",
+        steps: [],
+      };
+
+      vi.mocked(generateText).mockResolvedValueOnce(mockResult as never);
+
+      const { runAgent } = await import("./agent");
+      const result = await runAgent({ prompt: "Test" });
+
+      expect(result.text).toBe("I processed your request but couldn't generate a response. Please try again.");
+    });
   });
 });

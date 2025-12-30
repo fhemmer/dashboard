@@ -21,6 +21,7 @@ vi.mock("next/navigation", () => ({
 const mockAddMessage = vi.fn();
 const mockArchiveConversation = vi.fn();
 const mockDeleteConversation = vi.fn();
+const mockRecordMessageCost = vi.fn();
 const mockRunAgentAction = vi.fn();
 const mockUpdateConversation = vi.fn();
 
@@ -28,6 +29,7 @@ vi.mock("@/modules/chat/actions", () => ({
   addMessage: (...args: unknown[]) => mockAddMessage(...args),
   archiveConversation: (...args: unknown[]) => mockArchiveConversation(...args),
   deleteConversation: (...args: unknown[]) => mockDeleteConversation(...args),
+  recordMessageCost: (...args: unknown[]) => mockRecordMessageCost(...args),
   runAgentAction: (...args: unknown[]) => mockRunAgentAction(...args),
   updateConversation: (...args: unknown[]) => mockUpdateConversation(...args),
 }));
@@ -88,6 +90,7 @@ describe("ChatInterface", () => {
     mockAddMessage.mockResolvedValue({ success: true, id: "new-msg-id" });
     mockArchiveConversation.mockResolvedValue({ success: true });
     mockDeleteConversation.mockResolvedValue({ success: true });
+    mockRecordMessageCost.mockResolvedValue({ success: true });
     mockRunAgentAction.mockResolvedValue({
       text: "AI response",
       usage: { promptTokens: 100, completionTokens: 50 },
@@ -387,6 +390,26 @@ describe("ChatInterface", () => {
       await waitFor(() => {
         expect(mockUpdateConversation).toHaveBeenCalledWith("conv-123", {
           title: expect.any(String),
+        });
+      });
+    });
+
+    it("should record message cost after successful assistant response", async () => {
+      const user = userEvent.setup();
+      const conversation = createMockConversation({ messages: [] });
+      render(<ChatInterface conversation={conversation} />);
+
+      const textarea = screen.getByPlaceholderText("Type your message...");
+      await user.type(textarea, "Hello{enter}");
+
+      await waitFor(() => {
+        expect(mockRecordMessageCost).toHaveBeenCalledWith({
+          conversationId: "conv-123",
+          messageId: "new-msg-id",
+          model: "anthropic/claude-sonnet-4-20250514",
+          inputTokens: 100,
+          outputTokens: 50,
+          reasoningTokens: 0,
         });
       });
     });

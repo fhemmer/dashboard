@@ -87,6 +87,19 @@ describe("agent client", () => {
       const cost = calculateCost("openai/gpt-4o", 0, 0);
       expect(cost).toBe(0);
     });
+
+    it("should return zero cost for free models", async () => {
+      const { calculateCost } = await import("./client");
+      expect(calculateCost("meta-llama/llama-3.3-70b-instruct:free", 1000, 1000)).toBe(0);
+      expect(calculateCost("meta-llama/llama-3.1-8b-instruct:free", 5000, 2000)).toBe(0);
+      expect(calculateCost("google/gemini-2.0-flash-exp:free", 10000, 10000)).toBe(0);
+      expect(calculateCost("deepseek/deepseek-r1:free", 1000, 1000)).toBe(0);
+    });
+
+    it("should return zero cost for any model ending with :free", async () => {
+      const { calculateCost } = await import("./client");
+      expect(calculateCost("some-provider/some-model:free", 1000, 1000)).toBe(0);
+    });
   });
 
   describe("getAvailableModels", () => {
@@ -124,7 +137,7 @@ describe("agent client", () => {
 
     it("should have correct prices for all models", async () => {
       const { MODEL_PRICES } = await import("./client");
-      expect(Object.keys(MODEL_PRICES)).toHaveLength(5);
+      expect(Object.keys(MODEL_PRICES)).toHaveLength(10);
     });
 
     it("should include context window for all models", async () => {

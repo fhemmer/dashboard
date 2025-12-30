@@ -39,9 +39,26 @@ export const MODEL_PRICES: Record<string, ModelPricing> = {
   "openai/gpt-4o": { input: 0.005, output: 0.015, contextWindow: 128000 },
   "openai/gpt-4o-mini": { input: 0.00015, output: 0.0006, contextWindow: 128000 },
   "google/gemini-2.0-flash-001": { input: 0.0001, output: 0.0004, contextWindow: 1000000 },
+  // Free models
+  "meta-llama/llama-3.3-70b-instruct:free": { input: 0, output: 0, contextWindow: 128000 },
+  "meta-llama/llama-3.1-8b-instruct:free": { input: 0, output: 0, contextWindow: 128000 },
+  "google/gemini-2.0-flash-exp:free": { input: 0, output: 0, contextWindow: 1000000 },
+  "deepseek/deepseek-r1:free": { input: 0, output: 0, contextWindow: 64000 },
+  "deepseek/deepseek-r1-0528:free": { input: 0, output: 0, contextWindow: 64000 },
 };
 
+/**
+ * Check if a model is free based on its ID
+ */
+function isModelFree(modelId: string): boolean {
+  return modelId.endsWith(":free");
+}
+
 export function calculateCost(model: string, inputTokens: number, outputTokens: number): number {
+  // Free models have zero cost
+  if (isModelFree(model)) {
+    return 0;
+  }
   const prices = MODEL_PRICES[model] ?? { input: 0.001, output: 0.002, contextWindow: 128000 };
   return (inputTokens * prices.input + outputTokens * prices.output) / 1000;
 }

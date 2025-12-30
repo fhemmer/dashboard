@@ -112,7 +112,7 @@ export interface ModelWithPricing {
 // Constants
 // ============================================================================
 
-const CACHE_KEY = "openrouter:models";
+const CACHE_KEY = "openrouter:models:v2"; // v2: fixed isFree pricing for reliable free providers
 const CACHE_TTL_SECONDS = 3600; // 1 hour
 const OPENROUTER_API_URL = "https://openrouter.ai/api/v1/models";
 
