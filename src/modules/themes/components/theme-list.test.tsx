@@ -243,4 +243,42 @@ describe("ThemeList", () => {
 
     expect(mockDeleteTheme).toHaveBeenCalledWith("theme-1");
   });
+
+  it("calls clearCustomTheme when active theme is deleted", async () => {
+    mockActiveCustomThemeId = "theme-1";
+    const user = userEvent.setup();
+
+    render(<ThemeList themes={mockThemes} />);
+
+    // Open delete dialog for the active theme
+    const deleteButtons = screen.getAllByRole("button", { name: /delete/i });
+    await user.click(deleteButtons[0]);
+
+    // Confirm deletion
+    const confirmButton = screen.getByRole("button", { name: /^delete$/i });
+    await user.click(confirmButton);
+
+    // Both delete and clearCustomTheme should be called
+    expect(mockDeleteTheme).toHaveBeenCalledWith("theme-1");
+    expect(mockClearCustomTheme).toHaveBeenCalled();
+  });
+
+  it("does not call clearCustomTheme when deleting non-active theme", async () => {
+    mockActiveCustomThemeId = "theme-2"; // theme-2 is active, but we delete theme-1
+    const user = userEvent.setup();
+
+    render(<ThemeList themes={mockThemes} />);
+
+    // Open delete dialog for theme-1 (not active)
+    const deleteButtons = screen.getAllByRole("button", { name: /delete/i });
+    await user.click(deleteButtons[0]);
+
+    // Confirm deletion
+    const confirmButton = screen.getByRole("button", { name: /^delete$/i });
+    await user.click(confirmButton);
+
+    // Delete should be called but not clearCustomTheme
+    expect(mockDeleteTheme).toHaveBeenCalledWith("theme-1");
+    expect(mockClearCustomTheme).not.toHaveBeenCalled();
+  });
 });
