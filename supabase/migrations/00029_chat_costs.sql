@@ -34,13 +34,14 @@ ALTER TABLE public.profiles
 ADD COLUMN IF NOT EXISTS total_chat_spent DECIMAL(12, 8) NOT NULL DEFAULT 0;
 
 -- Function to update user's total chat spent when a cost is inserted
+-- Uses row-level locking to prevent race conditions on concurrent inserts
 CREATE OR REPLACE FUNCTION public.update_total_chat_spent()
 RETURNS trigger AS $$
 BEGIN
   UPDATE public.profiles
   SET total_chat_spent = total_chat_spent + NEW.cost_usd,
       updated_at = now()
-  WHERE id = NEW.user_id;
+  WHERE id = (SELECT id FROM public.profiles WHERE id = NEW.user_id FOR UPDATE);
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
