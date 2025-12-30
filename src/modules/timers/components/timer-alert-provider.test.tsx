@@ -167,6 +167,9 @@ describe("TimerAlertProvider", () => {
   });
 
   it("plays alarm sound when timer-complete event is dispatched with enableAlarm", async () => {
+    // Ensure AudioContext mock is set (may be cleared by other tests)
+    globalThis.AudioContext = MockAudioContextClass as unknown as typeof AudioContext;
+
     Object.defineProperty(globalThis.Notification, "permission", {
       value: "granted",
       configurable: true,
@@ -195,6 +198,9 @@ describe("TimerAlertProvider", () => {
   });
 
   it("does not play alarm sound when enableAlarm is false", async () => {
+    // Ensure AudioContext mock is set (may be cleared by other tests)
+    globalThis.AudioContext = MockAudioContextClass as unknown as typeof AudioContext;
+
     Object.defineProperty(globalThis.Notification, "permission", {
       value: "granted",
       configurable: true,
@@ -219,6 +225,9 @@ describe("TimerAlertProvider", () => {
   });
 
   it("shows browser notification when permission is granted", async () => {
+    // Ensure AudioContext mock is set (may be cleared by other tests)
+    globalThis.AudioContext = MockAudioContextClass as unknown as typeof AudioContext;
+
     Object.defineProperty(globalThis.Notification, "permission", {
       value: "granted",
       configurable: true,
@@ -254,6 +263,9 @@ describe("TimerAlertProvider", () => {
   });
 
   it("shows browser notification even when audio is disabled", async () => {
+    // Ensure AudioContext mock is set (may be cleared by other tests)
+    globalThis.AudioContext = MockAudioContextClass as unknown as typeof AudioContext;
+
     Object.defineProperty(globalThis.Notification, "permission", {
       value: "granted",
       configurable: true,
@@ -315,6 +327,9 @@ describe("TimerAlertProvider", () => {
   });
 
   it("cleans up event listener and AudioContext on unmount", async () => {
+    // Ensure AudioContext mock is set (may be cleared by other tests)
+    globalThis.AudioContext = MockAudioContextClass as unknown as typeof AudioContext;
+
     Object.defineProperty(globalThis.Notification, "permission", {
       value: "granted",
       configurable: true,
@@ -341,6 +356,9 @@ describe("TimerAlertProvider", () => {
   });
 
   it("handles AudioContext close errors gracefully", async () => {
+    // Ensure AudioContext mock is set (may be cleared by other tests)
+    globalThis.AudioContext = MockAudioContextClass as unknown as typeof AudioContext;
+
     Object.defineProperty(globalThis.Notification, "permission", {
       value: "granted",
       configurable: true,
