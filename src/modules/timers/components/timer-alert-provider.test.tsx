@@ -360,6 +360,9 @@ describe("TimerAlertProvider", () => {
   });
 
   it("handles error in playAlarmSound gracefully", async () => {
+    // Ensure AudioContext mock is set (may be removed by parallel tests)
+    globalThis.AudioContext = MockAudioContextClass as unknown as typeof AudioContext;
+    
     Object.defineProperty(globalThis.Notification, "permission", {
       value: "granted",
       configurable: true,
