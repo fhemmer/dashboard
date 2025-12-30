@@ -271,7 +271,9 @@ export async function deleteTheme(id: string): Promise<ThemeActionResult> {
 }
 
 /**
- * Set a theme as the active custom theme
+ * Set a theme as the active custom theme.
+ * The database trigger `ensure_single_active_theme` handles deactivating other themes
+ * when a new theme is activated, avoiding race conditions.
  */
 export async function setActiveTheme(id: string | null): Promise<ThemeActionResult> {
   const supabase = await createClient();
@@ -283,24 +285,23 @@ export async function setActiveTheme(id: string | null): Promise<ThemeActionResu
     return { success: false, error: "Not authenticated" };
   }
 
-  // First deactivate all themes for this user
-  const { error: deactivateError } = await supabase
-    .from("user_themes")
-    .update({ is_active: false })
-    .eq("user_id", user.id);
-
-  if (deactivateError) {
-    console.error("Error deactivating themes:", deactivateError);
-    return { success: false, error: deactivateError.message };
-  }
-
-  // If id is null, we just want to deactivate (switch to preset theme)
+  // If id is null, we want to deactivate all custom themes (switch to preset theme)
   if (!id) {
+    const { error: deactivateError } = await supabase
+      .from("user_themes")
+      .update({ is_active: false })
+      .eq("user_id", user.id);
+
+    if (deactivateError) {
+      console.error("Error deactivating themes:", deactivateError);
+      return { success: false, error: deactivateError.message };
+    }
+
     revalidatePath("/themes");
     return { success: true };
   }
 
-  // Activate the selected theme
+  // Activate the selected theme; database trigger ensures only one active theme per user
   const { data, error } = await supabase
     .from("user_themes")
     .update({ is_active: true })
