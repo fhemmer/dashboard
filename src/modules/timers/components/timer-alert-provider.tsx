@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Bell, BellOff, BellRing } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Timer } from "../types";
 
@@ -117,15 +118,52 @@ export function TimerAlertProvider() {
     return (
       <div className="rounded-lg border bg-muted p-4 mb-4">
         <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm font-medium">Enable Notifications</p>
-            <p className="text-xs text-muted-foreground">
-              Get notified when your timers complete
-            </p>
+          <div className="flex items-center gap-3">
+            <Bell className="h-5 w-5 text-muted-foreground" />
+            <div>
+              <p className="text-sm font-medium">Enable Notifications</p>
+              <p className="text-xs text-muted-foreground">
+                Get notified when your timers complete
+              </p>
+            </div>
           </div>
           <Button size="sm" onClick={requestNotificationPermission}>
             Enable
           </Button>
+        </div>
+      </div>
+    );
+  }
+
+  // Show status when notifications are enabled
+  if (notificationPermission === "granted") {
+    return (
+      <div className="rounded-lg border border-green-500/30 bg-green-500/10 p-4 mb-4">
+        <div className="flex items-center gap-3">
+          <BellRing className="h-5 w-5 text-green-500" />
+          <div>
+            <p className="text-sm font-medium text-green-700 dark:text-green-400">Notifications Enabled</p>
+            <p className="text-xs text-green-600/80 dark:text-green-500/80">
+              You&apos;ll be notified when timers complete
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show status when notifications are denied
+  if (notificationPermission === "denied") {
+    return (
+      <div className="rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4 mb-4">
+        <div className="flex items-center gap-3">
+          <BellOff className="h-5 w-5 text-yellow-600 dark:text-yellow-500" />
+          <div>
+            <p className="text-sm font-medium text-yellow-700 dark:text-yellow-400">Notifications Blocked</p>
+            <p className="text-xs text-yellow-600/80 dark:text-yellow-500/80">
+              Enable notifications in your browser settings to receive alerts
+            </p>
+          </div>
         </div>
       </div>
     );

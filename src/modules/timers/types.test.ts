@@ -1,8 +1,11 @@
 import { describe, expect, it } from "vitest";
 import type { Timer, TimerState } from "./types";
 import {
+    calculateEndTime,
     calculateRemainingSeconds,
+    formatEndTime,
     formatTime,
+    getFriendlyDayPrefix,
     getProgress,
     parseTime,
     syncTimerState,
@@ -218,6 +221,96 @@ describe("timers types", () => {
     it("handles zero duration", () => {
       const timer = { ...baseTimer, durationSeconds: 0, remainingSeconds: 0 };
       expect(getProgress(timer)).toBe(0);
+    });
+  });
+
+  describe("getFriendlyDayPrefix", () => {
+    // Use a fixed "now" date for consistent testing: Wednesday, January 15, 2025
+    const now = new Date(2025, 0, 15, 10, 0, 0); // Wednesday
+
+    it("returns 'Today' for same day", () => {
+      const sameDay = new Date(2025, 0, 15, 18, 30, 0);
+      expect(getFriendlyDayPrefix(sameDay, now)).toBe("Today");
+    });
+
+    it("returns 'Tomorrow' for next day", () => {
+      const tomorrow = new Date(2025, 0, 16, 9, 0, 0);
+      expect(getFriendlyDayPrefix(tomorrow, now)).toBe("Tomorrow");
+    });
+
+    it("returns day name for 2-6 days in same week", () => {
+      // Thursday (1 day after Wednesday would be Tomorrow, so test Friday = 2 days)
+      const friday = new Date(2025, 0, 17, 15, 0, 0); // Friday
+      expect(getFriendlyDayPrefix(friday, now)).toBe("Friday");
+
+      const saturday = new Date(2025, 0, 18, 15, 0, 0); // Saturday
+      expect(getFriendlyDayPrefix(saturday, now)).toBe("Saturday");
+    });
+
+    it("returns 'Day Next Week' for next week", () => {
+      // Sunday is 5 days out but dayOfWeek (0) < Wednesday (3), so it's "next week"
+      const sunday = new Date(2025, 0, 19, 15, 0, 0); // Sunday (5 days out)
+      expect(getFriendlyDayPrefix(sunday, now)).toBe("Sunday Next Week");
+
+      const nextWednesday = new Date(2025, 0, 22, 15, 0, 0); // 7 days out
+      expect(getFriendlyDayPrefix(nextWednesday, now)).toBe("Wednesday Next Week");
+
+      const nextFriday = new Date(2025, 0, 24, 15, 0, 0); // 9 days out
+      expect(getFriendlyDayPrefix(nextFriday, now)).toBe("Friday Next Week");
+    });
+
+    it("returns full date for dates more than 2 weeks out", () => {
+      const farOut = new Date(2025, 1, 14, 15, 0, 0); // February 14
+      const result = getFriendlyDayPrefix(farOut, now);
+      expect(result).toContain("Friday");
+      expect(result).toContain("February");
+      expect(result).toContain("14");
+    });
+  });
+
+  describe("formatEndTime", () => {
+    it("returns null when state is not running", () => {
+      const endTime = new Date();
+      expect(formatEndTime(endTime, "stopped")).toBeNull();
+      expect(formatEndTime(endTime, "paused")).toBeNull();
+      expect(formatEndTime(endTime, "completed")).toBeNull();
+    });
+
+    it("returns null when endTime is null", () => {
+      expect(formatEndTime(null, "running")).toBeNull();
+    });
+
+    it("returns formatted time string with day prefix when running", () => {
+      // Set end time to today at 3:30 PM
+      const now = new Date();
+      const endTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 15, 30, 0);
+      const result = formatEndTime(endTime, "running");
+      expect(result).toMatch(/Today at 3:30\s?PM/i);
+    });
+
+    it("includes Tomorrow prefix for next day", () => {
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      tomorrow.setHours(9, 0, 0, 0);
+      const result = formatEndTime(tomorrow, "running");
+      expect(result).toMatch(/Tomorrow at 9:00\s?AM/i);
+    });
+  });
+
+  describe("calculateEndTime", () => {
+    it("returns a date in the future based on remaining seconds", () => {
+      const now = Date.now();
+      const result = calculateEndTime(60);
+      const expectedTime = now + 60 * 1000;
+      // Allow 1 second tolerance for test execution time
+      expect(result.getTime()).toBeGreaterThanOrEqual(expectedTime - 1000);
+      expect(result.getTime()).toBeLessThanOrEqual(expectedTime + 1000);
+    });
+
+    it("returns approximately now when remaining is 0", () => {
+      const now = Date.now();
+      const result = calculateEndTime(0);
+      expect(Math.abs(result.getTime() - now)).toBeLessThan(1000);
     });
   });
 });

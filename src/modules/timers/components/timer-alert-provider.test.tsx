@@ -139,7 +139,7 @@ describe("TimerAlertProvider", () => {
     expect(mockRequestPermission).toHaveBeenCalled();
   });
 
-  it("renders nothing when notification permission is granted", async () => {
+  it("renders enabled status when notification permission is granted", async () => {
     Object.defineProperty(globalThis.Notification, "permission", {
       value: "granted",
       configurable: true,
@@ -148,15 +148,16 @@ describe("TimerAlertProvider", () => {
     // Ensure AudioContext mock is set (may be cleared by other tests)
     globalThis.AudioContext = MockAudioContextClass as unknown as typeof AudioContext;
 
-    const { container } = render(<TimerAlertProvider />);
+    render(<TimerAlertProvider />);
 
     // Wait for the async permission check via setTimeout
     await waitFor(() => {
-      expect(container).toBeEmptyDOMElement();
+      expect(screen.getByText("Notifications Enabled")).toBeInTheDocument();
+      expect(screen.getByText("You'll be notified when timers complete")).toBeInTheDocument();
     });
   });
 
-  it("renders nothing when notification permission is denied", async () => {
+  it("renders blocked status when notification permission is denied", async () => {
     Object.defineProperty(globalThis.Notification, "permission", {
       value: "denied",
       configurable: true,
@@ -165,11 +166,12 @@ describe("TimerAlertProvider", () => {
     // Ensure AudioContext mock is set (may be cleared by other tests)
     globalThis.AudioContext = MockAudioContextClass as unknown as typeof AudioContext;
 
-    const { container } = render(<TimerAlertProvider />);
+    render(<TimerAlertProvider />);
 
     // Wait for the async permission check via setTimeout
     await waitFor(() => {
-      expect(container).toBeEmptyDOMElement();
+      expect(screen.getByText("Notifications Blocked")).toBeInTheDocument();
+      expect(screen.getByText("Enable notifications in your browser settings to receive alerts")).toBeInTheDocument();
     });
   });
 
@@ -433,11 +435,11 @@ describe("TimerAlertProvider", () => {
     // @ts-expect-error - Intentionally removing for test
     delete globalThis.AudioContext;
 
-    const { container } = render(<TimerAlertProvider />);
+    render(<TimerAlertProvider />);
 
     // Wait for permission state to update
     await waitFor(() => {
-      expect(container).toBeEmptyDOMElement();
+      expect(screen.getByText("Notifications Enabled")).toBeInTheDocument();
     });
 
     // Should not throw when timer-complete is dispatched

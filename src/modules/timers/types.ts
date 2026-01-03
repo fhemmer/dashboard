@@ -162,3 +162,59 @@ export function getProgress(timer: Timer): number {
   if (timer.durationSeconds === 0) return 0;
   return ((timer.durationSeconds - timer.remainingSeconds) / timer.durationSeconds) * 100;
 }
+
+/**
+ * Get a friendly day prefix for a date relative to today
+ * Examples: "Today", "Tomorrow", "Tuesday", "Friday Next Week", "Monday February 14"
+ */
+export function getFriendlyDayPrefix(date: Date, now: Date = new Date()): string {
+  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const startOfTarget = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  const daysDiff = Math.floor((startOfTarget.getTime() - startOfToday.getTime()) / (1000 * 60 * 60 * 24));
+
+  if (daysDiff === 0) {
+    return "Today";
+  }
+  if (daysDiff === 1) {
+    return "Tomorrow";
+  }
+
+  const dayName = date.toLocaleDateString([], { weekday: "long" });
+
+  // Within current week (2-6 days out, same week)
+  const todayDayOfWeek = now.getDay();
+  const targetDayOfWeek = date.getDay();
+
+  if (daysDiff >= 2 && daysDiff <= 6 && targetDayOfWeek > todayDayOfWeek) {
+    return dayName;
+  }
+
+  // Next week (7-13 days out)
+  if (daysDiff >= 2 && daysDiff <= 13) {
+    return `${dayName} Next Week`;
+  }
+
+  // Further out - show full date
+  return date.toLocaleDateString([], { weekday: "long", month: "long", day: "numeric" });
+}
+
+/**
+ * Format end time with a friendly day prefix and time
+ * Examples: "Today at 3:45 PM", "Tomorrow at 9:00 AM", "Tuesday at 5:30 PM"
+ * Returns null if the timer is not running or has no end time
+ */
+export function formatEndTime(endTime: Date | null, state: TimerState): string | null {
+  if (!endTime || state !== "running") {
+    return null;
+  }
+  const dayPrefix = getFriendlyDayPrefix(endTime);
+  const timeStr = endTime.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+  return `${dayPrefix} at ${timeStr}`;
+}
+
+/**
+ * Calculate end time from current remaining seconds
+ */
+export function calculateEndTime(remainingSeconds: number): Date {
+  return new Date(Date.now() + remainingSeconds * 1000);
+}

@@ -15,7 +15,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { getTimers } from "../actions";
 import type { Timer, TimerState } from "../types";
-import { formatTime, getProgress } from "../types";
+import { calculateEndTime, formatEndTime, formatTime, getProgress } from "../types";
 
 const MAX_VISIBLE_TIMERS = 4;
 
@@ -57,6 +57,9 @@ interface TimerRowProps {
 function TimerRow({ timer, localRemaining }: TimerRowProps) {
   const progress = getProgress({ ...timer, remainingSeconds: localRemaining });
   const isCompleted = timer.state === "completed";
+  const endTimeDisplay = timer.state === "running" && localRemaining > 0
+    ? formatEndTime(calculateEndTime(localRemaining), "running")
+    : null;
 
   return (
     <div className="space-y-1">
@@ -67,9 +70,16 @@ function TimerRow({ timer, localRemaining }: TimerRowProps) {
             {timer.name}
           </span>
         </div>
-        <span className={`text-sm font-medium tabular-nums shrink-0 ${isCompleted ? "text-muted-foreground" : ""}`}>
-          {formatTime(localRemaining)}
-        </span>
+        <div className="flex items-center gap-2 shrink-0">
+          {endTimeDisplay && (
+            <span className="text-xs text-muted-foreground">
+              {endTimeDisplay} --
+            </span>
+          )}
+          <span className={`text-sm font-medium tabular-nums ${isCompleted ? "text-muted-foreground" : ""}`}>
+            {formatTime(localRemaining)}
+          </span>
+        </div>
       </div>
       <Progress value={progress} className="h-1" />
     </div>
