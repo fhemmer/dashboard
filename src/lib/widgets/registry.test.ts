@@ -30,6 +30,37 @@ describe("WIDGET_REGISTRY", () => {
     expect(WIDGET_REGISTRY["timers"].requiresAdmin).toBeUndefined();
     expect(WIDGET_REGISTRY["mail"].requiresAdmin).toBeUndefined();
   });
+
+  it("has default size properties for all widgets", () => {
+    for (const widget of Object.values(WIDGET_REGISTRY)) {
+      expect(widget.defaultColspan).toBeDefined();
+      expect(widget.defaultRowspan).toBeDefined();
+      expect([1, 2]).toContain(widget.defaultColspan);
+      expect([1, 2, 3]).toContain(widget.defaultRowspan);
+    }
+  });
+
+  it("has correct default sizes for specific widgets", () => {
+    // Timers: 1×1 (compact)
+    expect(WIDGET_REGISTRY["timers"].defaultColspan).toBe(1);
+    expect(WIDGET_REGISTRY["timers"].defaultRowspan).toBe(1);
+
+    // Pull Requests: 1×2 (tall)
+    expect(WIDGET_REGISTRY["pull-requests"].defaultColspan).toBe(1);
+    expect(WIDGET_REGISTRY["pull-requests"].defaultRowspan).toBe(2);
+
+    // News: 1×2 (tall)
+    expect(WIDGET_REGISTRY["news"].defaultColspan).toBe(1);
+    expect(WIDGET_REGISTRY["news"].defaultRowspan).toBe(2);
+
+    // Expenditures: 2×1 (wide)
+    expect(WIDGET_REGISTRY["expenditures"].defaultColspan).toBe(2);
+    expect(WIDGET_REGISTRY["expenditures"].defaultRowspan).toBe(1);
+
+    // Mail: 1×2 (tall)
+    expect(WIDGET_REGISTRY["mail"].defaultColspan).toBe(1);
+    expect(WIDGET_REGISTRY["mail"].defaultRowspan).toBe(2);
+  });
 });
 
 describe("getAllWidgets", () => {

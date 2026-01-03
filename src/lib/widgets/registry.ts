@@ -12,6 +12,8 @@ export const WIDGET_REGISTRY: Record<WidgetId, WidgetDefinition> = {
     description: "GitHub PRs across your connected accounts",
     icon: GitPullRequest,
     defaultEnabled: true,
+    defaultColspan: 1,
+    defaultRowspan: 2,
   },
   news: {
     id: "news",
@@ -19,6 +21,8 @@ export const WIDGET_REGISTRY: Record<WidgetId, WidgetDefinition> = {
     description: "Latest updates from your RSS sources",
     icon: Newspaper,
     defaultEnabled: true,
+    defaultColspan: 1,
+    defaultRowspan: 2,
   },
   expenditures: {
     id: "expenditures",
@@ -27,6 +31,8 @@ export const WIDGET_REGISTRY: Record<WidgetId, WidgetDefinition> = {
     icon: Wallet,
     requiresAdmin: true,
     defaultEnabled: true,
+    defaultColspan: 2,
+    defaultRowspan: 1,
   },
   timers: {
     id: "timers",
@@ -34,6 +40,8 @@ export const WIDGET_REGISTRY: Record<WidgetId, WidgetDefinition> = {
     description: "Countdown timers with alerts",
     icon: Timer,
     defaultEnabled: true,
+    defaultColspan: 1,
+    defaultRowspan: 1,
   },
   mail: {
     id: "mail",
@@ -41,6 +49,8 @@ export const WIDGET_REGISTRY: Record<WidgetId, WidgetDefinition> = {
     description: "Email summaries from Outlook, Gmail, and IMAP accounts",
     icon: Mail,
     defaultEnabled: true,
+    defaultColspan: 1,
+    defaultRowspan: 2,
   },
 };
 

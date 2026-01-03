@@ -10,6 +10,46 @@ vi.mock("@/app/actions.dashboard", () => ({
   updateWidgetOrder: vi.fn().mockResolvedValue({}),
 }));
 
+// Mock the widget registry for resolving sizes
+vi.mock("@/lib/widgets", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/widgets")>();
+  return {
+    ...actual,
+    WIDGET_REGISTRY: {
+      "pull-requests": {
+        id: "pull-requests",
+        name: "Pull Requests",
+        defaultColspan: 1,
+        defaultRowspan: 2,
+      },
+      news: {
+        id: "news",
+        name: "News",
+        defaultColspan: 1,
+        defaultRowspan: 2,
+      },
+      expenditures: {
+        id: "expenditures",
+        name: "Expenditures",
+        defaultColspan: 2,
+        defaultRowspan: 1,
+      },
+      timers: {
+        id: "timers",
+        name: "Timers",
+        defaultColspan: 1,
+        defaultRowspan: 1,
+      },
+      mail: {
+        id: "mail",
+        name: "Mail",
+        defaultColspan: 1,
+        defaultRowspan: 2,
+      },
+    },
+  };
+});
+
 // Store DndContext event handlers for testing
 let onDragStartHandler: ((event: { active: { id: string } }) => void) | null =
   null;
@@ -439,5 +479,111 @@ describe("DashboardGrid", () => {
     expect(screen.queryByTestId("pr-widget")).toBeNull();
     expect(screen.getByTestId("news-widget")).toBeDefined();
     expect(screen.getByTestId("expenditures-widget")).toBeDefined();
+  });
+
+  it("renders with auto layout mode", () => {
+    const autoLayoutSettings: WidgetSettings = {
+      layoutMode: "auto",
+      widgets: [
+        { id: "pull-requests", enabled: true, order: 0 },
+        { id: "news", enabled: true, order: 1 },
+      ],
+    };
+
+    render(
+      <DashboardGrid
+        settings={autoLayoutSettings}
+        widgetComponents={mockWidgetComponents}
+      />
+    );
+
+    expect(screen.getByTestId("pr-widget")).toBeDefined();
+    expect(screen.getByTestId("news-widget")).toBeDefined();
+  });
+
+  it("renders with manual layout mode by default", () => {
+    render(
+      <DashboardGrid
+        settings={mockSettings}
+        widgetComponents={mockWidgetComponents}
+      />
+    );
+
+    expect(screen.getByTestId("pr-widget")).toBeDefined();
+    expect(screen.getByTestId("news-widget")).toBeDefined();
+  });
+
+  it("applies custom widget sizes from settings", () => {
+    const customSizeSettings: WidgetSettings = {
+      widgets: [
+        { id: "pull-requests", enabled: true, order: 0, colspan: 2, rowspan: 3 },
+        { id: "news", enabled: true, order: 1 },
+      ],
+    };
+
+    render(
+      <DashboardGrid
+        settings={customSizeSettings}
+        widgetComponents={mockWidgetComponents}
+      />
+    );
+
+    // Widgets should render properly with custom sizes
+    expect(screen.getByTestId("pr-widget")).toBeDefined();
+    expect(screen.getByTestId("news-widget")).toBeDefined();
+  });
+
+  it("uses default sizes from registry when not specified", () => {
+    const defaultSizeSettings: WidgetSettings = {
+      widgets: [
+        { id: "pull-requests", enabled: true, order: 0 },
+        { id: "timers", enabled: true, order: 1 },
+      ],
+    };
+
+    render(
+      <DashboardGrid
+        settings={defaultSizeSettings}
+        widgetComponents={mockWidgetComponents}
+      />
+    );
+
+    // Widgets should render properly with default sizes
+    expect(screen.getByTestId("pr-widget")).toBeDefined();
+    expect(screen.getByTestId("timers-widget")).toBeDefined();
+  });
+
+  it("preserves layoutMode during drag reorder", async () => {
+    const autoLayoutSettings: WidgetSettings = {
+      layoutMode: "auto",
+      widgets: [
+        { id: "pull-requests", enabled: true, order: 0 },
+        { id: "news", enabled: true, order: 1 },
+        { id: "expenditures", enabled: false, order: 2 },
+      ],
+    };
+
+    render(
+      <DashboardGrid
+        settings={autoLayoutSettings}
+        widgetComponents={mockWidgetComponents}
+      />
+    );
+
+    // Simulate drag end with a valid reorder
+    await act(async () => {
+      onDragEndHandler?.({
+        active: { id: "pull-requests" },
+        over: { id: "news" },
+      });
+    });
+
+    await waitFor(() => {
+      expect(dashboardActions.updateWidgetOrder).toHaveBeenCalled();
+    });
+
+    // Widgets should still render
+    expect(screen.getByTestId("pr-widget")).toBeDefined();
+    expect(screen.getByTestId("news-widget")).toBeDefined();
   });
 });

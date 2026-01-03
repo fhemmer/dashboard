@@ -1,10 +1,13 @@
 "use client";
 
 import {
+    updateLayoutMode,
     updateWidgetOrder,
+    updateWidgetSize,
     updateWidgetVisibility,
 } from "@/app/actions.dashboard";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import {
     Sheet,
     SheetContent,
@@ -13,9 +16,15 @@ import {
     SheetTitle,
     SheetTrigger,
 } from "@/components/ui/sheet";
+import { Switch } from "@/components/ui/switch";
 import {
     getWidgetById,
+    WIDGET_REGISTRY,
+    resolveWidgetSize,
+    type LayoutMode,
+    type WidgetColspan,
     type WidgetId,
+    type WidgetRowspan,
     type WidgetSettings,
 } from "@/lib/widgets";
 import {
@@ -35,21 +44,27 @@ import {
     verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { GripVertical, Loader2, Settings2 } from "lucide-react";
+import { GripVertical, LayoutGrid, Loader2, Maximize2, Minimize2, Settings2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useId, useState, useTransition } from "react";
 
 interface SortableWidgetItemProps {
   id: WidgetId;
   enabled: boolean;
+  colspan: WidgetColspan;
+  rowspan: WidgetRowspan;
   onToggle: (id: WidgetId, enabled: boolean) => void;
+  onSizeChange: (id: WidgetId, colspan: WidgetColspan, rowspan: WidgetRowspan) => void;
   isPending: boolean;
 }
 
 function SortableWidgetItem({
   id,
   enabled,
+  colspan,
+  rowspan,
   onToggle,
+  onSizeChange,
   isPending,
 }: SortableWidgetItemProps) {
   const widget = getWidgetById(id);
@@ -70,6 +85,16 @@ function SortableWidgetItem({
   if (!widget) return null;
 
   const Icon = widget.icon;
+  const isMaxSize = colspan === 2 && rowspan === 3;
+  const isMinSize = colspan === 1 && rowspan === 1;
+
+  function handleExpand() {
+    onSizeChange(id, 2, 3);
+  }
+
+  function handleShrink() {
+    onSizeChange(id, 1, 1);
+  }
 
   return (
     <div
@@ -109,7 +134,42 @@ function SortableWidgetItem({
         <div className="text-xs text-muted-foreground truncate">
           {widget.description}
         </div>
+        {enabled && (
+          <div className="text-xs text-muted-foreground mt-0.5">
+            Size: {colspan}×{rowspan}
+          </div>
+        )}
       </div>
+
+      {/* Size Controls (only when enabled) */}
+      {enabled && (
+        <div className="flex items-center gap-1">
+          {!isMinSize && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7"
+              onClick={handleShrink}
+              disabled={isPending}
+              title="Shrink to 1×1"
+            >
+              <Minimize2 className="h-3.5 w-3.5" />
+            </Button>
+          )}
+          {!isMaxSize && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7"
+              onClick={handleExpand}
+              disabled={isPending}
+              title="Expand to 2×3"
+            >
+              <Maximize2 className="h-3.5 w-3.5" />
+            </Button>
+          )}
+        </div>
+      )}
 
       {/* Toggle Button */}
       <div className="flex items-center gap-2">
@@ -157,11 +217,16 @@ export function DashboardConfigSheet({
   const [isPending, startTransition] = useTransition();
   const [localSettings, setLocalSettings] = useState(settings);
 
-  // Sort widgets by order for display
-  const sortedWidgets = [...localSettings.widgets].sort(
-    (a, b) => a.order - b.order
-  );
+  // Sort widgets by order for display and resolve sizes
+  const sortedWidgets = [...localSettings.widgets]
+    .sort((a, b) => a.order - b.order)
+    .map((w) => ({
+      ...w,
+      ...resolveWidgetSize(w, WIDGET_REGISTRY[w.id]),
+    }));
   const widgetIds = sortedWidgets.map((w) => w.id);
+
+  const isAutoLayout = localSettings.layoutMode === "auto";
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -177,6 +242,7 @@ export function DashboardConfigSheet({
   function handleToggle(widgetId: WidgetId, enabled: boolean) {
     // Optimistic update
     setLocalSettings((prev) => ({
+      ...prev,
       widgets: prev.widgets.map((w) =>
         w.id === widgetId ? { ...w, enabled } : w
       ),
@@ -192,12 +258,61 @@ export function DashboardConfigSheet({
     if (result.error) {
       // Revert on error
       setLocalSettings((prev) => ({
+        ...prev,
         widgets: prev.widgets.map((w) =>
           w.id === widgetId ? { ...w, enabled: !enabled } : w
         ),
       }));
     } else {
       // Refresh to sync DashboardGrid
+      router.refresh();
+    }
+  }
+
+  function handleSizeChange(widgetId: WidgetId, colspan: WidgetColspan, rowspan: WidgetRowspan) {
+    // Optimistic update
+    setLocalSettings((prev) => ({
+      ...prev,
+      widgets: prev.widgets.map((w) =>
+        w.id === widgetId ? { ...w, colspan, rowspan } : w
+      ),
+    }));
+
+    startTransition(() => {
+      performSizeUpdate(widgetId, colspan, rowspan);
+    });
+  }
+
+  async function performSizeUpdate(widgetId: WidgetId, colspan: WidgetColspan, rowspan: WidgetRowspan) {
+    const result = await updateWidgetSize(widgetId, colspan, rowspan);
+    if (result.error) {
+      // Revert on error - reload from settings prop
+      setLocalSettings(settings);
+    } else {
+      router.refresh();
+    }
+  }
+
+  function handleLayoutModeChange(auto: boolean) {
+    const newMode: LayoutMode = auto ? "auto" : "manual";
+    
+    // Optimistic update
+    setLocalSettings((prev) => ({
+      ...prev,
+      layoutMode: newMode,
+    }));
+
+    startTransition(() => {
+      performLayoutModeUpdate(newMode);
+    });
+  }
+
+  async function performLayoutModeUpdate(mode: LayoutMode) {
+    const result = await updateLayoutMode(mode);
+    if (result.error) {
+      // Revert on error
+      setLocalSettings(settings);
+    } else {
       router.refresh();
     }
   }
@@ -213,6 +328,7 @@ export function DashboardConfigSheet({
 
       // Optimistic update
       setLocalSettings((prev) => ({
+        ...prev,
         widgets: prev.widgets.map((w) => ({
           ...w,
           order: newOrder.indexOf(w.id),
@@ -272,6 +388,34 @@ export function DashboardConfigSheet({
           </SheetDescription>
         </SheetHeader>
 
+        {/* Layout Mode Toggle */}
+        <div className="mt-6 p-4 rounded-lg border bg-muted/50">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <LayoutGrid className="h-4 w-4 text-muted-foreground" />
+              <Label htmlFor="layout-mode" className="text-sm font-medium">
+                Layout Mode
+              </Label>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-muted-foreground">
+                {isAutoLayout ? "Auto" : "Manual"}
+              </span>
+              <Switch
+                id="layout-mode"
+                checked={isAutoLayout}
+                onCheckedChange={handleLayoutModeChange}
+                disabled={isPending}
+              />
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground mt-2">
+            {isAutoLayout
+              ? "Auto mode fills gaps using dense grid packing."
+              : "Manual mode preserves widget order exactly as arranged."}
+          </p>
+        </div>
+
         <div className="mt-6 space-y-2">
           <DndContext
             sensors={sensors}
@@ -287,7 +431,10 @@ export function DashboardConfigSheet({
                   key={widget.id}
                   id={widget.id}
                   enabled={widget.enabled}
+                  colspan={widget.colspan}
+                  rowspan={widget.rowspan}
                   onToggle={handleToggle}
+                  onSizeChange={handleSizeChange}
                   isPending={isPending}
                 />
               ))}

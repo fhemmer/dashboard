@@ -6,6 +6,15 @@ import { type LucideIcon } from "lucide-react";
  */
 export type WidgetId = "pull-requests" | "news" | "expenditures" | "timers" | "mail";
 
+/** Valid column span values for widgets */
+export type WidgetColspan = 1 | 2;
+
+/** Valid row span values for widgets */
+export type WidgetRowspan = 1 | 2 | 3;
+
+/** Layout modes for the dashboard */
+export type LayoutMode = "manual" | "auto";
+
 /**
  * Widget metadata for the registry.
  */
@@ -22,6 +31,10 @@ export interface WidgetDefinition {
   requiresAdmin?: boolean;
   /** Default enabled state for new users */
   defaultEnabled: boolean;
+  /** Default column span (1-2) */
+  defaultColspan?: WidgetColspan;
+  /** Default row span (1-3) */
+  defaultRowspan?: WidgetRowspan;
 }
 
 /**
@@ -34,6 +47,10 @@ export interface WidgetSetting {
   enabled: boolean;
   /** Display order (lower = earlier in the grid) */
   order: number;
+  /** User-overridden column span (1-2) */
+  colspan?: WidgetColspan;
+  /** User-overridden row span (1-3) */
+  rowspan?: WidgetRowspan;
 }
 
 /**
@@ -41,6 +58,8 @@ export interface WidgetSetting {
  */
 export interface WidgetSettings {
   widgets: WidgetSetting[];
+  /** Layout mode: 'manual' (default) preserves order, 'auto' uses dense packing */
+  layoutMode?: LayoutMode;
 }
 
 /**
@@ -90,6 +109,7 @@ export function mergeWidgetSettings(
   );
 
   return {
+    layoutMode: userSettings.layoutMode,
     widgets: [...validUserWidgets, ...newWidgets].sort(
       (a, b) => a.order - b.order
     ),
@@ -114,6 +134,7 @@ export function toggleWidget(
   enabled: boolean
 ): WidgetSettings {
   return {
+    ...settings,
     widgets: settings.widgets.map((w) =>
       w.id === widgetId ? { ...w, enabled } : w
     ),
@@ -130,9 +151,62 @@ export function reorderWidgets(
   const orderMap = new Map(newOrder.map((id, index) => [id, index]));
 
   return {
+    ...settings,
     widgets: settings.widgets.map((w) => ({
       ...w,
       order: orderMap.get(w.id) ?? w.order,
     })),
+  };
+}
+
+/**
+ * Resolved widget with size information from both settings and defaults.
+ */
+export interface ResolvedWidget extends WidgetSetting {
+  colspan: WidgetColspan;
+  rowspan: WidgetRowspan;
+}
+
+/**
+ * Resolves a widget's size by merging user settings with registry defaults.
+ */
+export function resolveWidgetSize(
+  setting: WidgetSetting,
+  definition: WidgetDefinition | undefined
+): ResolvedWidget {
+  return {
+    ...setting,
+    colspan: setting.colspan ?? definition?.defaultColspan ?? 1,
+    rowspan: setting.rowspan ?? definition?.defaultRowspan ?? 1,
+  };
+}
+
+/**
+ * Updates a widget's size settings.
+ */
+export function updateWidgetSize(
+  settings: WidgetSettings,
+  widgetId: WidgetId,
+  colspan: WidgetColspan,
+  rowspan: WidgetRowspan
+): WidgetSettings {
+  return {
+    ...settings,
+    widgets: settings.widgets.map((w) =>
+      w.id === widgetId ? { ...w, colspan, rowspan } : w
+    ),
+  };
+}
+
+/**
+ * Updates the dashboard layout mode.
+ */
+export function updateLayoutMode(
+  settings: WidgetSettings,
+  layoutMode: LayoutMode
+): WidgetSettings {
+  return {
+    ...settings,
+    layoutMode,
   };
 }

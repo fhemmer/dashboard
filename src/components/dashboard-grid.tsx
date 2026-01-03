@@ -1,7 +1,15 @@
 "use client";
 
 import { updateWidgetOrder } from "@/app/actions.dashboard";
-import type { WidgetId, WidgetSettings } from "@/lib/widgets";
+import { WIDGET_REGISTRY } from "@/lib/widgets";
+import type {
+  ResolvedWidget,
+  WidgetColspan,
+  WidgetId,
+  WidgetRowspan,
+  WidgetSettings,
+} from "@/lib/widgets";
+import { resolveWidgetSize } from "@/lib/widgets";
 import {
     closestCenter,
     DndContext,
@@ -21,16 +29,33 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { type ReactNode, useEffect, useState, useTransition } from "react";
 
+/** Maps colspan values to Tailwind classes */
+const colspanClasses: Record<WidgetColspan, string> = {
+  1: "col-span-1",
+  2: "col-span-2",
+};
+
+/** Maps rowspan values to Tailwind classes */
+const rowspanClasses: Record<WidgetRowspan, string> = {
+  1: "row-span-1",
+  2: "row-span-2",
+  3: "row-span-3",
+};
+
 interface SortableWidgetWrapperProps {
   id: WidgetId;
   children: ReactNode;
   isDragMode: boolean;
+  colspan: WidgetColspan;
+  rowspan: WidgetRowspan;
 }
 
 function SortableWidgetWrapper({
   id,
   children,
   isDragMode,
+  colspan,
+  rowspan,
 }: SortableWidgetWrapperProps) {
   const {
     attributes,
@@ -52,6 +77,7 @@ function SortableWidgetWrapper({
       style={style}
       className={`
         relative transition-all duration-200
+        ${colspanClasses[colspan]} ${rowspanClasses[rowspan]}
         ${isDragging ? "z-50 scale-[1.02]" : ""}
         ${isDragMode ? "cursor-grab active:cursor-grabbing" : ""}
       `}
@@ -84,12 +110,14 @@ export function DashboardGrid({
     setLocalSettings(settings);
   }, [settings]);
 
-  // Get enabled widgets sorted by order
-  const enabledWidgets = [...localSettings.widgets]
+  // Get enabled widgets sorted by order and resolve their sizes
+  const enabledWidgets: ResolvedWidget[] = [...localSettings.widgets]
     .filter((w) => w.enabled)
-    .sort((a, b) => a.order - b.order);
+    .sort((a, b) => a.order - b.order)
+    .map((w) => resolveWidgetSize(w, WIDGET_REGISTRY[w.id]));
 
   const widgetIds = enabledWidgets.map((w) => w.id);
+  const isAutoLayout = localSettings.layoutMode === "auto";
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -123,6 +151,7 @@ export function DashboardGrid({
 
       // Optimistic update
       setLocalSettings((prev) => ({
+        ...prev,
         widgets: prev.widgets.map((w) => ({
           ...w,
           order: fullOrder.indexOf(w.id),
@@ -174,6 +203,13 @@ export function DashboardGrid({
     );
   }
 
+  // Grid classes: responsive columns + dense packing when auto mode
+  const gridClasses = `
+    grid gap-4 grid-cols-2 lg:grid-cols-3 xl:grid-cols-4
+    ${isAutoLayout ? "[grid-auto-flow:dense]" : ""}
+    ${isPending ? "opacity-70 pointer-events-none" : ""}
+  `;
+
   return (
     <DndContext
       sensors={sensors}
@@ -183,12 +219,7 @@ export function DashboardGrid({
       onDragCancel={handleDragCancel}
     >
       <SortableContext items={widgetIds} strategy={rectSortingStrategy}>
-        <div
-          className={`
-            grid gap-8 md:grid-cols-2
-            ${isPending ? "opacity-70 pointer-events-none" : ""}
-          `}
-        >
+        <div className={gridClasses}>
           {enabledWidgets.map((widget) => {
             const component = widgetComponents[widget.id];
             if (!component) return null;
@@ -198,6 +229,8 @@ export function DashboardGrid({
                 key={widget.id}
                 id={widget.id}
                 isDragMode={isDragMode}
+                colspan={widget.colspan}
+                rowspan={widget.rowspan}
               >
                 {component}
               </SortableWidgetWrapper>

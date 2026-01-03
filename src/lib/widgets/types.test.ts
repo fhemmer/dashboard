@@ -5,7 +5,10 @@ import {
     getEnabledWidgets,
     mergeWidgetSettings,
     reorderWidgets,
+    resolveWidgetSize,
     toggleWidget,
+    updateLayoutMode,
+    updateWidgetSize,
     type WidgetDefinition,
     type WidgetId,
     type WidgetSettings,
@@ -18,6 +21,8 @@ const mockWidgets: WidgetDefinition[] = [
     description: "GitHub PRs",
     icon: GitPullRequest,
     defaultEnabled: true,
+    defaultColspan: 1,
+    defaultRowspan: 2,
   },
   {
     id: "news",
@@ -25,6 +30,8 @@ const mockWidgets: WidgetDefinition[] = [
     description: "Latest news",
     icon: Newspaper,
     defaultEnabled: true,
+    defaultColspan: 1,
+    defaultRowspan: 2,
   },
   {
     id: "expenditures",
@@ -33,6 +40,8 @@ const mockWidgets: WidgetDefinition[] = [
     icon: Wallet,
     requiresAdmin: true,
     defaultEnabled: true,
+    defaultColspan: 2,
+    defaultRowspan: 1,
   },
 ];
 
@@ -214,5 +223,201 @@ describe("reorderWidgets", () => {
     const result = reorderWidgets(settings, partialOrder);
 
     expect(result.widgets.find((w) => w.id === "expenditures")?.order).toBe(2);
+  });
+
+  it("preserves layoutMode when reordering", () => {
+    const settings: WidgetSettings = {
+      layoutMode: "auto",
+      widgets: [
+        { id: "pull-requests", enabled: true, order: 0 },
+        { id: "news", enabled: true, order: 1 },
+      ],
+    };
+
+    const newOrder: WidgetId[] = ["news", "pull-requests"];
+    const result = reorderWidgets(settings, newOrder);
+
+    expect(result.layoutMode).toBe("auto");
+  });
+});
+
+describe("resolveWidgetSize", () => {
+  it("uses user settings when provided", () => {
+    const setting = { id: "pull-requests" as WidgetId, enabled: true, order: 0, colspan: 2 as const, rowspan: 3 as const };
+    const result = resolveWidgetSize(setting, mockWidgets[0]);
+
+    expect(result.colspan).toBe(2);
+    expect(result.rowspan).toBe(3);
+  });
+
+  it("falls back to registry defaults when user settings not provided", () => {
+    const setting = { id: "pull-requests" as WidgetId, enabled: true, order: 0 };
+    const result = resolveWidgetSize(setting, mockWidgets[0]);
+
+    expect(result.colspan).toBe(1); // defaultColspan from mockWidgets[0]
+    expect(result.rowspan).toBe(2); // defaultRowspan from mockWidgets[0]
+  });
+
+  it("falls back to 1x1 when no defaults exist", () => {
+    const setting = { id: "pull-requests" as WidgetId, enabled: true, order: 0 };
+    const widgetWithoutDefaults: WidgetDefinition = {
+      id: "pull-requests",
+      name: "Pull Requests",
+      description: "GitHub PRs",
+      icon: GitPullRequest,
+      defaultEnabled: true,
+    };
+    const result = resolveWidgetSize(setting, widgetWithoutDefaults);
+
+    expect(result.colspan).toBe(1);
+    expect(result.rowspan).toBe(1);
+  });
+
+  it("includes all original setting properties", () => {
+    const setting = { id: "news" as WidgetId, enabled: false, order: 5 };
+    const result = resolveWidgetSize(setting, mockWidgets[1]);
+
+    expect(result.id).toBe("news");
+    expect(result.enabled).toBe(false);
+    expect(result.order).toBe(5);
+  });
+
+  it("handles undefined definition gracefully", () => {
+    const setting = { id: "unknown-widget" as WidgetId, enabled: true, order: 0 };
+    const result = resolveWidgetSize(setting, undefined);
+
+    expect(result.colspan).toBe(1);
+    expect(result.rowspan).toBe(1);
+  });
+});
+
+describe("updateWidgetSize", () => {
+  it("updates the size of a specific widget", () => {
+    const settings: WidgetSettings = {
+      widgets: [
+        { id: "pull-requests", enabled: true, order: 0, colspan: 1, rowspan: 1 },
+        { id: "news", enabled: true, order: 1 },
+      ],
+    };
+
+    const result = updateWidgetSize(settings, "pull-requests", 2, 3);
+
+    const prWidget = result.widgets.find((w) => w.id === "pull-requests");
+    expect(prWidget?.colspan).toBe(2);
+    expect(prWidget?.rowspan).toBe(3);
+  });
+
+  it("leaves other widgets unchanged", () => {
+    const settings: WidgetSettings = {
+      widgets: [
+        { id: "pull-requests", enabled: true, order: 0, colspan: 1, rowspan: 1 },
+        { id: "news", enabled: true, order: 1, colspan: 2, rowspan: 2 },
+      ],
+    };
+
+    const result = updateWidgetSize(settings, "pull-requests", 2, 3);
+
+    const newsWidget = result.widgets.find((w) => w.id === "news");
+    expect(newsWidget?.colspan).toBe(2);
+    expect(newsWidget?.rowspan).toBe(2);
+  });
+
+  it("preserves layoutMode", () => {
+    const settings: WidgetSettings = {
+      layoutMode: "auto",
+      widgets: [
+        { id: "pull-requests", enabled: true, order: 0 },
+      ],
+    };
+
+    const result = updateWidgetSize(settings, "pull-requests", 2, 2);
+
+    expect(result.layoutMode).toBe("auto");
+  });
+});
+
+describe("updateLayoutMode", () => {
+  it("sets layout mode to auto", () => {
+    const settings: WidgetSettings = {
+      widgets: [
+        { id: "pull-requests", enabled: true, order: 0 },
+      ],
+    };
+
+    const result = updateLayoutMode(settings, "auto");
+
+    expect(result.layoutMode).toBe("auto");
+  });
+
+  it("sets layout mode to manual", () => {
+    const settings: WidgetSettings = {
+      layoutMode: "auto",
+      widgets: [
+        { id: "pull-requests", enabled: true, order: 0 },
+      ],
+    };
+
+    const result = updateLayoutMode(settings, "manual");
+
+    expect(result.layoutMode).toBe("manual");
+  });
+
+  it("preserves widgets when updating layout mode", () => {
+    const settings: WidgetSettings = {
+      widgets: [
+        { id: "pull-requests", enabled: true, order: 0, colspan: 2, rowspan: 2 },
+        { id: "news", enabled: false, order: 1 },
+      ],
+    };
+
+    const result = updateLayoutMode(settings, "auto");
+
+    expect(result.widgets).toHaveLength(2);
+    expect(result.widgets[0].colspan).toBe(2);
+    expect(result.widgets[0].rowspan).toBe(2);
+    expect(result.widgets[1].enabled).toBe(false);
+  });
+});
+
+describe("mergeWidgetSettings with layoutMode", () => {
+  it("preserves layoutMode from user settings", () => {
+    const userSettings: WidgetSettings = {
+      layoutMode: "auto",
+      widgets: [
+        { id: "pull-requests", enabled: true, order: 0 },
+      ],
+    };
+
+    const result = mergeWidgetSettings(userSettings, mockWidgets);
+
+    expect(result.layoutMode).toBe("auto");
+  });
+
+  it("handles undefined layoutMode", () => {
+    const userSettings: WidgetSettings = {
+      widgets: [
+        { id: "pull-requests", enabled: true, order: 0 },
+      ],
+    };
+
+    const result = mergeWidgetSettings(userSettings, mockWidgets);
+
+    expect(result.layoutMode).toBeUndefined();
+  });
+});
+
+describe("toggleWidget with layoutMode", () => {
+  it("preserves layoutMode when toggling widget", () => {
+    const settings: WidgetSettings = {
+      layoutMode: "auto",
+      widgets: [
+        { id: "pull-requests", enabled: true, order: 0 },
+        { id: "news", enabled: true, order: 1 },
+      ],
+    };
+
+    const result = toggleWidget(settings, "pull-requests", false);
+
+    expect(result.layoutMode).toBe("auto");
   });
 });
