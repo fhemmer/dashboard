@@ -9,9 +9,11 @@
  */
 
 import { DEFAULT_MODEL, runAgent as executeAgent, type AgentOptions, type AgentResult } from "@/lib/agent";
+import { canUsePaidModelsByUserId, deductCredits, getCreditsInfo, usdToCents, type CreditsInfo } from "@/lib/credits";
 import {
     calculateCostWithMargin,
     getModelsWithPricing,
+    isFreeModel,
     type ModelWithPricing,
 } from "@/lib/openrouter";
 import { createClient } from "@/lib/supabase/server";
@@ -497,8 +499,12 @@ export async function getChatSummary(): Promise<ChatSummary> {
 /**
  * Run the AI agent (server action)
  * This must be a server action because OPENROUTER_API_KEY is server-side only
+ * 
+ * Credit checking:
+ * - Free models: Always allowed
+ * - Paid models: Requires credits > 0
  */
-export async function runAgentAction(options: AgentOptions): Promise<AgentResult> {
+export async function runAgentAction(options: AgentOptions): Promise<AgentResult & { upgradeRequired?: boolean; creditsRemaining?: number; creditError?: string }> {
   const supabase = await createClient();
   const {
     data: { user },
@@ -508,7 +514,50 @@ export async function runAgentAction(options: AgentOptions): Promise<AgentResult
     throw new Error("Not authenticated");
   }
 
-  return executeAgent(options);
+  const modelId = options.model ?? DEFAULT_MODEL;
+  const modelIsFree = isFreeModel(modelId);
+
+  // Check credits for paid models
+  if (!modelIsFree) {
+    const canUse = await canUsePaidModelsByUserId(user.id);
+    if (!canUse) {
+      // Return a minimal AgentResult with error info
+      return {
+        text: "Insufficient credits. Upgrade your plan or use a free model.",
+        finishReason: "error",
+        steps: 0,
+        upgradeRequired: true,
+        creditsRemaining: 0,
+        creditError: "Insufficient credits. Upgrade your plan or use a free model.",
+      };
+    }
+  }
+
+  // Run the agent
+  const result = await executeAgent(options);
+
+  // Deduct credits if it was a paid model and we have usage info
+  if (!modelIsFree && result.usage) {
+    const cost = await calculateCostWithMargin(
+      modelId,
+      result.usage.promptTokens,
+      result.usage.completionTokens,
+      0 // reasoning tokens
+    );
+    const costCents = usdToCents(cost);
+    
+    if (costCents > 0) {
+      await deductCredits(user.id, costCents, "ai_usage");
+    }
+  }
+
+  // Get remaining credits
+  const creditsInfo = await getCreditsInfo();
+  
+  return {
+    ...result,
+    creditsRemaining: creditsInfo?.balanceCents ?? 0,
+  };
 }
 
 /**
@@ -541,7 +590,7 @@ export async function getAvailableModelsWithPricing(): Promise<ModelWithPricing[
 }
 
 /**
- * Record cost for a message
+ * Record cost for a message and deduct credits
  * Called after an AI response is received
  */
 export async function recordMessageCost(params: {
@@ -551,7 +600,7 @@ export async function recordMessageCost(params: {
   inputTokens: number;
   outputTokens: number;
   reasoningTokens?: number;
-}): Promise<UpdateResult> {
+}): Promise<UpdateResult & { creditsRemaining?: number }> {
   const supabase = await createClient();
   const {
     data: { user },
@@ -589,7 +638,17 @@ export async function recordMessageCost(params: {
     return { success: false, error: error.message };
   }
 
-  return { success: true };
+  // Deduct credits for paid models
+  const modelIsFree = isFreeModel(params.model);
+  if (!modelIsFree && cost > 0) {
+    const costCents = usdToCents(cost);
+    await deductCredits(user.id, costCents, "ai_usage", params.messageId);
+  }
+
+  // Get remaining credits
+  const creditsInfo = await getCreditsInfo();
+
+  return { success: true, creditsRemaining: creditsInfo?.balanceCents ?? 0 };
 }
 
 /**
@@ -617,4 +676,39 @@ export async function getUserChatSpending(): Promise<{ totalSpent: number; error
   }
 
   return { totalSpent: data?.total_chat_spent ?? 0 };
+}
+
+/**
+ * Get user's credit info for display
+ */
+export async function getUserCreditsInfo(): Promise<{ credits: CreditsInfo | null; error?: string }> {
+  const credits = await getCreditsInfo();
+  return { credits };
+}
+
+/**
+ * Check if user can use a specific model
+ */
+export async function canUseModel(modelId: string): Promise<{ canUse: boolean; isFree: boolean; upgradeRequired: boolean }> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { canUse: false, isFree: false, upgradeRequired: true };
+  }
+
+  const modelIsFree = isFreeModel(modelId);
+  
+  if (modelIsFree) {
+    return { canUse: true, isFree: true, upgradeRequired: false };
+  }
+
+  const canUsePaid = await canUsePaidModelsByUserId(user.id);
+  return { 
+    canUse: canUsePaid, 
+    isFree: false, 
+    upgradeRequired: !canUsePaid 
+  };
 }

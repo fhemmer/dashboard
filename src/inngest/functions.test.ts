@@ -12,10 +12,17 @@ vi.mock("@/lib/agent", () => ({
 // Mock supabaseAdmin
 const mockUpdate = vi.fn().mockReturnThis();
 const mockEq = vi.fn().mockResolvedValue({ error: null });
+const mockSelect = vi.fn().mockReturnThis();
 const mockFrom = vi.fn(() => ({
   update: mockUpdate,
+  select: mockSelect,
 }));
 mockUpdate.mockReturnValue({ eq: mockEq });
+mockSelect.mockReturnValue({
+  eq: vi.fn().mockReturnValue({
+    eq: vi.fn().mockResolvedValue({ data: [], error: null }),
+  }),
+});
 
 vi.mock("@/lib/supabase/admin", () => ({
   supabaseAdmin: {
@@ -24,7 +31,7 @@ vi.mock("@/lib/supabase/admin", () => ({
 }));
 
 // Mock Inngest as a class
-let capturedHandler: ((params: { event: unknown; step: unknown }) => Promise<unknown>) | undefined;
+const capturedHandlers: Record<string, (params: { event: unknown; step: unknown }) => Promise<unknown>> = {};
 
 vi.mock("inngest", () => ({
   Inngest: class MockInngest {
@@ -38,11 +45,11 @@ vi.mock("inngest", () => ({
 
     createFunction = vi.fn(
       (
-        _config: unknown,
+        config: { id: string },
         _trigger: unknown,
         handler: (params: { event: unknown; step: unknown }) => Promise<unknown>
       ) => {
-        capturedHandler = handler;
+        capturedHandlers[config.id] = handler;
         return { handler };
       }
     );
@@ -58,7 +65,7 @@ describe("inngest functions", () => {
     mockFrom.mockClear();
     mockUpdate.mockClear();
     mockEq.mockClear();
-    capturedHandler = undefined;
+    Object.keys(capturedHandlers).forEach(key => delete capturedHandlers[key]);
   });
 
   describe("agentRun function", () => {
@@ -106,8 +113,9 @@ describe("inngest functions", () => {
 
       const step = { run: mockStepRun };
 
-      expect(capturedHandler).toBeDefined();
-      const result = await capturedHandler!({ event, step });
+      const handler = capturedHandlers["agent-run"];
+      expect(handler).toBeDefined();
+      const result = await handler({ event, step });
 
       expect(result).toEqual({ success: true, text: "Agent response" });
       expect(mockStepRun).toHaveBeenCalledTimes(3);
@@ -138,8 +146,9 @@ describe("inngest functions", () => {
         },
       };
 
-      expect(capturedHandler).toBeDefined();
-      const result = await capturedHandler!({ event, step: { run: mockStepRun } });
+      const handler = capturedHandlers["agent-run"];
+      expect(handler).toBeDefined();
+      const result = await handler({ event, step: { run: mockStepRun } });
 
       expect(result).toEqual({ success: true, text: "Agent response" });
     });
@@ -149,7 +158,7 @@ describe("inngest functions", () => {
     it("should export all functions array", async () => {
       const { allFunctions } = await import("./functions");
       expect(Array.isArray(allFunctions)).toBe(true);
-      expect(allFunctions).toHaveLength(1);
+      expect(allFunctions).toHaveLength(5); // agentRun + 4 cron functions
     });
   });
 });

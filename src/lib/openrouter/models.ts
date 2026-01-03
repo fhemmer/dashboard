@@ -225,7 +225,7 @@ function extractProviderId(modelId: string): string {
 /**
  * Checks if a model is free based on its ID suffix or pricing
  */
-function isModelFree(modelId: string, pricing: OpenRouterModelPricing): boolean {
+function checkModelFree(modelId: string, pricing: OpenRouterModelPricing): boolean {
   if (modelId.endsWith(":free")) return true;
   const promptPrice = parseFloat(pricing.prompt);
   const completionPrice = parseFloat(pricing.completion);
@@ -247,7 +247,7 @@ function modelSupportsTools(model: OpenRouterModel): boolean {
   const supportsTools = model.supported_parameters?.includes("tools") ?? false;
   if (!supportsTools) return false;
 
-  const isFree = isModelFree(model.id, model.pricing);
+  const isFree = checkModelFree(model.id, model.pricing);
   if (!isFree) return true;
 
   // Allow free models from reliable providers (e.g., Meta Llama)
@@ -259,7 +259,7 @@ function modelSupportsTools(model: OpenRouterModel): boolean {
  * Transforms OpenRouter model to simplified format with margin-adjusted pricing
  */
 function transformModel(model: OpenRouterModel): ModelWithPricing {
-  const isFree = isModelFree(model.id, model.pricing);
+  const isFree = checkModelFree(model.id, model.pricing);
   return {
     id: model.id,
     name: model.name,
@@ -370,4 +370,29 @@ export function formatPrice(pricePerMillion: number): string {
   if (pricePerMillion < 0.01) return `$${pricePerMillion.toFixed(4)}`;
   if (pricePerMillion < 1) return `$${pricePerMillion.toFixed(2)}`;
   return `$${pricePerMillion.toFixed(2)}`;
+}
+
+/**
+ * Check if a model ID represents a free model
+ * Free models have :free suffix or zero pricing
+ */
+export function isFreeModel(modelId: string): boolean {
+  // Models with :free suffix are always free
+  if (modelId.endsWith(":free")) return true;
+
+  // Check if it's in our known free model list
+  const knownFreeModels = CURATED_MODEL_IDS.filter((id) => id.endsWith(":free"));
+  return knownFreeModels.includes(modelId);
+}
+
+/**
+ * Check if a model is free by looking up its pricing (async version)
+ * More accurate than isFreeModel but requires API/cache lookup
+ */
+export async function isModelFreeAsync(modelId: string): Promise<boolean> {
+  // Quick check for :free suffix
+  if (modelId.endsWith(":free")) return true;
+
+  const model = await getModelWithPricing(modelId);
+  return model?.isFree ?? false;
 }

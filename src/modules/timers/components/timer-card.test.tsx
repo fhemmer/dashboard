@@ -371,6 +371,7 @@ describe("TimerCard", () => {
 
       await waitFor(() => {
         expect(mockUpdateTimer).toHaveBeenCalledWith("timer-1", {
+          durationSeconds: 69060,
           remainingSeconds: 69060,
           state: "stopped",
           endTime: null,
@@ -433,6 +434,7 @@ describe("TimerCard", () => {
 
       await waitFor(() => {
         expect(mockUpdateTimer).toHaveBeenCalledWith("timer-1", {
+          durationSeconds: 150,
           remainingSeconds: 150,
           state: "stopped",
           endTime: null,

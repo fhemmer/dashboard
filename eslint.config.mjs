@@ -16,20 +16,30 @@ const eslintConfig = defineConfig([
     "coverage/**",
     "next-env.d.ts",
   ]),
-  // Allow underscore-prefixed parameters (common pattern for intentionally unused params)
+  // TypeScript ESLint rules to match SonarQube findings
   {
     rules: {
       "@typescript-eslint/no-unused-vars": [
         "error",
         { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
       ],
+      // S7764: Prefer globalThis over global
+      "no-restricted-globals": [
+        "warn",
+        {
+          name: "global",
+          message: "Use globalThis instead of global.",
+        },
+      ],
     },
   },
   // Disable nested functions rule for test files (vitest/jest naturally nest describe/it/beforeEach)
+  // Also allow 'global' in test files since it's a common Node.js pattern for mocking
   {
-    files: ["**/*.test.ts", "**/*.test.tsx"],
+    files: ["**/*.test.ts", "**/*.test.tsx", "**/test/**"],
     rules: {
       "sonarjs/no-nested-functions": "off",
+      "no-restricted-globals": "off",
     },
   },
 ]);

@@ -864,4 +864,29 @@ describe("openrouter/models", () => {
       expect(resultOpusIndex).toBeLessThan(resultGptIndex);
     });
   });
+
+  describe("isFreeModel", () => {
+    it("should return true for models with :free suffix", async () => {
+      const { isFreeModel } = await import("./models");
+      expect(isFreeModel("meta-llama/llama-3.3-70b-instruct:free")).toBe(true);
+      expect(isFreeModel("deepseek/deepseek-r1:free")).toBe(true);
+      expect(isFreeModel("google/gemini-2.0-flash-exp:free")).toBe(true);
+    });
+
+    it("should return false for paid models", async () => {
+      const { isFreeModel } = await import("./models");
+      expect(isFreeModel("anthropic/claude-sonnet-4")).toBe(false);
+      expect(isFreeModel("openai/gpt-4o")).toBe(false);
+      expect(isFreeModel("google/gemini-2.5-pro")).toBe(false);
+    });
+
+    it("should return true for known free models in curated list", async () => {
+      const { isFreeModel, CURATED_MODEL_IDS } = await import("./models");
+      const freeModels = CURATED_MODEL_IDS.filter((id: string) => id.endsWith(":free"));
+      
+      for (const modelId of freeModels) {
+        expect(isFreeModel(modelId)).toBe(true);
+      }
+    });
+  });
 });

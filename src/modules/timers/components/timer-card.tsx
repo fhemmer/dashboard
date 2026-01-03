@@ -141,8 +141,9 @@ export function TimerCard({ timer: initialTimer, onUpdate }: TimerCardProps) {
     const newSeconds = parseTime(editValue);
     if (newSeconds !== null && newSeconds !== localRemaining) {
       setLocalRemaining(newSeconds);
-      // Update the timer with new remaining time
+      // Update both duration and remaining time so Reset uses the new value
       await updateTimer(timer.id, {
+        durationSeconds: newSeconds,
         remainingSeconds: newSeconds,
         state: "stopped",
         endTime: null,

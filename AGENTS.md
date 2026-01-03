@@ -49,6 +49,33 @@ This project follows the **StackProbe** protocol. All agents and contributors mu
 - **Push Migrations**: Use `npx supabase db push --yes` to push migrations non-interactively.
 - **Generate Types**: Run `bun db:types` after schema changes to regenerate `src/lib/supabase/database.types.ts`.
 
+## Subscription Tiers & Cost Management
+
+The Dashboard uses a tiered subscription system to manage AI feature costs (Chat & Agent modules).
+
+### Tier Structure
+| Tier | Price | Monthly Credit | Notes |
+|------|-------|----------------|-------|
+| **Free** | $0 | $1.00 | New users get 7-day trial with $10 credit |
+| **Pro** | $10/mo | $15.00 | — |
+| **Pro+** | $20/mo | $35.00 | — |
+
+### Cost Enforcement Rules
+- **Credits do NOT roll over** month-to-month
+- **When credits exhausted**:
+  - Paid models (Claude, GPT-4, etc.) → **Blocked** with upgrade prompt
+  - Free models (Llama 3.3:free, DeepSeek R1:free, etc.) → **Always available**
+- **Profit margin**: 10% applied to OpenRouter pricing (configurable via `OPENROUTER_PROFIT_MARGIN`)
+
+### Related Tables
+- `subscriptions` - User tier and Stripe subscription info
+- `user_credits` - Current credit balance (in cents) and trial expiry
+- `credit_transactions` - Audit trail of all credit changes
+- `chat_costs` - Per-message cost tracking with `total_chat_spent` on profiles
+
+### Implementation Reference
+See [GitHub Issue #18](https://github.com/HemSoft/dashboard/issues/18) for full implementation details.
+
 ## Module Architecture
 
 Dashboard features are organized as **Modules**. Each module provides both a **Widget** (compact dashboard card) and a **Page** (full-screen view).

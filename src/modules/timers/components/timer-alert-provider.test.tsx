@@ -106,12 +106,19 @@ describe("TimerAlertProvider", () => {
 
     // Mock AudioContext using the module-level class
     globalThis.AudioContext = MockAudioContextClass as unknown as typeof AudioContext;
+    // Also mock on window for components that check window.AudioContext
+    if (typeof window !== "undefined") {
+      (window as unknown as { AudioContext: typeof AudioContext }).AudioContext = MockAudioContextClass as unknown as typeof AudioContext;
+    }
   });
 
   afterEach(() => {
     // Restore originals
     globalThis.Notification = originalNotification;
     globalThis.AudioContext = originalAudioContext;
+    if (typeof window !== "undefined") {
+      (window as unknown as { AudioContext: typeof AudioContext }).AudioContext = originalAudioContext;
+    }
   });
 
   it("renders notification permission prompt when permission is default", () => {

@@ -43,10 +43,24 @@ vi.mock("@/lib/agent", () => ({
 
 const mockGetModelsWithPricing = vi.fn();
 const mockCalculateCostWithMargin = vi.fn();
+const mockIsFreeModel = vi.fn();
 
 vi.mock("@/lib/openrouter", () => ({
   getModelsWithPricing: () => mockGetModelsWithPricing(),
   calculateCostWithMargin: (...args: unknown[]) => mockCalculateCostWithMargin(...args),
+  isFreeModel: (...args: unknown[]) => mockIsFreeModel(...args),
+}));
+
+const mockCanUsePaidModelsByUserId = vi.fn();
+const mockDeductCredits = vi.fn();
+const mockGetCreditsInfo = vi.fn();
+const mockUsdToCents = vi.fn();
+
+vi.mock("@/lib/credits", () => ({
+  canUsePaidModelsByUserId: (...args: unknown[]) => mockCanUsePaidModelsByUserId(...args),
+  deductCredits: (...args: unknown[]) => mockDeductCredits(...args),
+  getCreditsInfo: (...args: unknown[]) => mockGetCreditsInfo(...args),
+  usdToCents: (...args: unknown[]) => mockUsdToCents(...args),
 }));
 
 describe("chat actions", () => {
@@ -56,6 +70,12 @@ describe("chat actions", () => {
       data: { user: { id: "user-123", email: "test@example.com" } },
       error: null,
     });
+    // Default to paid model
+    mockIsFreeModel.mockReturnValue(false);
+    // Default to allowing paid models
+    mockCanUsePaidModelsByUserId.mockResolvedValue(true);
+    mockDeductCredits.mockResolvedValue({ success: true });
+    mockUsdToCents.mockReturnValue(50); // 50 cents
   });
 
   describe("getHiddenModels", () => {
@@ -784,13 +804,14 @@ describe("chat actions", () => {
         steps: 1,
       };
       mockExecuteAgent.mockResolvedValue(mockResult);
+      mockGetCreditsInfo.mockResolvedValue({ balanceCents: 100 });
 
       const result = await runAgentAction({
         prompt: "Hello",
         model: "gpt-4",
       });
 
-      expect(result).toEqual(mockResult);
+      expect(result).toEqual({ ...mockResult, creditsRemaining: 100 });
       expect(mockExecuteAgent).toHaveBeenCalledWith({
         prompt: "Hello",
         model: "gpt-4",
