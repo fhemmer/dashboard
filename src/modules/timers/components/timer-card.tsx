@@ -174,18 +174,22 @@ export function TimerCard({ timer: initialTimer, onUpdate }: TimerCardProps) {
     }
   }, [localRemaining, timer.state, handleComplete]);
 
-  // Client-side countdown for running timers
+  // Client-side countdown for running timers - calculate from endTime for accuracy
   useEffect(() => {
-    if (timer.state !== "running") return;
+    if (timer.state !== "running" || !timer.endTime) return;
 
-    intervalRef.current = setInterval(() => {
-      setLocalRemaining((prev) => {
-        if (prev <= 1) {
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
+    // Calculate remaining time from endTime on each tick for accuracy
+    // This ensures the timer stays correct even if the browser was frozen/inactive
+    const updateRemaining = () => {
+      const now = Date.now();
+      const remaining = Math.max(0, Math.floor((timer.endTime!.getTime() - now) / 1000));
+      setLocalRemaining(remaining);
+    };
+
+    // Initial sync
+    updateRemaining();
+
+    intervalRef.current = setInterval(updateRemaining, 1000);
 
     return () => {
       if (intervalRef.current) {
@@ -193,7 +197,7 @@ export function TimerCard({ timer: initialTimer, onUpdate }: TimerCardProps) {
         intervalRef.current = null;
       }
     };
-  }, [timer.state]);
+  }, [timer.state, timer.endTime]);
 
   const handleStart = async () => {
     await startTimer(timer.id);

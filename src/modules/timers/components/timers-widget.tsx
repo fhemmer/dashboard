@@ -152,19 +152,18 @@ function TimersContent({ loading, error, timers, localRemainingMap }: TimersCont
   return <TimersList timers={timers} localRemainingMap={localRemainingMap} />;
 }
 
-function decrementRunningTimers(
+function calculateRemainingFromEndTime(
   timers: Timer[],
   prev: Map<string, number>
 ): Map<string, number> {
-  const runningTimers = timers.filter((t) => t.state === "running");
+  const runningTimers = timers.filter((t) => t.state === "running" && t.endTime);
   if (runningTimers.length === 0) return prev;
 
+  const now = Date.now();
   const next = new Map(prev);
   for (const timer of runningTimers) {
-    const current = next.get(timer.id) ?? timer.remainingSeconds;
-    if (current > 0) {
-      next.set(timer.id, current - 1);
-    }
+    const remaining = Math.max(0, Math.floor((timer.endTime!.getTime() - now) / 1000));
+    next.set(timer.id, remaining);
   }
   return next;
 }
@@ -206,13 +205,13 @@ export function TimerWidget() {
     };
   }, []);
 
-  // Real-time countdown for running timers
+  // Real-time countdown for running timers - calculate from endTime for accuracy
   useEffect(() => {
-    const hasRunningTimers = timers.some((t) => t.state === "running");
+    const hasRunningTimers = timers.some((t) => t.state === "running" && t.endTime);
     if (!hasRunningTimers) return;
 
     const interval = setInterval(() => {
-      setLocalRemainingMap((prev) => decrementRunningTimers(timers, prev));
+      setLocalRemainingMap((prev) => calculateRemainingFromEndTime(timers, prev));
     }, 1000);
 
     return () => clearInterval(interval);

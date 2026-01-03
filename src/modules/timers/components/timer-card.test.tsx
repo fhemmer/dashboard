@@ -345,7 +345,8 @@ describe("TimerCard", () => {
       const runningTimer = {
         ...baseTimer,
         state: "running" as const,
-        endTime: new Date(Date.now() + 300000),
+        // Add 1 second buffer to ensure we still show 5:00 after calculation
+        endTime: new Date(Date.now() + 300000 + 1000),
       };
 
       render(<TimerCard timer={runningTimer} />);

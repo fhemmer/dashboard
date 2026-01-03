@@ -45,6 +45,12 @@ This project follows the **StackProbe** protocol. All agents and contributors mu
   - `fphemmer@gmail.com` is the default administrator.
   - Use RLS policies on tables to restrict access based on `auth.uid()` and the `profiles.role` column.
 
+## Database Queries
+- **Use `db.ps1`**: For ad-hoc database queries, use the `.\db.ps1` PowerShell script at the project root.
+- **Syntax**: `.\db.ps1 "select * from tablename"` or `.\db.ps1 "tablename"` for simple selects.
+- **Auth Users**: Use `.\db.ps1 "select * from auth.users"` to query the auth schema (uses Supabase Admin API).
+- **Do NOT** use `npx supabase sql` or `supabase db execute` — these commands don't exist.
+
 ## Database Migrations
 - **Push Migrations**: Use `npx supabase db push --yes` to push migrations non-interactively.
 - **Generate Types**: Run `bun db:types` after schema changes to regenerate `src/lib/supabase/database.types.ts`.
