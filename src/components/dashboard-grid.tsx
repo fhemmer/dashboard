@@ -1,14 +1,13 @@
 "use client";
 
 import { updateWidgetOrder } from "@/app/actions.dashboard";
-import { WIDGET_REGISTRY } from "@/lib/widgets";
 import type {
-  ResolvedWidget,
-  WidgetHeight,
-  WidgetId,
-  WidgetSettings,
+    ResolvedWidget,
+    WidgetHeight,
+    WidgetId,
+    WidgetSettings,
 } from "@/lib/widgets";
-import { organizeWidgetsIntoRows, resolveWidgetSize } from "@/lib/widgets";
+import { organizeWidgetsIntoRows, resolveWidgetSize, WIDGET_REGISTRY } from "@/lib/widgets";
 import {
     closestCenter,
     DndContext,

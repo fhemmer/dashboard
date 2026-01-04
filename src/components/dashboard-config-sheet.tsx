@@ -19,8 +19,8 @@ import {
 import { Switch } from "@/components/ui/switch";
 import {
     getWidgetById,
-    WIDGET_REGISTRY,
     resolveWidgetSize,
+    WIDGET_REGISTRY,
     type LayoutMode,
     type WidgetHeight,
     type WidgetId,
@@ -30,11 +30,11 @@ import {
 import {
     closestCenter,
     DndContext,
-    type DragEndEvent,
     KeyboardSensor,
     PointerSensor,
     useSensor,
     useSensors,
+    type DragEndEvent,
 } from "@dnd-kit/core";
 import {
     arrayMove,
