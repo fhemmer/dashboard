@@ -33,33 +33,45 @@ describe("WIDGET_REGISTRY", () => {
 
   it("has default size properties for all widgets", () => {
     for (const widget of Object.values(WIDGET_REGISTRY)) {
-      expect(widget.defaultColspan).toBeDefined();
-      expect(widget.defaultRowspan).toBeDefined();
-      expect([1, 2]).toContain(widget.defaultColspan);
-      expect([1, 2, 3]).toContain(widget.defaultRowspan);
+      expect(widget.defaultWidth).toBeDefined();
+      expect(widget.defaultHeight).toBeDefined();
+      expect(widget.minWidth).toBeDefined();
+      expect(widget.minHeight).toBeDefined();
+      expect([1, 2, 3, 4, 5, 6]).toContain(widget.defaultWidth);
+      expect([1, 2, 3, 4, 5, 6]).toContain(widget.defaultHeight);
     }
   });
 
   it("has correct default sizes for specific widgets", () => {
-    // Timers: 1×1 (compact)
-    expect(WIDGET_REGISTRY["timers"].defaultColspan).toBe(1);
-    expect(WIDGET_REGISTRY["timers"].defaultRowspan).toBe(1);
+    // Timers: 1×2 (min 1×2)
+    expect(WIDGET_REGISTRY["timers"].defaultWidth).toBe(1);
+    expect(WIDGET_REGISTRY["timers"].defaultHeight).toBe(2);
+    expect(WIDGET_REGISTRY["timers"].minWidth).toBe(1);
+    expect(WIDGET_REGISTRY["timers"].minHeight).toBe(2);
 
-    // Pull Requests: 1×2 (tall)
-    expect(WIDGET_REGISTRY["pull-requests"].defaultColspan).toBe(1);
-    expect(WIDGET_REGISTRY["pull-requests"].defaultRowspan).toBe(2);
+    // Pull Requests: 1×2 (min 1×2)
+    expect(WIDGET_REGISTRY["pull-requests"].defaultWidth).toBe(1);
+    expect(WIDGET_REGISTRY["pull-requests"].defaultHeight).toBe(2);
+    expect(WIDGET_REGISTRY["pull-requests"].minWidth).toBe(1);
+    expect(WIDGET_REGISTRY["pull-requests"].minHeight).toBe(2);
 
-    // News: 1×2 (tall)
-    expect(WIDGET_REGISTRY["news"].defaultColspan).toBe(1);
-    expect(WIDGET_REGISTRY["news"].defaultRowspan).toBe(2);
+    // News: 1×2 (min 1×2)
+    expect(WIDGET_REGISTRY["news"].defaultWidth).toBe(1);
+    expect(WIDGET_REGISTRY["news"].defaultHeight).toBe(2);
+    expect(WIDGET_REGISTRY["news"].minWidth).toBe(1);
+    expect(WIDGET_REGISTRY["news"].minHeight).toBe(2);
 
-    // Expenditures: 2×1 (wide)
-    expect(WIDGET_REGISTRY["expenditures"].defaultColspan).toBe(2);
-    expect(WIDGET_REGISTRY["expenditures"].defaultRowspan).toBe(1);
+    // Expenditures: 2×1 (min 2×1)
+    expect(WIDGET_REGISTRY["expenditures"].defaultWidth).toBe(2);
+    expect(WIDGET_REGISTRY["expenditures"].defaultHeight).toBe(1);
+    expect(WIDGET_REGISTRY["expenditures"].minWidth).toBe(2);
+    expect(WIDGET_REGISTRY["expenditures"].minHeight).toBe(1);
 
-    // Mail: 1×2 (tall)
-    expect(WIDGET_REGISTRY["mail"].defaultColspan).toBe(1);
-    expect(WIDGET_REGISTRY["mail"].defaultRowspan).toBe(2);
+    // Mail: 1×2 (min 1×2)
+    expect(WIDGET_REGISTRY["mail"].defaultWidth).toBe(1);
+    expect(WIDGET_REGISTRY["mail"].defaultHeight).toBe(2);
+    expect(WIDGET_REGISTRY["mail"].minWidth).toBe(1);
+    expect(WIDGET_REGISTRY["mail"].minHeight).toBe(2);
   });
 });
 

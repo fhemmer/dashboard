@@ -6,10 +6,10 @@ import {
     getAvailableWidgets,
     mergeWidgetSettings,
     type LayoutMode,
-    type WidgetColspan,
+    type WidgetHeight,
     type WidgetId,
-    type WidgetRowspan,
     type WidgetSettings,
+    type WidgetWidth,
 } from "@/lib/widgets";
 import { revalidatePath } from "next/cache";
 
@@ -191,12 +191,12 @@ export async function resetWidgetSettings(): Promise<{ error?: string }> {
 }
 
 /**
- * Update widget size (colspan and rowspan).
+ * Update widget size (width and height).
  */
 export async function updateWidgetSize(
   widgetId: WidgetId,
-  colspan: WidgetColspan,
-  rowspan: WidgetRowspan
+  width: WidgetWidth,
+  height: WidgetHeight
 ): Promise<{ error?: string }> {
   const supabase = await createClient();
   const {
@@ -207,8 +207,8 @@ export async function updateWidgetSize(
     return { error: "Not authenticated" };
   }
 
-  // Validate size values
-  if (![1, 2].includes(colspan) || ![1, 2, 3].includes(rowspan)) {
+  // Validate size values (1-6 for flexible grid)
+  if (width < 1 || width > 6 || height < 1 || height > 6) {
     return { error: "Invalid size values" };
   }
 
@@ -217,7 +217,7 @@ export async function updateWidgetSize(
 
   // Update the specific widget's size
   const updatedWidgets = settings.widgets.map((w) =>
-    w.id === widgetId ? { ...w, colspan, rowspan } : w
+    w.id === widgetId ? { ...w, width, height, colspan: undefined, rowspan: undefined } : w
   );
 
   const widgetSettingsJson = {

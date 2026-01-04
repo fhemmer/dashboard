@@ -36,36 +36,46 @@ vi.mock("@/lib/widgets", async (importOriginal) => {
         id: "pull-requests",
         name: "Pull Requests",
         description: "GitHub PRs across your connected accounts",
-        defaultColspan: 1,
-        defaultRowspan: 2,
+        minWidth: 1,
+        minHeight: 2,
+        defaultWidth: 1,
+        defaultHeight: 2,
       },
       news: {
         id: "news",
         name: "News",
         description: "Latest updates from your RSS sources",
-        defaultColspan: 1,
-        defaultRowspan: 2,
+        minWidth: 1,
+        minHeight: 2,
+        defaultWidth: 1,
+        defaultHeight: 2,
       },
       expenditures: {
         id: "expenditures",
         name: "Expenditures",
         description: "Track subscriptions and consumption costs",
-        defaultColspan: 2,
-        defaultRowspan: 1,
+        minWidth: 2,
+        minHeight: 1,
+        defaultWidth: 2,
+        defaultHeight: 1,
       },
       timers: {
         id: "timers",
         name: "Timers",
         description: "Countdown timers with alerts",
-        defaultColspan: 1,
-        defaultRowspan: 1,
+        minWidth: 1,
+        minHeight: 2,
+        defaultWidth: 1,
+        defaultHeight: 2,
       },
       mail: {
         id: "mail",
         name: "Mail",
         description: "Email summaries",
-        defaultColspan: 1,
-        defaultRowspan: 2,
+        minWidth: 1,
+        minHeight: 2,
+        defaultWidth: 1,
+        defaultHeight: 2,
       },
     },
   };
@@ -461,7 +471,7 @@ describe("DashboardConfigSheet", () => {
     fireEvent.click(trigger);
 
     expect(screen.getByText("Manual")).toBeDefined();
-    expect(screen.getByText(/Manual mode preserves widget order/)).toBeDefined();
+    expect(screen.getByText(/Manual mode packs widgets in order/)).toBeDefined();
   });
 
   it("shows Auto mode when layoutMode is auto", () => {
@@ -476,7 +486,7 @@ describe("DashboardConfigSheet", () => {
     fireEvent.click(trigger);
 
     expect(screen.getByText("Auto")).toBeDefined();
-    expect(screen.getByText(/Auto mode fills gaps/)).toBeDefined();
+    expect(screen.getByText(/Auto mode groups widgets by height/)).toBeDefined();
   });
 
   it("toggles layout mode when switch is clicked", async () => {
@@ -528,8 +538,10 @@ describe("DashboardConfigSheet", () => {
     const trigger = screen.getByRole("button", { name: /configure/i });
     fireEvent.click(trigger);
 
-    // Enabled widgets should show size info
-    expect(screen.getAllByText(/Size: \d×\d/).length).toBeGreaterThan(0);
+    // Enabled widgets should show width and height controls
+    expect(screen.getAllByText(/W:/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/H:/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/min:/).length).toBeGreaterThan(0);
   });
 
   it("displays expand button for non-max size widgets", () => {
@@ -538,14 +550,15 @@ describe("DashboardConfigSheet", () => {
     const trigger = screen.getByRole("button", { name: /configure/i });
     fireEvent.click(trigger);
 
-    const expandButtons = screen.getAllByTitle("Expand to 2×3");
+    // Use title attribute to find expand buttons
+    const expandButtons = screen.getAllByTitle("Expand to 4×4");
     expect(expandButtons.length).toBeGreaterThan(0);
   });
 
   it("displays shrink button for non-min size widgets", () => {
     const largeSettings: WidgetSettings = {
       widgets: [
-        { id: "pull-requests", enabled: true, order: 0, colspan: 2, rowspan: 3 },
+        { id: "pull-requests", enabled: true, order: 0, width: 4, height: 4 },
         { id: "news", enabled: true, order: 1 },
         { id: "expenditures", enabled: false, order: 2 },
       ],
@@ -556,7 +569,8 @@ describe("DashboardConfigSheet", () => {
     const trigger = screen.getByRole("button", { name: /configure/i });
     fireEvent.click(trigger);
 
-    const shrinkButtons = screen.getAllByTitle("Shrink to 1×1");
+    // Use title attribute to find shrink buttons
+    const shrinkButtons = screen.getAllByTitle(/Shrink to/);
     expect(shrinkButtons.length).toBeGreaterThan(0);
   });
 
@@ -566,16 +580,17 @@ describe("DashboardConfigSheet", () => {
     const trigger = screen.getByRole("button", { name: /configure/i });
     fireEvent.click(trigger);
 
-    const expandButtons = screen.getAllByTitle("Expand to 2×3");
+    const expandButtons = screen.getAllByTitle("Expand to 4×4");
     await act(async () => {
       fireEvent.click(expandButtons[0]);
     });
 
     await waitFor(() => {
+      // Expanding to 4×4 (max)
       expect(dashboardActions.updateWidgetSize).toHaveBeenCalledWith(
         expect.any(String),
-        2,
-        3
+        4,
+        4
       );
     });
 
@@ -587,7 +602,7 @@ describe("DashboardConfigSheet", () => {
   it("calls updateWidgetSize when shrink button is clicked", async () => {
     const largeSettings: WidgetSettings = {
       widgets: [
-        { id: "pull-requests", enabled: true, order: 0, colspan: 2, rowspan: 3 },
+        { id: "pull-requests", enabled: true, order: 0, width: 4, height: 4 },
         { id: "news", enabled: true, order: 1 },
         { id: "expenditures", enabled: false, order: 2 },
       ],
@@ -598,16 +613,17 @@ describe("DashboardConfigSheet", () => {
     const trigger = screen.getByRole("button", { name: /configure/i });
     fireEvent.click(trigger);
 
-    const shrinkButtons = screen.getAllByTitle("Shrink to 1×1");
+    const shrinkButtons = screen.getAllByTitle(/Shrink to/);
     await act(async () => {
       fireEvent.click(shrinkButtons[0]);
     });
 
     await waitFor(() => {
+      // Shrinks to minWidth=1, minHeight=2 for pull-requests
       expect(dashboardActions.updateWidgetSize).toHaveBeenCalledWith(
         "pull-requests",
         1,
-        1
+        2
       );
     });
 
@@ -626,7 +642,7 @@ describe("DashboardConfigSheet", () => {
     const trigger = screen.getByRole("button", { name: /configure/i });
     fireEvent.click(trigger);
 
-    const expandButtons = screen.getAllByTitle("Expand to 2×3");
+    const expandButtons = screen.getAllByTitle("Expand to 4×4");
     await act(async () => {
       fireEvent.click(expandButtons[0]);
     });
@@ -653,7 +669,7 @@ describe("DashboardConfigSheet", () => {
     const trigger = screen.getByRole("button", { name: /configure/i });
     fireEvent.click(trigger);
 
-    expect(screen.queryByTitle("Expand to 2×3")).toBeNull();
-    expect(screen.queryByTitle("Shrink to 1×1")).toBeNull();
+    expect(screen.queryByTitle(/Expand to/)).toBeNull();
+    expect(screen.queryByTitle(/Shrink to/)).toBeNull();
   });
 });

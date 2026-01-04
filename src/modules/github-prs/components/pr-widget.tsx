@@ -32,7 +32,7 @@ export async function PRWidget() {
   const totalPRs = countTotalPRs(accounts);
 
   return (
-    <Card>
+    <Card className="h-full">
       <CardHeader className="flex flex-row items-center justify-between">
         <div className="flex items-start gap-2">
           <GitPullRequest className="h-4 w-4 text-muted-foreground mt-1" />
@@ -52,7 +52,7 @@ export async function PRWidget() {
           <Link href="/prs">View All</Link>
         </Button>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex-1 overflow-auto">
         {errors.length > 0 && (
           <div className="flex items-center gap-2 text-sm text-destructive mb-4">
             <AlertTriangle className="h-4 w-4" />

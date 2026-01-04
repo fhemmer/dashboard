@@ -22,10 +22,10 @@ import {
     WIDGET_REGISTRY,
     resolveWidgetSize,
     type LayoutMode,
-    type WidgetColspan,
+    type WidgetHeight,
     type WidgetId,
-    type WidgetRowspan,
     type WidgetSettings,
+    type WidgetWidth,
 } from "@/lib/widgets";
 import {
     closestCenter,
@@ -44,25 +44,73 @@ import {
     verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { GripVertical, LayoutGrid, Loader2, Maximize2, Minimize2, Settings2 } from "lucide-react";
+import { ChevronDown, ChevronUp, GripVertical, LayoutGrid, Loader2, Maximize2, Minimize2, Settings2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useId, useState, useTransition } from "react";
 
 interface SortableWidgetItemProps {
   id: WidgetId;
   enabled: boolean;
-  colspan: WidgetColspan;
-  rowspan: WidgetRowspan;
+  width: WidgetWidth;
+  height: WidgetHeight;
+  minWidth: WidgetWidth;
+  minHeight: WidgetHeight;
   onToggle: (id: WidgetId, enabled: boolean) => void;
-  onSizeChange: (id: WidgetId, colspan: WidgetColspan, rowspan: WidgetRowspan) => void;
+  onSizeChange: (id: WidgetId, width: WidgetWidth, height: WidgetHeight) => void;
   isPending: boolean;
+}
+
+/** Size control with up/down buttons */
+function SizeControl({
+  label,
+  value,
+  min,
+  max = 6,
+  onChange,
+  disabled,
+}: {
+  label: string;
+  value: number;
+  min: number;
+  max?: number;
+  onChange: (value: number) => void;
+  disabled: boolean;
+}) {
+  return (
+    <div className="flex items-center gap-1">
+      <span className="text-xs text-muted-foreground w-6">{label}:</span>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="h-5 w-5 p-0"
+        onClick={() => onChange(Math.max(min, value - 1))}
+        disabled={disabled || value <= min}
+        title={`Decrease ${label.toLowerCase()}`}
+      >
+        <ChevronDown className="h-3 w-3" />
+      </Button>
+      <span className="text-xs font-medium w-4 text-center tabular-nums">{value}</span>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="h-5 w-5 p-0"
+        onClick={() => onChange(Math.min(max, value + 1))}
+        disabled={disabled || value >= max}
+        title={`Increase ${label.toLowerCase()}`}
+      >
+        <ChevronUp className="h-3 w-3" />
+      </Button>
+    </div>
+  );
 }
 
 function SortableWidgetItem({
   id,
   enabled,
-  colspan,
-  rowspan,
+  width,
+  height,
+  minWidth,
+  minHeight,
   onToggle,
   onSizeChange,
   isPending,
@@ -85,15 +133,23 @@ function SortableWidgetItem({
   if (!widget) return null;
 
   const Icon = widget.icon;
-  const isMaxSize = colspan === 2 && rowspan === 3;
-  const isMinSize = colspan === 1 && rowspan === 1;
+  const isMaxSize = width >= 4 && height >= 4;
+  const isMinSize = width === minWidth && height === minHeight;
 
   function handleExpand() {
-    onSizeChange(id, 2, 3);
+    onSizeChange(id, Math.max(4, minWidth) as WidgetWidth, Math.max(4, minHeight) as WidgetHeight);
   }
 
   function handleShrink() {
-    onSizeChange(id, 1, 1);
+    onSizeChange(id, minWidth, minHeight);
+  }
+
+  function handleWidthChange(newWidth: number) {
+    onSizeChange(id, newWidth as WidgetWidth, height);
+  }
+
+  function handleHeightChange(newHeight: number) {
+    onSizeChange(id, width, newHeight as WidgetHeight);
   }
 
   return (
@@ -101,104 +157,126 @@ function SortableWidgetItem({
       ref={setNodeRef}
       style={style}
       className={`
-        group flex items-center gap-3 rounded-lg border p-3
+        group flex flex-col gap-2 rounded-lg border p-3
         bg-card transition-all duration-200
         ${isDragging ? "z-50 shadow-lg ring-2 ring-primary/20 scale-[1.02]" : ""}
         ${enabled ? "border-border" : "border-dashed border-muted-foreground/30 opacity-60"}
       `}
     >
-      {/* Drag Handle */}
-      <button
-        type="button"
-        className="touch-none cursor-grab active:cursor-grabbing p-1 rounded hover:bg-muted transition-colors"
-        {...attributes}
-        {...listeners}
-        aria-label={`Drag to reorder ${widget.name}`}
-      >
-        <GripVertical className="h-4 w-4 text-muted-foreground" />
-      </button>
-
-      {/* Widget Icon */}
-      <div
-        className={`
-          flex h-9 w-9 shrink-0 items-center justify-center rounded-md
-          ${enabled ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"}
-        `}
-      >
-        <Icon className="h-4 w-4" />
-      </div>
-
-      {/* Widget Info */}
-      <div className="flex-1 min-w-0">
-        <div className="font-medium text-sm">{widget.name}</div>
-        <div className="text-xs text-muted-foreground truncate">
-          {widget.description}
-        </div>
-        {enabled && (
-          <div className="text-xs text-muted-foreground mt-0.5">
-            Size: {colspan}×{rowspan}
-          </div>
-        )}
-      </div>
-
-      {/* Size Controls (only when enabled) */}
-      {enabled && (
-        <div className="flex items-center gap-1">
-          {!isMinSize && (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-7 w-7"
-              onClick={handleShrink}
-              disabled={isPending}
-              title="Shrink to 1×1"
-            >
-              <Minimize2 className="h-3.5 w-3.5" />
-            </Button>
-          )}
-          {!isMaxSize && (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-7 w-7"
-              onClick={handleExpand}
-              disabled={isPending}
-              title="Expand to 2×3"
-            >
-              <Maximize2 className="h-3.5 w-3.5" />
-            </Button>
-          )}
-        </div>
-      )}
-
-      {/* Toggle Button */}
-      <div className="flex items-center gap-2">
-        {isPending && (
-          <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-        )}
+      <div className="flex items-center gap-3">
+        {/* Drag Handle */}
         <button
           type="button"
-          onClick={() => onToggle(id, !enabled)}
-          disabled={isPending}
-          className={`
-            relative h-6 w-11 shrink-0 rounded-full transition-colors duration-200
-            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
-            ${enabled ? "bg-primary" : "bg-input"}
-            ${isPending ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
-          `}
-          role="switch"
-          aria-checked={enabled}
-          aria-label={`${enabled ? "Hide" : "Show"} ${widget.name} widget`}
+          className="touch-none cursor-grab active:cursor-grabbing p-1 rounded hover:bg-muted transition-colors"
+          {...attributes}
+          {...listeners}
+          aria-label={`Drag to reorder ${widget.name}`}
         >
-          <span
-            className={`
-              block h-5 w-5 rounded-full bg-background shadow-sm ring-0
-              transition-transform duration-200
-              ${enabled ? "translate-x-5" : "translate-x-0.5"}
-            `}
-          />
+          <GripVertical className="h-4 w-4 text-muted-foreground" />
         </button>
+
+        {/* Widget Icon */}
+        <div
+          className={`
+            flex h-9 w-9 shrink-0 items-center justify-center rounded-md
+            ${enabled ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"}
+          `}
+        >
+          <Icon className="h-4 w-4" />
+        </div>
+
+        {/* Widget Info */}
+        <div className="flex-1 min-w-0">
+          <div className="font-medium text-sm">{widget.name}</div>
+          <div className="text-xs text-muted-foreground truncate">
+            {widget.description}
+          </div>
+        </div>
+
+        {/* Quick Size Controls */}
+        {enabled && (
+          <div className="flex items-center gap-1">
+            {!isMinSize && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-7 w-7"
+                onClick={handleShrink}
+                disabled={isPending}
+                title={`Shrink to ${minWidth}×${minHeight}`}
+              >
+                <Minimize2 className="h-3.5 w-3.5" />
+              </Button>
+            )}
+            {!isMaxSize && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-7 w-7"
+                onClick={handleExpand}
+                disabled={isPending}
+                title="Expand to 4×4"
+              >
+                <Maximize2 className="h-3.5 w-3.5" />
+              </Button>
+            )}
+          </div>
+        )}
+
+        {/* Toggle Button */}
+        <div className="flex items-center gap-2">
+          {isPending && (
+            <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+          )}
+          <button
+            type="button"
+            onClick={() => onToggle(id, !enabled)}
+            disabled={isPending}
+            className={`
+              relative h-6 w-11 shrink-0 rounded-full transition-colors duration-200
+              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
+              ${enabled ? "bg-primary" : "bg-input"}
+              ${isPending ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
+            `}
+            role="switch"
+            aria-checked={enabled}
+            aria-label={`${enabled ? "Hide" : "Show"} ${widget.name} widget`}
+          >
+            <span
+              className={`
+                block h-5 w-5 rounded-full bg-background shadow-sm ring-0
+                transition-transform duration-200
+                ${enabled ? "translate-x-5" : "translate-x-0.5"}
+              `}
+            />
+          </button>
+        </div>
       </div>
+
+      {/* Size Controls Row (only when enabled) */}
+      {enabled && (
+        <div className="flex items-center justify-between pl-10 pr-2 py-1 bg-muted/30 rounded">
+          <div className="flex items-center gap-4">
+            <SizeControl
+              label="W"
+              value={width}
+              min={minWidth}
+              onChange={handleWidthChange}
+              disabled={isPending}
+            />
+            <SizeControl
+              label="H"
+              value={height}
+              min={minHeight}
+              onChange={handleHeightChange}
+              disabled={isPending}
+            />
+          </div>
+          <span className="text-xs text-muted-foreground">
+            min: {minWidth}×{minHeight}
+          </span>
+        </div>
+      )}
     </div>
   );
 }
@@ -269,22 +347,22 @@ export function DashboardConfigSheet({
     }
   }
 
-  function handleSizeChange(widgetId: WidgetId, colspan: WidgetColspan, rowspan: WidgetRowspan) {
+  function handleSizeChange(widgetId: WidgetId, width: WidgetWidth, height: WidgetHeight) {
     // Optimistic update
     setLocalSettings((prev) => ({
       ...prev,
       widgets: prev.widgets.map((w) =>
-        w.id === widgetId ? { ...w, colspan, rowspan } : w
+        w.id === widgetId ? { ...w, width, height } : w
       ),
     }));
 
     startTransition(() => {
-      performSizeUpdate(widgetId, colspan, rowspan);
+      performSizeUpdate(widgetId, width, height);
     });
   }
 
-  async function performSizeUpdate(widgetId: WidgetId, colspan: WidgetColspan, rowspan: WidgetRowspan) {
-    const result = await updateWidgetSize(widgetId, colspan, rowspan);
+  async function performSizeUpdate(widgetId: WidgetId, width: WidgetWidth, height: WidgetHeight) {
+    const result = await updateWidgetSize(widgetId, width, height);
     if (result.error) {
       // Revert on error - reload from settings prop
       setLocalSettings(settings);
@@ -411,8 +489,8 @@ export function DashboardConfigSheet({
           </div>
           <p className="text-xs text-muted-foreground mt-2">
             {isAutoLayout
-              ? "Auto mode fills gaps using dense grid packing."
-              : "Manual mode preserves widget order exactly as arranged."}
+              ? "Auto mode groups widgets by height into uniform rows."
+              : "Manual mode packs widgets in order into rows."}
           </p>
         </div>
 
@@ -431,8 +509,10 @@ export function DashboardConfigSheet({
                   key={widget.id}
                   id={widget.id}
                   enabled={widget.enabled}
-                  colspan={widget.colspan}
-                  rowspan={widget.rowspan}
+                  width={widget.width}
+                  height={widget.height}
+                  minWidth={widget.minWidth}
+                  minHeight={widget.minHeight}
                   onToggle={handleToggle}
                   onSizeChange={handleSizeChange}
                   isPending={isPending}

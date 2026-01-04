@@ -1,4 +1,5 @@
 import type { Database } from "@/lib/supabase/database.types";
+import type { WidgetHeight } from "@/lib/widgets";
 import type { BrandColor, NewsSourceCategory, SourceIcon } from "@/modules/news-sources";
 
 export type NewsCategory = NewsSourceCategory;
@@ -44,7 +45,7 @@ export interface FetchNewsItemsResult {
  * Props for the NewsWidget component.
  */
 export interface NewsWidgetProps {
-  maxItems?: number;
+  widgetHeight?: WidgetHeight;
 }
 
 /**

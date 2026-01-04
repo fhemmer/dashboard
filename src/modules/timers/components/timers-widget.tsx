@@ -218,7 +218,7 @@ export function TimerWidget() {
   }, [timers]);
 
   return (
-    <Card>
+    <Card className="h-full">
       <CardHeader className="flex flex-row items-center justify-between">
         <div className="flex items-start gap-2">
           <TimerIcon className="h-4 w-4 text-muted-foreground mt-1" />
@@ -240,7 +240,7 @@ export function TimerWidget() {
           <Link href="/timers">View All</Link>
         </Button>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex-1 overflow-auto">
         {error && (
           <div className="flex items-center gap-2 text-sm text-destructive mb-4">
             <AlertTriangle className="h-4 w-4" />

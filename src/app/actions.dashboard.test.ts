@@ -289,26 +289,26 @@ describe("updateWidgetSize", () => {
     expect(result.error).toBe("Not authenticated");
   });
 
-  it("returns error for invalid colspan", async () => {
+  it("returns error for invalid width (too large)", async () => {
     mockSupabase.auth.getUser.mockResolvedValue({
       data: { user: mockUser },
       error: null,
     });
 
-    // @ts-expect-error Testing invalid value
-    const result = await updateWidgetSize("news", 3, 2);
+    // Testing value outside 1-6 range
+    const result = await updateWidgetSize("news", 7 as never, 2);
 
     expect(result.error).toBe("Invalid size values");
   });
 
-  it("returns error for invalid rowspan", async () => {
+  it("returns error for invalid height (too large)", async () => {
     mockSupabase.auth.getUser.mockResolvedValue({
       data: { user: mockUser },
       error: null,
     });
 
-    // @ts-expect-error Testing invalid value
-    const result = await updateWidgetSize("news", 1, 4);
+    // Testing value outside 1-6 range
+    const result = await updateWidgetSize("news", 1, 7 as never);
 
     expect(result.error).toBe("Invalid size values");
   });

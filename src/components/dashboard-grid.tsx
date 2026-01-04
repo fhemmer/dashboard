@@ -4,12 +4,11 @@ import { updateWidgetOrder } from "@/app/actions.dashboard";
 import { WIDGET_REGISTRY } from "@/lib/widgets";
 import type {
   ResolvedWidget,
-  WidgetColspan,
+  WidgetHeight,
   WidgetId,
-  WidgetRowspan,
   WidgetSettings,
 } from "@/lib/widgets";
-import { resolveWidgetSize } from "@/lib/widgets";
+import { organizeWidgetsIntoRows, resolveWidgetSize } from "@/lib/widgets";
 import {
     closestCenter,
     DndContext,
@@ -29,33 +28,46 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { type ReactNode, useEffect, useState, useTransition } from "react";
 
-/** Maps colspan values to Tailwind classes */
-const colspanClasses: Record<WidgetColspan, string> = {
-  1: "col-span-1",
-  2: "col-span-2",
+/** Grid column count at different breakpoints */
+const GRID_COLUMNS = {
+  sm: 2,
+  lg: 3,
+  xl: 4,
 };
 
-/** Maps rowspan values to Tailwind classes */
-const rowspanClasses: Record<WidgetRowspan, string> = {
-  1: "row-span-1",
-  2: "row-span-2",
-  3: "row-span-3",
-};
+/** Maps width values to Tailwind grid column span classes */
+function getWidthClass(width: number): string {
+  const classes: Record<number, string> = {
+    1: "col-span-1",
+    2: "col-span-2",
+    3: "col-span-3",
+    4: "col-span-4",
+    5: "col-span-5",
+    6: "col-span-6",
+  };
+  return classes[width] ?? "col-span-1";
+}
+
+/** Maps height values to row height CSS variable */
+function getRowStyle(height: WidgetHeight): React.CSSProperties {
+  // Each row unit is 180px for consistent sizing
+  return {
+    "--row-height": `${height * 180}px`,
+  } as React.CSSProperties;
+}
 
 interface SortableWidgetWrapperProps {
   id: WidgetId;
   children: ReactNode;
   isDragMode: boolean;
-  colspan: WidgetColspan;
-  rowspan: WidgetRowspan;
+  width: number;
 }
 
 function SortableWidgetWrapper({
   id,
   children,
   isDragMode,
-  colspan,
-  rowspan,
+  width,
 }: SortableWidgetWrapperProps) {
   const {
     attributes,
@@ -76,8 +88,8 @@ function SortableWidgetWrapper({
       ref={setNodeRef}
       style={style}
       className={`
-        relative transition-all duration-200
-        ${colspanClasses[colspan]} ${rowspanClasses[rowspan]}
+        relative transition-all duration-200 h-full
+        ${getWidthClass(width)}
         ${isDragging ? "z-50 scale-[1.02]" : ""}
         ${isDragMode ? "cursor-grab active:cursor-grabbing" : ""}
       `}
@@ -117,7 +129,10 @@ export function DashboardGrid({
     .map((w) => resolveWidgetSize(w, WIDGET_REGISTRY[w.id]));
 
   const widgetIds = enabledWidgets.map((w) => w.id);
-  const isAutoLayout = localSettings.layoutMode === "auto";
+  const layoutMode = localSettings.layoutMode ?? "auto";
+  
+  // Organize widgets into rows (using xl breakpoint columns for now)
+  const rows = organizeWidgetsIntoRows(enabledWidgets, GRID_COLUMNS.xl, layoutMode);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -203,13 +218,6 @@ export function DashboardGrid({
     );
   }
 
-  // Grid classes: responsive columns + dense packing when auto mode
-  const gridClasses = `
-    grid gap-4 grid-cols-2 lg:grid-cols-3 xl:grid-cols-4
-    ${isAutoLayout ? "[grid-auto-flow:dense]" : ""}
-    ${isPending ? "opacity-70 pointer-events-none" : ""}
-  `;
-
   return (
     <DndContext
       sensors={sensors}
@@ -219,23 +227,30 @@ export function DashboardGrid({
       onDragCancel={handleDragCancel}
     >
       <SortableContext items={widgetIds} strategy={rectSortingStrategy}>
-        <div className={gridClasses}>
-          {enabledWidgets.map((widget) => {
-            const component = widgetComponents[widget.id];
-            if (!component) return null;
+        <div className={`flex flex-col gap-4 ${isPending ? "opacity-70 pointer-events-none" : ""}`}>
+          {rows.map((row, rowIndex) => (
+            <div
+              key={`row-${rowIndex}`}
+              className="grid gap-4 grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+              style={getRowStyle(row.height)}
+            >
+              {row.widgets.map((widget) => {
+                const component = widgetComponents[widget.id];
+                if (!component) return null;
 
-            return (
-              <SortableWidgetWrapper
-                key={widget.id}
-                id={widget.id}
-                isDragMode={isDragMode}
-                colspan={widget.colspan}
-                rowspan={widget.rowspan}
-              >
-                {component}
-              </SortableWidgetWrapper>
-            );
-          })}
+                return (
+                  <SortableWidgetWrapper
+                    key={widget.id}
+                    id={widget.id}
+                    isDragMode={isDragMode}
+                    width={widget.calculatedWidth}
+                  >
+                    <div className="h-[var(--row-height)]">{component}</div>
+                  </SortableWidgetWrapper>
+                );
+              })}
+            </div>
+          ))}
         </div>
       </SortableContext>
     </DndContext>

@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { WidgetSizeControl } from "./widget-size-control";
 
 // Mock the UI components
@@ -19,22 +19,26 @@ describe("WidgetSizeControl", () => {
   it("renders size control buttons", () => {
     render(
       <WidgetSizeControl
-        currentColspan={1}
-        currentRowspan={1}
+        currentWidth={1}
+        currentHeight={1}
+        minWidth={1}
+        minHeight={1}
         onSizeChange={mockOnSizeChange}
       />
     );
 
     // Should have height and width buttons
     expect(screen.getByRole("button", { name: /cycle height/i })).toBeDefined();
-    expect(screen.getByRole("button", { name: /toggle width/i })).toBeDefined();
+    expect(screen.getByRole("button", { name: /cycle width/i })).toBeDefined();
   });
 
-  it("cycles rowspan when height button is clicked (1 -> 2)", () => {
+  it("cycles height when height button is clicked (1 -> 2)", () => {
     render(
       <WidgetSizeControl
-        currentColspan={1}
-        currentRowspan={1}
+        currentWidth={1}
+        currentHeight={1}
+        minWidth={1}
+        minHeight={1}
         onSizeChange={mockOnSizeChange}
       />
     );
@@ -45,11 +49,13 @@ describe("WidgetSizeControl", () => {
     expect(mockOnSizeChange).toHaveBeenCalledWith(1, 2);
   });
 
-  it("cycles rowspan when height button is clicked (2 -> 3)", () => {
+  it("cycles height when height button is clicked (2 -> 3)", () => {
     render(
       <WidgetSizeControl
-        currentColspan={1}
-        currentRowspan={2}
+        currentWidth={1}
+        currentHeight={2}
+        minWidth={1}
+        minHeight={1}
         onSizeChange={mockOnSizeChange}
       />
     );
@@ -60,11 +66,13 @@ describe("WidgetSizeControl", () => {
     expect(mockOnSizeChange).toHaveBeenCalledWith(1, 3);
   });
 
-  it("cycles rowspan when height button is clicked (3 -> 1)", () => {
+  it("cycles height and respects minHeight (wraps from 4 to minHeight)", () => {
     render(
       <WidgetSizeControl
-        currentColspan={1}
-        currentRowspan={3}
+        currentWidth={1}
+        currentHeight={4}
+        minWidth={1}
+        minHeight={2}
         onSizeChange={mockOnSizeChange}
       />
     );
@@ -72,44 +80,52 @@ describe("WidgetSizeControl", () => {
     const heightButton = screen.getByRole("button", { name: /cycle height/i });
     fireEvent.click(heightButton);
 
-    expect(mockOnSizeChange).toHaveBeenCalledWith(1, 1);
+    // When cycling from 4, next would be 1, but minHeight is 2
+    expect(mockOnSizeChange).toHaveBeenCalledWith(1, 2);
   });
 
-  it("toggles colspan when width button is clicked (1 -> 2)", () => {
+  it("cycles width when width button is clicked (1 -> 2)", () => {
     render(
       <WidgetSizeControl
-        currentColspan={1}
-        currentRowspan={1}
+        currentWidth={1}
+        currentHeight={1}
+        minWidth={1}
+        minHeight={1}
         onSizeChange={mockOnSizeChange}
       />
     );
 
-    const widthButton = screen.getByRole("button", { name: /toggle width/i });
+    const widthButton = screen.getByRole("button", { name: /cycle width/i });
     fireEvent.click(widthButton);
 
     expect(mockOnSizeChange).toHaveBeenCalledWith(2, 1);
   });
 
-  it("toggles colspan when width button is clicked (2 -> 1)", () => {
+  it("cycles width and respects minWidth (wraps from 4 to minWidth)", () => {
     render(
       <WidgetSizeControl
-        currentColspan={2}
-        currentRowspan={1}
+        currentWidth={4}
+        currentHeight={1}
+        minWidth={2}
+        minHeight={1}
         onSizeChange={mockOnSizeChange}
       />
     );
 
-    const widthButton = screen.getByRole("button", { name: /toggle width/i });
+    const widthButton = screen.getByRole("button", { name: /cycle width/i });
     fireEvent.click(widthButton);
 
-    expect(mockOnSizeChange).toHaveBeenCalledWith(1, 1);
+    // When cycling from 4, next would be 1, but minWidth is 2
+    expect(mockOnSizeChange).toHaveBeenCalledWith(2, 1);
   });
 
-  it("expands to max size when expand button is clicked", () => {
+  it("expands to 4x4 when expand button is clicked", () => {
     render(
       <WidgetSizeControl
-        currentColspan={1}
-        currentRowspan={1}
+        currentWidth={1}
+        currentHeight={1}
+        minWidth={1}
+        minHeight={1}
         onSizeChange={mockOnSizeChange}
       />
     );
@@ -117,14 +133,16 @@ describe("WidgetSizeControl", () => {
     const expandButton = screen.getByRole("button", { name: /expand to max/i });
     fireEvent.click(expandButton);
 
-    expect(mockOnSizeChange).toHaveBeenCalledWith(2, 3);
+    expect(mockOnSizeChange).toHaveBeenCalledWith(4, 4);
   });
 
   it("shrinks to min size when shrink button is clicked", () => {
     render(
       <WidgetSizeControl
-        currentColspan={2}
-        currentRowspan={3}
+        currentWidth={4}
+        currentHeight={4}
+        minWidth={2}
+        minHeight={2}
         onSizeChange={mockOnSizeChange}
       />
     );
@@ -132,14 +150,16 @@ describe("WidgetSizeControl", () => {
     const shrinkButton = screen.getByRole("button", { name: /shrink to min/i });
     fireEvent.click(shrinkButton);
 
-    expect(mockOnSizeChange).toHaveBeenCalledWith(1, 1);
+    expect(mockOnSizeChange).toHaveBeenCalledWith(2, 2);
   });
 
-  it("does not show expand button when already at max size", () => {
+  it("does not show expand button when already at max size (4x4)", () => {
     render(
       <WidgetSizeControl
-        currentColspan={2}
-        currentRowspan={3}
+        currentWidth={4}
+        currentHeight={4}
+        minWidth={1}
+        minHeight={1}
         onSizeChange={mockOnSizeChange}
       />
     );
@@ -150,8 +170,10 @@ describe("WidgetSizeControl", () => {
   it("does not show shrink button when already at min size", () => {
     render(
       <WidgetSizeControl
-        currentColspan={1}
-        currentRowspan={1}
+        currentWidth={2}
+        currentHeight={2}
+        minWidth={2}
+        minHeight={2}
         onSizeChange={mockOnSizeChange}
       />
     );
@@ -162,8 +184,10 @@ describe("WidgetSizeControl", () => {
   it("shows both expand and shrink buttons for medium sizes", () => {
     render(
       <WidgetSizeControl
-        currentColspan={1}
-        currentRowspan={2}
+        currentWidth={2}
+        currentHeight={2}
+        minWidth={1}
+        minHeight={1}
         onSizeChange={mockOnSizeChange}
       />
     );
@@ -175,8 +199,10 @@ describe("WidgetSizeControl", () => {
   it("disables buttons when disabled prop is true", () => {
     render(
       <WidgetSizeControl
-        currentColspan={1}
-        currentRowspan={2}
+        currentWidth={2}
+        currentHeight={2}
+        minWidth={1}
+        minHeight={1}
         onSizeChange={mockOnSizeChange}
         disabled={true}
       />
@@ -188,11 +214,13 @@ describe("WidgetSizeControl", () => {
     });
   });
 
-  it("preserves current colspan when cycling rowspan", () => {
+  it("preserves current width when cycling height", () => {
     render(
       <WidgetSizeControl
-        currentColspan={2}
-        currentRowspan={1}
+        currentWidth={3}
+        currentHeight={1}
+        minWidth={1}
+        minHeight={1}
         onSizeChange={mockOnSizeChange}
       />
     );
@@ -200,19 +228,21 @@ describe("WidgetSizeControl", () => {
     const heightButton = screen.getByRole("button", { name: /cycle height/i });
     fireEvent.click(heightButton);
 
-    expect(mockOnSizeChange).toHaveBeenCalledWith(2, 2);
+    expect(mockOnSizeChange).toHaveBeenCalledWith(3, 2);
   });
 
-  it("preserves current rowspan when toggling colspan", () => {
+  it("preserves current height when cycling width", () => {
     render(
       <WidgetSizeControl
-        currentColspan={1}
-        currentRowspan={3}
+        currentWidth={1}
+        currentHeight={3}
+        minWidth={1}
+        minHeight={1}
         onSizeChange={mockOnSizeChange}
       />
     );
 
-    const widthButton = screen.getByRole("button", { name: /toggle width/i });
+    const widthButton = screen.getByRole("button", { name: /cycle width/i });
     fireEvent.click(widthButton);
 
     expect(mockOnSizeChange).toHaveBeenCalledWith(2, 3);
