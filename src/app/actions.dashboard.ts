@@ -5,8 +5,11 @@ import { createClient } from "@/lib/supabase/server";
 import {
     getAvailableWidgets,
     mergeWidgetSettings,
+    type LayoutMode,
+    type WidgetHeight,
     type WidgetId,
     type WidgetSettings,
+    type WidgetWidth,
 } from "@/lib/widgets";
 import { revalidatePath } from "next/cache";
 
@@ -89,7 +92,10 @@ export async function updateWidgetVisibility(
     w.id === widgetId ? { ...w, enabled } : w
   );
 
-  const widgetSettingsJson = { widgets: updatedWidgets } as unknown as Json;
+  const widgetSettingsJson = {
+    ...settings,
+    widgets: updatedWidgets,
+  } as unknown as Json;
 
   const { error } = await supabase
     .from("profiles")
@@ -134,7 +140,10 @@ export async function updateWidgetOrder(
     order: orderMap.get(w.id) ?? w.order,
   }));
 
-  const widgetSettingsJson = { widgets: updatedWidgets } as unknown as Json;
+  const widgetSettingsJson = {
+    ...settings,
+    widgets: updatedWidgets,
+  } as unknown as Json;
 
   const { error } = await supabase
     .from("profiles")
@@ -169,6 +178,101 @@ export async function resetWidgetSettings(): Promise<{ error?: string }> {
     .from("profiles")
     .update({
       widget_settings: null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", user.id);
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  revalidatePath("/");
+  return {};
+}
+
+/**
+ * Update widget size (width and height).
+ */
+export async function updateWidgetSize(
+  widgetId: WidgetId,
+  width: WidgetWidth,
+  height: WidgetHeight
+): Promise<{ error?: string }> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { error: "Not authenticated" };
+  }
+
+  // Validate size values (1-6 for flexible grid)
+  if (width < 1 || width > 6 || height < 1 || height > 6) {
+    return { error: "Invalid size values" };
+  }
+
+  // Get current settings
+  const { settings } = await getWidgetSettings();
+
+  // Update the specific widget's size
+  const updatedWidgets = settings.widgets.map((w) =>
+    w.id === widgetId ? { ...w, width, height, colspan: undefined, rowspan: undefined } : w
+  );
+
+  const widgetSettingsJson = {
+    ...settings,
+    widgets: updatedWidgets,
+  } as unknown as Json;
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({
+      widget_settings: widgetSettingsJson,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", user.id);
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  revalidatePath("/");
+  return {};
+}
+
+/**
+ * Update dashboard layout mode (manual or auto).
+ */
+export async function updateLayoutMode(
+  layoutMode: LayoutMode
+): Promise<{ error?: string }> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { error: "Not authenticated" };
+  }
+
+  // Validate layout mode
+  if (!["manual", "auto"].includes(layoutMode)) {
+    return { error: "Invalid layout mode" };
+  }
+
+  // Get current settings
+  const { settings } = await getWidgetSettings();
+
+  const widgetSettingsJson = {
+    ...settings,
+    layoutMode,
+  } as unknown as Json;
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({
+      widget_settings: widgetSettingsJson,
       updated_at: new Date().toISOString(),
     })
     .eq("id", user.id);

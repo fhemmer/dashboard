@@ -87,23 +87,36 @@ describe("NewsWidget", () => {
     expect(viewAllLink.getAttribute("href")).toBe("/news");
   });
 
-  it("renders default 3 items", async () => {
+  it("renders 4 items for default height of 2", async () => {
+    // Height 2 = 360px, content ~272px, ~4 items @ 60px each
     const Widget = await NewsWidget({});
     render(Widget);
 
     expect(screen.getByText("First News Item")).toBeDefined();
     expect(screen.getByText("Second News Item")).toBeDefined();
     expect(screen.getByText("Third News Item")).toBeDefined();
-    expect(screen.queryByText("Fourth News Item")).toBeNull();
+    expect(screen.getByText("Fourth News Item")).toBeDefined();
   });
 
-  it("respects maxItems prop", async () => {
-    const Widget = await NewsWidget({ maxItems: 2 });
+  it("renders fewer items for smaller height", async () => {
+    // Height 1 = 180px, content ~92px, ~1 item @ 60px each
+    const Widget = await NewsWidget({ widgetHeight: 1 });
     render(Widget);
 
     expect(screen.getByText("First News Item")).toBeDefined();
+    expect(screen.queryByText("Second News Item")).toBeNull();
+  });
+
+  it("renders more items for larger height", async () => {
+    // Height 3 = 540px, content ~452px, ~7 items @ 60px each
+    const Widget = await NewsWidget({ widgetHeight: 3 });
+    render(Widget);
+
+    // Should show all 4 items since we only have 4
+    expect(screen.getByText("First News Item")).toBeDefined();
     expect(screen.getByText("Second News Item")).toBeDefined();
-    expect(screen.queryByText("Third News Item")).toBeNull();
+    expect(screen.getByText("Third News Item")).toBeDefined();
+    expect(screen.getByText("Fourth News Item")).toBeDefined();
   });
 });
 

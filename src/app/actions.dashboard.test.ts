@@ -3,7 +3,9 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
     getWidgetSettings,
     resetWidgetSettings,
+    updateLayoutMode,
     updateWidgetOrder,
+    updateWidgetSize,
     updateWidgetVisibility,
 } from "./actions.dashboard";
 
@@ -268,5 +270,196 @@ describe("resetWidgetSettings", () => {
     const result = await resetWidgetSettings();
 
     expect(result.error).toBe("Reset failed");
+  });
+});
+
+describe("updateWidgetSize", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("returns error when not authenticated", async () => {
+    mockSupabase.auth.getUser.mockResolvedValue({
+      data: { user: null },
+      error: null,
+    });
+
+    const result = await updateWidgetSize("news", 2, 3);
+
+    expect(result.error).toBe("Not authenticated");
+  });
+
+  it("returns error for invalid width (too large)", async () => {
+    mockSupabase.auth.getUser.mockResolvedValue({
+      data: { user: mockUser },
+      error: null,
+    });
+
+    // Testing value outside 1-6 range
+    const result = await updateWidgetSize("news", 7 as never, 2);
+
+    expect(result.error).toBe("Invalid size values");
+  });
+
+  it("returns error for invalid height (too large)", async () => {
+    mockSupabase.auth.getUser.mockResolvedValue({
+      data: { user: mockUser },
+      error: null,
+    });
+
+    // Testing value outside 1-6 range
+    const result = await updateWidgetSize("news", 1, 7 as never);
+
+    expect(result.error).toBe("Invalid size values");
+  });
+
+  it("updates widget size successfully", async () => {
+    const mockUpdate = vi.fn().mockReturnThis();
+    const mockEq = vi.fn().mockResolvedValue({ error: null });
+
+    mockSupabase.auth.getUser.mockResolvedValue({
+      data: { user: mockUser },
+      error: null,
+    });
+    mockSupabase.rpc.mockResolvedValue({ data: false });
+    mockSupabase.from.mockReturnValue({
+      select: vi.fn().mockReturnThis(),
+      eq: vi.fn().mockImplementation(() => ({
+        single: vi.fn().mockResolvedValue({ data: { widget_settings: null }, error: null }),
+      })),
+      update: mockUpdate,
+    });
+    mockUpdate.mockReturnValue({ eq: mockEq });
+
+    const result = await updateWidgetSize("news", 2, 3);
+
+    expect(result.error).toBeUndefined();
+    expect(revalidatePath).toHaveBeenCalledWith("/");
+  });
+
+  it("returns error when update fails", async () => {
+    const mockUpdate = vi.fn().mockReturnThis();
+    const mockEq = vi.fn().mockResolvedValue({ error: { message: "Update failed" } });
+
+    mockSupabase.auth.getUser.mockResolvedValue({
+      data: { user: mockUser },
+      error: null,
+    });
+    mockSupabase.rpc.mockResolvedValue({ data: false });
+    mockSupabase.from.mockReturnValue({
+      select: vi.fn().mockReturnThis(),
+      eq: vi.fn().mockImplementation(() => ({
+        single: vi.fn().mockResolvedValue({ data: { widget_settings: null }, error: null }),
+      })),
+      update: mockUpdate,
+    });
+    mockUpdate.mockReturnValue({ eq: mockEq });
+
+    const result = await updateWidgetSize("news", 1, 2);
+
+    expect(result.error).toBe("Update failed");
+  });
+});
+
+describe("updateLayoutMode", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("returns error when not authenticated", async () => {
+    mockSupabase.auth.getUser.mockResolvedValue({
+      data: { user: null },
+      error: null,
+    });
+
+    const result = await updateLayoutMode("auto");
+
+    expect(result.error).toBe("Not authenticated");
+  });
+
+  it("returns error for invalid layout mode", async () => {
+    mockSupabase.auth.getUser.mockResolvedValue({
+      data: { user: mockUser },
+      error: null,
+    });
+
+    // @ts-expect-error Testing invalid value
+    const result = await updateLayoutMode("invalid");
+
+    expect(result.error).toBe("Invalid layout mode");
+  });
+
+  it("updates layout mode to auto successfully", async () => {
+    const mockUpdate = vi.fn().mockReturnThis();
+    const mockEq = vi.fn().mockResolvedValue({ error: null });
+
+    mockSupabase.auth.getUser.mockResolvedValue({
+      data: { user: mockUser },
+      error: null,
+    });
+    mockSupabase.rpc.mockResolvedValue({ data: false });
+    mockSupabase.from.mockReturnValue({
+      select: vi.fn().mockReturnThis(),
+      eq: vi.fn().mockImplementation(() => ({
+        single: vi.fn().mockResolvedValue({ data: { widget_settings: null }, error: null }),
+      })),
+      update: mockUpdate,
+    });
+    mockUpdate.mockReturnValue({ eq: mockEq });
+
+    const result = await updateLayoutMode("auto");
+
+    expect(result.error).toBeUndefined();
+    expect(revalidatePath).toHaveBeenCalledWith("/");
+  });
+
+  it("updates layout mode to manual successfully", async () => {
+    const mockUpdate = vi.fn().mockReturnThis();
+    const mockEq = vi.fn().mockResolvedValue({ error: null });
+
+    mockSupabase.auth.getUser.mockResolvedValue({
+      data: { user: mockUser },
+      error: null,
+    });
+    mockSupabase.rpc.mockResolvedValue({ data: false });
+    mockSupabase.from.mockReturnValue({
+      select: vi.fn().mockReturnThis(),
+      eq: vi.fn().mockImplementation(() => ({
+        single: vi.fn().mockResolvedValue({
+          data: { widget_settings: { layoutMode: "auto", widgets: [] } },
+          error: null,
+        }),
+      })),
+      update: mockUpdate,
+    });
+    mockUpdate.mockReturnValue({ eq: mockEq });
+
+    const result = await updateLayoutMode("manual");
+
+    expect(result.error).toBeUndefined();
+    expect(revalidatePath).toHaveBeenCalledWith("/");
+  });
+
+  it("returns error when update fails", async () => {
+    const mockUpdate = vi.fn().mockReturnThis();
+    const mockEq = vi.fn().mockResolvedValue({ error: { message: "Update failed" } });
+
+    mockSupabase.auth.getUser.mockResolvedValue({
+      data: { user: mockUser },
+      error: null,
+    });
+    mockSupabase.rpc.mockResolvedValue({ data: false });
+    mockSupabase.from.mockReturnValue({
+      select: vi.fn().mockReturnThis(),
+      eq: vi.fn().mockImplementation(() => ({
+        single: vi.fn().mockResolvedValue({ data: { widget_settings: null }, error: null }),
+      })),
+      update: mockUpdate,
+    });
+    mockUpdate.mockReturnValue({ eq: mockEq });
+
+    const result = await updateLayoutMode("auto");
+
+    expect(result.error).toBe("Update failed");
   });
 });

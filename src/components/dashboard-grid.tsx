@@ -1,7 +1,13 @@
 "use client";
 
 import { updateWidgetOrder } from "@/app/actions.dashboard";
-import type { WidgetId, WidgetSettings } from "@/lib/widgets";
+import type {
+    ResolvedWidget,
+    WidgetHeight,
+    WidgetId,
+    WidgetSettings,
+} from "@/lib/widgets";
+import { organizeWidgetsIntoRows, resolveWidgetSize, WIDGET_REGISTRY } from "@/lib/widgets";
 import {
     closestCenter,
     DndContext,
@@ -21,16 +27,48 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { type ReactNode, useEffect, useState, useTransition } from "react";
 
+/** Grid column count at different breakpoints */
+const GRID_COLUMNS = {
+  sm: 2,
+  lg: 3,
+  xl: 4,
+};
+
+/** Height of one grid row unit in pixels */
+const GRID_ROW_HEIGHT = 180;
+
+/** Maps width values to Tailwind grid column span classes */
+function getWidthClass(width: number): string {
+  const classes: Record<number, string> = {
+    1: "col-span-1",
+    2: "col-span-2",
+    3: "col-span-3",
+    4: "col-span-4",
+    5: "col-span-5",
+    6: "col-span-6",
+  };
+  return classes[width] ?? "col-span-1";
+}
+
+/** Maps height values to row height CSS variable */
+function getRowStyle(height: WidgetHeight): React.CSSProperties {
+  return {
+    "--row-height": `${height * GRID_ROW_HEIGHT}px`,
+  } as React.CSSProperties;
+}
+
 interface SortableWidgetWrapperProps {
   id: WidgetId;
   children: ReactNode;
   isDragMode: boolean;
+  width: number;
 }
 
 function SortableWidgetWrapper({
   id,
   children,
   isDragMode,
+  width,
 }: SortableWidgetWrapperProps) {
   const {
     attributes,
@@ -51,7 +89,8 @@ function SortableWidgetWrapper({
       ref={setNodeRef}
       style={style}
       className={`
-        relative transition-all duration-200
+        relative transition-all duration-200 h-full
+        ${getWidthClass(width)}
         ${isDragging ? "z-50 scale-[1.02]" : ""}
         ${isDragMode ? "cursor-grab active:cursor-grabbing" : ""}
       `}
@@ -84,12 +123,17 @@ export function DashboardGrid({
     setLocalSettings(settings);
   }, [settings]);
 
-  // Get enabled widgets sorted by order
-  const enabledWidgets = [...localSettings.widgets]
+  // Get enabled widgets sorted by order and resolve their sizes
+  const enabledWidgets: ResolvedWidget[] = [...localSettings.widgets]
     .filter((w) => w.enabled)
-    .sort((a, b) => a.order - b.order);
+    .sort((a, b) => a.order - b.order)
+    .map((w) => resolveWidgetSize(w, WIDGET_REGISTRY[w.id]));
 
   const widgetIds = enabledWidgets.map((w) => w.id);
+  const layoutMode = localSettings.layoutMode ?? "auto";
+  
+  // Organize widgets into rows (using xl breakpoint columns for now)
+  const rows = organizeWidgetsIntoRows(enabledWidgets, GRID_COLUMNS.xl, layoutMode);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -123,6 +167,7 @@ export function DashboardGrid({
 
       // Optimistic update
       setLocalSettings((prev) => ({
+        ...prev,
         widgets: prev.widgets.map((w) => ({
           ...w,
           order: fullOrder.indexOf(w.id),
@@ -183,26 +228,30 @@ export function DashboardGrid({
       onDragCancel={handleDragCancel}
     >
       <SortableContext items={widgetIds} strategy={rectSortingStrategy}>
-        <div
-          className={`
-            grid gap-8 md:grid-cols-2
-            ${isPending ? "opacity-70 pointer-events-none" : ""}
-          `}
-        >
-          {enabledWidgets.map((widget) => {
-            const component = widgetComponents[widget.id];
-            if (!component) return null;
+        <div className={`flex flex-col gap-4 ${isPending ? "opacity-70 pointer-events-none" : ""}`}>
+          {rows.map((row, rowIndex) => (
+            <div
+              key={`row-${rowIndex}`}
+              className="grid gap-4 grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+              style={getRowStyle(row.height)}
+            >
+              {row.widgets.map((widget) => {
+                const component = widgetComponents[widget.id];
+                if (!component) return null;
 
-            return (
-              <SortableWidgetWrapper
-                key={widget.id}
-                id={widget.id}
-                isDragMode={isDragMode}
-              >
-                {component}
-              </SortableWidgetWrapper>
-            );
-          })}
+                return (
+                  <SortableWidgetWrapper
+                    key={widget.id}
+                    id={widget.id}
+                    isDragMode={isDragMode}
+                    width={widget.calculatedWidth}
+                  >
+                    <div className="h-[var(--row-height)]">{component}</div>
+                  </SortableWidgetWrapper>
+                );
+              })}
+            </div>
+          ))}
         </div>
       </SortableContext>
     </DndContext>

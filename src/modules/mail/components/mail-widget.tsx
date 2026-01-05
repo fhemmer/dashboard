@@ -1,11 +1,11 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
 } from "@/components/ui/card";
 import { AlertTriangle, Mail, Settings } from "lucide-react";
 import Link from "next/link";
@@ -20,7 +20,7 @@ export async function MailWidget() {
   const summary = await getMailSummary();
 
   return (
-    <Card>
+    <Card className="h-full">
       <CardHeader className="flex flex-row items-center justify-between">
         <div className="flex items-start gap-2">
           <Mail className="h-4 w-4 text-muted-foreground mt-1" />
@@ -49,7 +49,7 @@ export async function MailWidget() {
           </Button>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex-1 overflow-auto">
         {summary.error && (
           <div className="flex items-center gap-2 text-sm text-destructive mb-4">
             <AlertTriangle className="h-4 w-4" />

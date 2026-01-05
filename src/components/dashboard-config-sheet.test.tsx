@@ -22,7 +22,64 @@ vi.mock("next/navigation", () => ({
 vi.mock("@/app/actions.dashboard", () => ({
   updateWidgetVisibility: vi.fn().mockResolvedValue({}),
   updateWidgetOrder: vi.fn().mockResolvedValue({}),
+  updateWidgetSize: vi.fn().mockResolvedValue({}),
+  updateLayoutMode: vi.fn().mockResolvedValue({}),
 }));
+
+// Mock the widget registry
+vi.mock("@/lib/widgets", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/widgets")>();
+  return {
+    ...actual,
+    WIDGET_REGISTRY: {
+      "pull-requests": {
+        id: "pull-requests",
+        name: "Pull Requests",
+        description: "GitHub PRs across your connected accounts",
+        minWidth: 1,
+        minHeight: 2,
+        defaultWidth: 1,
+        defaultHeight: 2,
+      },
+      news: {
+        id: "news",
+        name: "News",
+        description: "Latest updates from your RSS sources",
+        minWidth: 1,
+        minHeight: 2,
+        defaultWidth: 1,
+        defaultHeight: 2,
+      },
+      expenditures: {
+        id: "expenditures",
+        name: "Expenditures",
+        description: "Track subscriptions and consumption costs",
+        minWidth: 2,
+        minHeight: 1,
+        defaultWidth: 2,
+        defaultHeight: 1,
+      },
+      timers: {
+        id: "timers",
+        name: "Timers",
+        description: "Countdown timers with alerts",
+        minWidth: 1,
+        minHeight: 2,
+        defaultWidth: 1,
+        defaultHeight: 2,
+      },
+      mail: {
+        id: "mail",
+        name: "Mail",
+        description: "Email summaries",
+        minWidth: 1,
+        minHeight: 2,
+        defaultWidth: 1,
+        defaultHeight: 2,
+      },
+    },
+  };
+});
 
 // Mock framer-motion to avoid animation issues in tests
 vi.mock("framer-motion", () => ({
@@ -94,6 +151,8 @@ describe("DashboardConfigSheet", () => {
     vi.clearAllMocks();
     vi.mocked(dashboardActions.updateWidgetVisibility).mockResolvedValue({});
     vi.mocked(dashboardActions.updateWidgetOrder).mockResolvedValue({});
+    vi.mocked(dashboardActions.updateWidgetSize).mockResolvedValue({});
+    vi.mocked(dashboardActions.updateLayoutMode).mockResolvedValue({});
     onDragEndHandler = null;
     mockRefresh.mockClear();
   });
@@ -134,14 +193,14 @@ describe("DashboardConfigSheet", () => {
     expect(screen.getByText(/Showing 2 of 3 widgets/)).toBeDefined();
   });
 
-  it("renders toggle switches for each widget", () => {
+  it("renders toggle switches for each widget plus layout mode toggle", () => {
     render(<DashboardConfigSheet settings={mockSettings} isAdmin={true} />);
 
     const trigger = screen.getByRole("button", { name: /configure/i });
     fireEvent.click(trigger);
 
     const switches = screen.getAllByRole("switch");
-    expect(switches).toHaveLength(3);
+    expect(switches).toHaveLength(4); // 3 widget toggles + 1 layout mode toggle
   });
 
   it("shows tip about auto-saving", () => {
@@ -393,5 +452,224 @@ describe("DashboardConfigSheet", () => {
     await waitFor(() => {
       expect(screen.getByText(/Showing 2 of 3 widgets/)).toBeDefined();
     });
+  });
+
+  it("displays layout mode toggle", () => {
+    render(<DashboardConfigSheet settings={mockSettings} isAdmin={true} />);
+
+    const trigger = screen.getByRole("button", { name: /configure/i });
+    fireEvent.click(trigger);
+
+    expect(screen.getByText("Layout Mode")).toBeDefined();
+    expect(screen.getByRole("switch", { name: /Layout Mode/i })).toBeDefined();
+  });
+
+  it("shows Manual mode by default", () => {
+    render(<DashboardConfigSheet settings={mockSettings} isAdmin={true} />);
+
+    const trigger = screen.getByRole("button", { name: /configure/i });
+    fireEvent.click(trigger);
+
+    expect(screen.getByText("Manual")).toBeDefined();
+    expect(screen.getByText(/Manual mode packs widgets in order/)).toBeDefined();
+  });
+
+  it("shows Auto mode when layoutMode is auto", () => {
+    const autoSettings: WidgetSettings = {
+      layoutMode: "auto",
+      widgets: mockSettings.widgets,
+    };
+
+    render(<DashboardConfigSheet settings={autoSettings} isAdmin={true} />);
+
+    const trigger = screen.getByRole("button", { name: /configure/i });
+    fireEvent.click(trigger);
+
+    expect(screen.getByText("Auto")).toBeDefined();
+    expect(screen.getByText(/Auto mode groups widgets by height/)).toBeDefined();
+  });
+
+  it("toggles layout mode when switch is clicked", async () => {
+    render(<DashboardConfigSheet settings={mockSettings} isAdmin={true} />);
+
+    const trigger = screen.getByRole("button", { name: /configure/i });
+    fireEvent.click(trigger);
+
+    const layoutSwitch = screen.getByRole("switch", { name: /Layout Mode/i });
+    await act(async () => {
+      fireEvent.click(layoutSwitch);
+    });
+
+    await waitFor(() => {
+      expect(dashboardActions.updateLayoutMode).toHaveBeenCalledWith("auto");
+    });
+
+    await waitFor(() => {
+      expect(mockRefresh).toHaveBeenCalled();
+    });
+  });
+
+  it("reverts layout mode on server error", async () => {
+    vi.mocked(dashboardActions.updateLayoutMode).mockResolvedValue({
+      error: "Server error",
+    });
+
+    render(<DashboardConfigSheet settings={mockSettings} isAdmin={true} />);
+
+    const trigger = screen.getByRole("button", { name: /configure/i });
+    fireEvent.click(trigger);
+
+    const layoutSwitch = screen.getByRole("switch", { name: /Layout Mode/i });
+    await act(async () => {
+      fireEvent.click(layoutSwitch);
+    });
+
+    await waitFor(() => {
+      expect(dashboardActions.updateLayoutMode).toHaveBeenCalled();
+    });
+
+    // Should not refresh when there's an error
+    expect(mockRefresh).not.toHaveBeenCalled();
+  });
+
+  it("displays widget size info for enabled widgets", () => {
+    render(<DashboardConfigSheet settings={mockSettings} isAdmin={true} />);
+
+    const trigger = screen.getByRole("button", { name: /configure/i });
+    fireEvent.click(trigger);
+
+    // Enabled widgets should show width and height controls
+    expect(screen.getAllByText(/W:/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/H:/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/min:/).length).toBeGreaterThan(0);
+  });
+
+  it("displays expand button for non-max size widgets", () => {
+    render(<DashboardConfigSheet settings={mockSettings} isAdmin={true} />);
+
+    const trigger = screen.getByRole("button", { name: /configure/i });
+    fireEvent.click(trigger);
+
+    // Use title attribute to find expand buttons
+    const expandButtons = screen.getAllByTitle("Expand to 4×4");
+    expect(expandButtons.length).toBeGreaterThan(0);
+  });
+
+  it("displays shrink button for non-min size widgets", () => {
+    const largeSettings: WidgetSettings = {
+      widgets: [
+        { id: "pull-requests", enabled: true, order: 0, width: 4, height: 4 },
+        { id: "news", enabled: true, order: 1 },
+        { id: "expenditures", enabled: false, order: 2 },
+      ],
+    };
+
+    render(<DashboardConfigSheet settings={largeSettings} isAdmin={true} />);
+
+    const trigger = screen.getByRole("button", { name: /configure/i });
+    fireEvent.click(trigger);
+
+    // Use title attribute to find shrink buttons
+    const shrinkButtons = screen.getAllByTitle(/Shrink to/);
+    expect(shrinkButtons.length).toBeGreaterThan(0);
+  });
+
+  it("calls updateWidgetSize when expand button is clicked", async () => {
+    render(<DashboardConfigSheet settings={mockSettings} isAdmin={true} />);
+
+    const trigger = screen.getByRole("button", { name: /configure/i });
+    fireEvent.click(trigger);
+
+    const expandButtons = screen.getAllByTitle("Expand to 4×4");
+    await act(async () => {
+      fireEvent.click(expandButtons[0]);
+    });
+
+    await waitFor(() => {
+      // Expanding to 4×4 (max)
+      expect(dashboardActions.updateWidgetSize).toHaveBeenCalledWith(
+        expect.any(String),
+        4,
+        4
+      );
+    });
+
+    await waitFor(() => {
+      expect(mockRefresh).toHaveBeenCalled();
+    });
+  });
+
+  it("calls updateWidgetSize when shrink button is clicked", async () => {
+    const largeSettings: WidgetSettings = {
+      widgets: [
+        { id: "pull-requests", enabled: true, order: 0, width: 4, height: 4 },
+        { id: "news", enabled: true, order: 1 },
+        { id: "expenditures", enabled: false, order: 2 },
+      ],
+    };
+
+    render(<DashboardConfigSheet settings={largeSettings} isAdmin={true} />);
+
+    const trigger = screen.getByRole("button", { name: /configure/i });
+    fireEvent.click(trigger);
+
+    const shrinkButtons = screen.getAllByTitle(/Shrink to/);
+    await act(async () => {
+      fireEvent.click(shrinkButtons[0]);
+    });
+
+    await waitFor(() => {
+      // Shrinks to minWidth=1, minHeight=2 for pull-requests
+      expect(dashboardActions.updateWidgetSize).toHaveBeenCalledWith(
+        "pull-requests",
+        1,
+        2
+      );
+    });
+
+    await waitFor(() => {
+      expect(mockRefresh).toHaveBeenCalled();
+    });
+  });
+
+  it("reverts size on server error", async () => {
+    vi.mocked(dashboardActions.updateWidgetSize).mockResolvedValue({
+      error: "Server error",
+    });
+
+    render(<DashboardConfigSheet settings={mockSettings} isAdmin={true} />);
+
+    const trigger = screen.getByRole("button", { name: /configure/i });
+    fireEvent.click(trigger);
+
+    const expandButtons = screen.getAllByTitle("Expand to 4×4");
+    await act(async () => {
+      fireEvent.click(expandButtons[0]);
+    });
+
+    await waitFor(() => {
+      expect(dashboardActions.updateWidgetSize).toHaveBeenCalled();
+    });
+
+    // Should not refresh when there's an error
+    expect(mockRefresh).not.toHaveBeenCalled();
+  });
+
+  it("does not show size controls for disabled widgets", () => {
+    const disabledSettings: WidgetSettings = {
+      widgets: [
+        { id: "pull-requests", enabled: false, order: 0 },
+        { id: "news", enabled: false, order: 1 },
+        { id: "expenditures", enabled: false, order: 2 },
+      ],
+    };
+
+    render(<DashboardConfigSheet settings={disabledSettings} isAdmin={true} />);
+
+    const trigger = screen.getByRole("button", { name: /configure/i });
+    fireEvent.click(trigger);
+
+    expect(screen.queryByTitle(/Expand to/)).toBeNull();
+    expect(screen.queryByTitle(/Shrink to/)).toBeNull();
   });
 });

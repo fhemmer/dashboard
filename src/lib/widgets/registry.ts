@@ -12,6 +12,10 @@ export const WIDGET_REGISTRY: Record<WidgetId, WidgetDefinition> = {
     description: "GitHub PRs across your connected accounts",
     icon: GitPullRequest,
     defaultEnabled: true,
+    minWidth: 1,
+    minHeight: 2,
+    defaultWidth: 1,
+    defaultHeight: 2,
   },
   news: {
     id: "news",
@@ -19,6 +23,10 @@ export const WIDGET_REGISTRY: Record<WidgetId, WidgetDefinition> = {
     description: "Latest updates from your RSS sources",
     icon: Newspaper,
     defaultEnabled: true,
+    minWidth: 1,
+    minHeight: 2,
+    defaultWidth: 1,
+    defaultHeight: 2,
   },
   expenditures: {
     id: "expenditures",
@@ -27,6 +35,10 @@ export const WIDGET_REGISTRY: Record<WidgetId, WidgetDefinition> = {
     icon: Wallet,
     requiresAdmin: true,
     defaultEnabled: true,
+    minWidth: 2,
+    minHeight: 1,
+    defaultWidth: 2,
+    defaultHeight: 1,
   },
   timers: {
     id: "timers",
@@ -34,6 +46,10 @@ export const WIDGET_REGISTRY: Record<WidgetId, WidgetDefinition> = {
     description: "Countdown timers with alerts",
     icon: Timer,
     defaultEnabled: true,
+    minWidth: 1,
+    minHeight: 2,
+    defaultWidth: 1,
+    defaultHeight: 2,
   },
   mail: {
     id: "mail",
@@ -41,6 +57,10 @@ export const WIDGET_REGISTRY: Record<WidgetId, WidgetDefinition> = {
     description: "Email summaries from Outlook, Gmail, and IMAP accounts",
     icon: Mail,
     defaultEnabled: true,
+    minWidth: 1,
+    minHeight: 2,
+    defaultWidth: 1,
+    defaultHeight: 2,
   },
 };
 

@@ -4,6 +4,7 @@ import { DashboardGrid } from "@/components/dashboard-grid";
 import { LandingPage } from "@/components/landing";
 import { createClient } from "@/lib/supabase/server";
 import type { WidgetId } from "@/lib/widgets";
+import { resolveWidgetSize, WIDGET_REGISTRY } from "@/lib/widgets";
 import { ExpendituresWidget } from "@/modules/expenditures";
 import { PRWidget } from "@/modules/github-prs";
 import { MailWidget } from "@/modules/mail/components/mail-widget";
@@ -25,10 +26,16 @@ export default async function Home() {
   // Get widget settings
   const { settings, isAdmin } = await getWidgetSettings();
 
+  // Get resolved height for the news widget
+  const newsWidgetSetting = settings.widgets.find((w) => w.id === "news");
+  const newsWidgetHeight = newsWidgetSetting
+    ? resolveWidgetSize(newsWidgetSetting, WIDGET_REGISTRY.news).height
+    : 2;
+
   // Map widget IDs to their components
   const widgetComponents: Record<WidgetId, ReactNode> = {
     "pull-requests": <PRWidget />,
-    news: <NewsWidget />,
+    news: <NewsWidget widgetHeight={newsWidgetHeight} />,
     expenditures: isAdmin ? <ExpendituresWidget /> : null,
     timers: <TimerWidget />,
     mail: <MailWidget />,

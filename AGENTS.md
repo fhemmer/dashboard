@@ -80,7 +80,7 @@ The Dashboard uses a tiered subscription system to manage AI feature costs (Chat
 - `chat_costs` - Per-message cost tracking with `total_chat_spent` on profiles
 
 ### Implementation Reference
-See [GitHub Issue #18](https://github.com/HemSoft/dashboard/issues/18) for full implementation details.
+See [GitHub Issue #18](https://github.com/fhemmer/dashboard/issues/18) for full implementation details.
 
 ## Module Architecture
 
