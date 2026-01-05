@@ -1,8 +1,8 @@
 "use client";
 
-import { describe, expect, it, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import type { ThemeVariables } from "@/lib/theme-utils";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // Helper to create valid ThemeVariables mock (28 variables)
 const mockThemeVars = (): ThemeVariables => ({
@@ -87,8 +87,8 @@ vi.mock("@/modules/themes/components/theme-editor", () => ({
   ),
 }));
 
-import { EditThemeClient } from "./edit-client";
 import type { UserTheme } from "@/modules/themes/types";
+import { EditThemeClient } from "./edit-client";
 
 describe("EditThemeClient", () => {
   const mockTheme: UserTheme = {

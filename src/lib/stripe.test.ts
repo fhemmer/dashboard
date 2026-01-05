@@ -6,16 +6,16 @@ import type Stripe from "stripe";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
-  createCheckoutSession,
-  createPortalSession,
-  getPriceId,
-  getTierFromPriceId,
-  getOrCreateCustomer,
-  handleCheckoutComplete,
-  handleSubscriptionUpdate,
-  handleSubscriptionDeleted,
-  handleInvoicePaid,
-  verifyWebhookSignature,
+    createCheckoutSession,
+    createPortalSession,
+    getOrCreateCustomer,
+    getPriceId,
+    getTierFromPriceId,
+    handleCheckoutComplete,
+    handleInvoicePaid,
+    handleSubscriptionDeleted,
+    handleSubscriptionUpdate,
+    verifyWebhookSignature,
 } from "./stripe";
 
 // Mock hoisting

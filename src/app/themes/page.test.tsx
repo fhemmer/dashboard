@@ -1,6 +1,6 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
 import type { ThemeVariables } from "@/lib/theme-utils";
+import { render, screen } from "@testing-library/react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // Helper to create valid ThemeVariables mock (28 variables)
 const mockThemeVars = (): ThemeVariables => ({
@@ -68,8 +68,8 @@ vi.mock("@/modules/themes/components/theme-list", () => ({
   ),
 }));
 
-import ThemesPage, { metadata } from "./page";
 import { getUserThemes } from "./actions";
+import ThemesPage, { metadata } from "./page";
 
 describe("ThemesPage", () => {
   beforeEach(() => {

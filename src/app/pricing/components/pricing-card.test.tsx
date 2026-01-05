@@ -1,6 +1,6 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { Sparkles } from "lucide-react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // Mock next/navigation
 const mockPush = vi.fn();

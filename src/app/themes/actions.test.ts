@@ -45,13 +45,13 @@ vi.mock("next/cache", () => ({
 }));
 
 import {
-  getUserThemes,
-  getThemeById,
-  getActiveCustomTheme,
-  createTheme,
-  updateTheme,
-  deleteTheme,
-  setActiveTheme,
+    createTheme,
+    deleteTheme,
+    getActiveCustomTheme,
+    getThemeById,
+    getUserThemes,
+    setActiveTheme,
+    updateTheme,
 } from "./actions";
 
 // Helper to create mock ThemeVariables

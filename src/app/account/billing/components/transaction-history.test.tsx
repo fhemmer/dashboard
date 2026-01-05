@@ -1,7 +1,7 @@
-import { describe, expect, it } from "vitest";
-import { render, screen } from "@testing-library/react";
-import { TransactionHistory } from "./transaction-history";
 import type { CreditTransaction } from "@/lib/credits";
+import { render, screen } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
+import { TransactionHistory } from "./transaction-history";
 
 // Helper to create a mock transaction
 function mockTransaction(overrides: Partial<CreditTransaction> = {}): CreditTransaction {

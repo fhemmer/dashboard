@@ -1,5 +1,5 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { Subscription } from "@/lib/subscription";
 
@@ -22,8 +22,8 @@ vi.mock("./components/pricing-card", () => ({
   ),
 }));
 
-import PricingPage, { metadata } from "./page";
 import { getSubscription } from "@/lib/subscription";
+import PricingPage, { metadata } from "./page";
 
 // Helper for creating mock subscription
 function mockSubscription(overrides: Partial<Subscription> = {}): Subscription {
