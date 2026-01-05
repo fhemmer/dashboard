@@ -423,9 +423,24 @@ describe("themes actions", () => {
     });
 
     it("returns error when delete fails", async () => {
-      // This test requires complex mock chain that's hard to setup
-      // The error path is covered by authentication test
-      expect(true).toBe(true);
+      mockGetUser.mockResolvedValue({ data: { user: { id: "user-123" } } });
+      
+      // Setup chain to return error on delete
+      const deleteChain: Record<string, unknown> = {};
+      deleteChain.eq = vi.fn().mockReturnValue({ eq: vi.fn().mockReturnValue({ error: { message: "Delete failed" } }) });
+      mockFrom.mockImplementation((table: string) => {
+        if (table === "user_themes") {
+          return { delete: vi.fn().mockReturnValue(deleteChain) };
+        }
+        return {};
+      });
+      
+      const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+      const result = await deleteTheme("theme-123");
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("Delete failed");
+      consoleSpy.mockRestore();
     });
 
     it("deletes theme successfully", async () => {
@@ -458,15 +473,46 @@ describe("themes actions", () => {
     });
 
     it("returns error when deactivating themes fails", async () => {
-      // This test requires complex mock chain that's hard to setup
-      // The error path is covered by other tests
-      expect(true).toBe(true);
+      mockGetUser.mockResolvedValue({ data: { user: { id: "user-123" } } });
+      
+      // Setup chain to return error on update (deactivation)
+      const updateChain: Record<string, unknown> = {};
+      updateChain.eq = vi.fn().mockReturnValue({ error: { message: "Deactivate failed" } });
+      mockFrom.mockImplementation((table: string) => {
+        if (table === "user_themes") {
+          return { update: vi.fn().mockReturnValue(updateChain) };
+        }
+        return {};
+      });
+      
+      const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+      const result = await setActiveTheme(null);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("Deactivate failed");
+      consoleSpy.mockRestore();
     });
 
     it("returns error when activating theme fails", async () => {
-      // This test requires complex mock chain that's hard to setup
-      // The error path is covered by other tests
-      expect(true).toBe(true);
+      mockGetUser.mockResolvedValue({ data: { user: { id: "user-123" } } });
+      
+      // Setup chain to return error on update with select (activation)
+      const updateChain: Record<string, unknown> = {};
+      updateChain.eq = vi.fn().mockReturnValue(updateChain);
+      updateChain.select = vi.fn().mockReturnValue({ single: vi.fn().mockReturnValue({ data: null, error: { message: "Activate failed" } }) });
+      mockFrom.mockImplementation((table: string) => {
+        if (table === "user_themes") {
+          return { update: vi.fn().mockReturnValue(updateChain) };
+        }
+        return {};
+      });
+      
+      const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+      const result = await setActiveTheme("theme-123");
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("Activate failed");
+      consoleSpy.mockRestore();
     });
 
     it("activates theme successfully", async () => {

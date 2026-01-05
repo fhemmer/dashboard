@@ -127,8 +127,13 @@ export function TimerAlertProvider() {
 
   const requestNotificationPermission = async () => {
     if (typeof window !== "undefined" && "Notification" in window) {
-      const permission = await Notification.requestPermission();
-      setPermissionOverride(permission);
+      try {
+        const permission = await Notification.requestPermission();
+        setPermissionOverride(permission);
+      } catch (error) {
+        console.error("Failed to request notification permission:", error);
+        setPermissionOverride("denied");
+      }
     }
   };
 

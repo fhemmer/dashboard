@@ -34,6 +34,9 @@ const GRID_COLUMNS = {
   xl: 4,
 };
 
+/** Height of one grid row unit in pixels */
+const GRID_ROW_HEIGHT = 180;
+
 /** Maps width values to Tailwind grid column span classes */
 function getWidthClass(width: number): string {
   const classes: Record<number, string> = {
@@ -49,9 +52,8 @@ function getWidthClass(width: number): string {
 
 /** Maps height values to row height CSS variable */
 function getRowStyle(height: WidgetHeight): React.CSSProperties {
-  // Each row unit is 180px for consistent sizing
   return {
-    "--row-height": `${height * 180}px`,
+    "--row-height": `${height * GRID_ROW_HEIGHT}px`,
   } as React.CSSProperties;
 }
 

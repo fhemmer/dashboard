@@ -18,16 +18,19 @@ interface WidgetSizeControlProps {
   disabled?: boolean;
 }
 
+/** Maximum practical size for UI cycling (larger values available programmatically) */
+const MAX_CYCLE_SIZE = 4;
+
 /** Cycles height: 1 -> 2 -> 3 -> 4 -> 1 (respecting minHeight) */
 function cycleHeight(current: WidgetHeight, min: WidgetHeight): WidgetHeight {
-  const next = current >= 4 ? 1 : (current + 1) as WidgetHeight;
-  return Math.max(next, min) as WidgetHeight;
+  const next = current >= MAX_CYCLE_SIZE ? min : Math.max((current + 1) as WidgetHeight, min);
+  return next as WidgetHeight;
 }
 
 /** Cycles width: 1 -> 2 -> 3 -> 4 -> 1 (respecting minWidth) */
 function cycleWidth(current: WidgetWidth, min: WidgetWidth): WidgetWidth {
-  const next = current >= 4 ? 1 : (current + 1) as WidgetWidth;
-  return Math.max(next, min) as WidgetWidth;
+  const next = current >= MAX_CYCLE_SIZE ? min : Math.max((current + 1) as WidgetWidth, min);
+  return next as WidgetWidth;
 }
 
 export function WidgetSizeControl({
