@@ -53,7 +53,7 @@ export async function NewsWidget({ widgetHeight = 2 }: NewsWidgetProps) {
           <Link href="/news">View All</Link>
         </Button>
       </CardHeader>
-      <CardContent className="flex-1 overflow-y-auto pr-1 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-muted-foreground/20 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-muted-foreground/40">
+      <CardContent className="flex-1 overflow-y-auto overflow-x-hidden pr-1 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-muted-foreground/20 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-muted-foreground/40">
         {error && (
           <div className="flex items-center gap-2 text-sm text-destructive mb-4">
             <AlertTriangle className="h-4 w-4" />

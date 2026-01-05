@@ -121,10 +121,13 @@ describe("TimerAlertProvider", () => {
     }
   });
 
-  it("renders notification permission prompt when permission is default", () => {
+  it("renders notification permission prompt when permission is default", async () => {
     render(<TimerAlertProvider />);
 
-    expect(screen.getByText("Enable Notifications")).toBeInTheDocument();
+    // Wait for client-side effect to run
+    await waitFor(() => {
+      expect(screen.getByText("Enable Notifications")).toBeInTheDocument();
+    });
     expect(screen.getByText("Get notified when your timers complete")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Enable" })).toBeInTheDocument();
   });
@@ -132,6 +135,11 @@ describe("TimerAlertProvider", () => {
   it("requests notification permission when Enable button is clicked", async () => {
     const user = userEvent.setup();
     render(<TimerAlertProvider />);
+
+    // Wait for client-side effect to run
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: "Enable" })).toBeInTheDocument();
+    });
 
     const enableButton = screen.getByRole("button", { name: "Enable" });
     await user.click(enableButton);
@@ -463,7 +471,8 @@ describe("TimerAlertProvider", () => {
 
     render(<TimerAlertProvider />);
 
-    // Should show permission prompt because permission stays at default
+    // With missing Notification API, getNotificationPermission returns "default"
+    // so the Enable button should still be shown
     await waitFor(() => {
       expect(screen.getByText("Enable Notifications")).toBeInTheDocument();
     });
@@ -476,7 +485,10 @@ describe("TimerAlertProvider", () => {
     // Start with Notification API present to render the prompt
     render(<TimerAlertProvider />);
 
-    expect(screen.getByText("Enable Notifications")).toBeInTheDocument();
+    // Wait for client-side effect to run
+    await waitFor(() => {
+      expect(screen.getByText("Enable Notifications")).toBeInTheDocument();
+    });
 
     // Remove Notification before clicking
     const savedNotification = globalThis.Notification;

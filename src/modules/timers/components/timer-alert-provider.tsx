@@ -2,8 +2,34 @@
 
 import { Button } from "@/components/ui/button";
 import { Bell, BellOff, BellRing } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import type { Timer } from "../types";
+
+/**
+ * Get the current notification permission, returns "default" if not available
+ */
+function getNotificationPermission(): NotificationPermission {
+  if (typeof window !== "undefined" && "Notification" in window) {
+    return Notification.permission;
+  }
+  return "default";
+}
+
+/**
+ * Subscriber for notification permission changes (none available, but needed for useSyncExternalStore)
+ */
+function subscribeToNotificationPermission(_callback: () => void): () => void {
+  // There's no native event for permission changes, so we just return a no-op cleanup
+  // The permission will be re-checked when user interacts with the enable button
+  return () => {};
+}
+
+/**
+ * Server snapshot for SSR - always return "default" to avoid hydration mismatch
+ */
+function getServerSnapshot(): NotificationPermission {
+  return "default";
+}
 
 /**
  * TimerAlertProvider listens for timer-complete events and triggers
@@ -11,26 +37,19 @@ import type { Timer } from "../types";
  */
 export function TimerAlertProvider() {
   const audioContextRef = useRef<AudioContext | null>(null);
-  // Use ref to track if initial permission check is done (avoids sync setState in effect)
-  const hasCheckedPermission = useRef(false);
-  // Initialize with "default" to avoid SSR hydration mismatch
-  const [notificationPermission, setNotificationPermission] =
-    useState<NotificationPermission>("default");
-
-  // Read actual notification permission on client side only via callback
-  useEffect(() => {
-    if (hasCheckedPermission.current) return;
-    hasCheckedPermission.current = true;
-
-    // Schedule permission check for next tick to avoid sync setState in effect
-    const timeoutId = setTimeout(() => {
-      if (typeof window !== "undefined" && "Notification" in window) {
-        setNotificationPermission(Notification.permission);
-      }
-    }, 0);
-
-    return () => clearTimeout(timeoutId);
-  }, []);
+  
+  // Use useSyncExternalStore to get the permission without causing hydration mismatch
+  const initialPermission = useSyncExternalStore(
+    subscribeToNotificationPermission,
+    getNotificationPermission,
+    getServerSnapshot
+  );
+  
+  // Track permission changes from user interaction (requestPermission)
+  const [permissionOverride, setPermissionOverride] = useState<NotificationPermission | null>(null);
+  
+  // Use the override if set, otherwise use the synced initial permission
+  const notificationPermission = permissionOverride ?? initialPermission;
 
   /**
    * Play a simple alarm tone using Web Audio API
@@ -109,7 +128,7 @@ export function TimerAlertProvider() {
   const requestNotificationPermission = async () => {
     if (typeof window !== "undefined" && "Notification" in window) {
       const permission = await Notification.requestPermission();
-      setNotificationPermission(permission);
+      setPermissionOverride(permission);
     }
   };
 
