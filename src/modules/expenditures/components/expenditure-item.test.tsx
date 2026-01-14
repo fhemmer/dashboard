@@ -1,13 +1,14 @@
-import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { ExpenditureSource } from "../types";
 import { ExpenditureItem } from "./expenditure-item";
 
 vi.mock("../actions", () => ({
   updateExpenditureSource: vi.fn(),
+  deleteExpenditureSource: vi.fn(),
 }));
 
-const { updateExpenditureSource } = await import("../actions");
+const { updateExpenditureSource, deleteExpenditureSource } = await import("../actions");
 
 const mockSource: ExpenditureSource = {
   id: "exp-1",
@@ -71,7 +72,8 @@ describe("ExpenditureItem", () => {
     it("shows edit button", () => {
       render(<ExpenditureItem source={mockSource} />);
 
-      expect(screen.getByRole("button")).toBeDefined();
+      const buttons = screen.getAllByRole("button");
+      expect(buttons.length).toBe(2); // edit and delete buttons
     });
   });
 
@@ -79,7 +81,8 @@ describe("ExpenditureItem", () => {
     it("enters edit mode when clicking edit button", () => {
       render(<ExpenditureItem source={mockSource} />);
 
-      fireEvent.click(screen.getByRole("button"));
+      const buttons = screen.getAllByRole("button");
+      fireEvent.click(buttons[0]); // Edit button is first
 
       expect(screen.getByLabelText("Name")).toBeDefined();
       expect(screen.getByLabelText("Base Cost ($)")).toBeDefined();
@@ -93,7 +96,8 @@ describe("ExpenditureItem", () => {
     it("pre-fills form with current values", () => {
       render(<ExpenditureItem source={mockSource} />);
 
-      fireEvent.click(screen.getByRole("button"));
+      const buttons = screen.getAllByRole("button");
+      fireEvent.click(buttons[0]); // Edit button is first
 
       expect(screen.getByLabelText("Name")).toHaveValue("AWS");
       expect(screen.getByLabelText("Base Cost ($)")).toHaveValue(100);
@@ -107,7 +111,8 @@ describe("ExpenditureItem", () => {
     it("cancels edit and restores original values", () => {
       render(<ExpenditureItem source={mockSource} />);
 
-      fireEvent.click(screen.getByRole("button"));
+      const buttons = screen.getAllByRole("button");
+      fireEvent.click(buttons[0]); // Edit button is first
       fireEvent.change(screen.getByLabelText("Name"), {
         target: { value: "Changed Name" },
       });
@@ -123,7 +128,8 @@ describe("ExpenditureItem", () => {
 
       render(<ExpenditureItem source={mockSource} />);
 
-      fireEvent.click(screen.getByRole("button"));
+      const buttons = screen.getAllByRole("button");
+      fireEvent.click(buttons[0]); // Edit button is first
       fireEvent.change(screen.getByLabelText("Name"), {
         target: { value: "Updated AWS" },
       });
@@ -154,7 +160,8 @@ describe("ExpenditureItem", () => {
 
       render(<ExpenditureItem source={mockSource} />);
 
-      fireEvent.click(screen.getByRole("button"));
+      const buttons = screen.getAllByRole("button");
+      fireEvent.click(buttons[0]); // Edit button is first
 
       await act(async () => {
         fireEvent.click(screen.getByRole("button", { name: /save/i }));
@@ -168,7 +175,8 @@ describe("ExpenditureItem", () => {
     it("shows running total while editing", () => {
       render(<ExpenditureItem source={mockSource} />);
 
-      fireEvent.click(screen.getByRole("button"));
+      const buttons = screen.getAllByRole("button");
+      fireEvent.click(buttons[0]); // Edit button is first
 
       // Original total should be shown
       expect(screen.getByText(/Total:/)).toBeDefined();
@@ -180,7 +188,8 @@ describe("ExpenditureItem", () => {
 
       render(<ExpenditureItem source={mockSource} />);
 
-      fireEvent.click(screen.getByRole("button"));
+      const buttons = screen.getAllByRole("button");
+      fireEvent.click(buttons[0]); // Edit button is first
       fireEvent.change(screen.getByLabelText("Details URL"), {
         target: { value: "" },
       });
@@ -202,7 +211,8 @@ describe("ExpenditureItem", () => {
 
       render(<ExpenditureItem source={mockSource} />);
 
-      fireEvent.click(screen.getByRole("button"));
+      const buttons = screen.getAllByRole("button");
+      fireEvent.click(buttons[0]); // Edit button is first
       fireEvent.change(screen.getByLabelText("Base Cost ($)"), {
         target: { value: "" },
       });
@@ -237,7 +247,8 @@ describe("ExpenditureItem", () => {
 
       render(<ExpenditureItem source={mockSource} />);
 
-      fireEvent.click(screen.getByRole("button"));
+      const buttons = screen.getAllByRole("button");
+      fireEvent.click(buttons[0]); // Edit button is first
 
       await act(async () => {
         fireEvent.click(screen.getByRole("button", { name: /save/i }));
@@ -251,7 +262,8 @@ describe("ExpenditureItem", () => {
     it("shows billing month field when yearly cycle is selected", async () => {
       render(<ExpenditureItem source={mockSource} />);
 
-      fireEvent.click(screen.getByRole("button"));
+      const buttons = screen.getAllByRole("button");
+      fireEvent.click(buttons[0]); // Edit button is first
 
       // Billing Month should not be visible for monthly
       expect(screen.queryByLabelText("Billing Month")).toBeNull();
@@ -279,7 +291,8 @@ describe("ExpenditureItem", () => {
       };
       render(<ExpenditureItem source={yearlySource} />);
 
-      fireEvent.click(screen.getByRole("button"));
+      const buttons = screen.getAllByRole("button");
+      fireEvent.click(buttons[0]); // Edit button is first
 
       // Billing Month should be visible for yearly
       expect(screen.getByLabelText("Billing Month")).toBeDefined();
@@ -303,7 +316,8 @@ describe("ExpenditureItem", () => {
 
       render(<ExpenditureItem source={mockSource} />);
 
-      fireEvent.click(screen.getByRole("button"));
+      const buttons = screen.getAllByRole("button");
+      fireEvent.click(buttons[0]); // Edit button is first
 
       // Change to yearly using combobox
       const cycleCombobox = screen.getByRole("combobox", { name: /billing cycle/i });
@@ -368,6 +382,169 @@ describe("ExpenditureItem", () => {
       render(<ExpenditureItem source={yearlySource} />);
 
       expect(screen.getByText(/\(day 15\)/)).toBeDefined();
+    });
+  });
+
+  describe("delete functionality", () => {
+    it("shows delete button in display mode", () => {
+      render(<ExpenditureItem source={mockSource} />);
+
+      const buttons = screen.getAllByRole("button");
+      // Should have edit and delete buttons
+      expect(buttons.length).toBe(2);
+    });
+
+    it("opens confirmation dialog when clicking delete in display mode", async () => {
+      render(<ExpenditureItem source={mockSource} />);
+
+      const buttons = screen.getAllByRole("button");
+      // Click the delete button (second button)
+      fireEvent.click(buttons[1]);
+
+      await waitFor(() => {
+        expect(screen.getByText("Delete expenditure")).toBeDefined();
+        expect(screen.getByText(/Are you sure you want to delete "AWS"\?/)).toBeDefined();
+      });
+    });
+
+    it("deletes expenditure after confirmation in display mode", async () => {
+      vi.mocked(deleteExpenditureSource).mockResolvedValue({ success: true });
+
+      render(<ExpenditureItem source={mockSource} />);
+
+      const buttons = screen.getAllByRole("button");
+      fireEvent.click(buttons[1]);
+
+      await waitFor(() => {
+        const deleteButton = screen.getByRole("button", { name: /^delete$/i });
+        fireEvent.click(deleteButton);
+      });
+
+      await waitFor(() => {
+        expect(deleteExpenditureSource).toHaveBeenCalledWith("exp-1");
+      });
+    });
+
+    it("cancels delete when clicking cancel in confirmation dialog", async () => {
+      render(<ExpenditureItem source={mockSource} />);
+
+      const buttons = screen.getAllByRole("button");
+      fireEvent.click(buttons[1]);
+
+      await waitFor(() => {
+        const cancelButton = screen.getByRole("button", { name: /cancel/i });
+        fireEvent.click(cancelButton);
+      });
+
+      // Dialog should be closed and delete not called
+      expect(deleteExpenditureSource).not.toHaveBeenCalled();
+    });
+
+    it("shows delete button in edit mode", () => {
+      render(<ExpenditureItem source={mockSource} />);
+
+      const buttons = screen.getAllByRole("button");
+      fireEvent.click(buttons[0]); // Edit button is first
+
+      // Should have Delete, Cancel, Save buttons
+      expect(screen.getByRole("button", { name: /delete/i })).toBeDefined();
+      expect(screen.getByRole("button", { name: /cancel/i })).toBeDefined();
+      expect(screen.getByRole("button", { name: /save/i })).toBeDefined();
+    });
+
+    it("opens confirmation dialog when clicking delete in edit mode", async () => {
+      render(<ExpenditureItem source={mockSource} />);
+
+      const buttons = screen.getAllByRole("button");
+      fireEvent.click(buttons[0]); // Edit button is first
+      fireEvent.click(screen.getByRole("button", { name: /delete/i }));
+
+      await waitFor(() => {
+        expect(screen.getByText("Delete expenditure")).toBeDefined();
+        expect(screen.getByText(/Are you sure you want to delete "AWS"\?/)).toBeDefined();
+      });
+    });
+
+    it("deletes expenditure after confirmation in edit mode", async () => {
+      vi.mocked(deleteExpenditureSource).mockResolvedValue({ success: true });
+
+      render(<ExpenditureItem source={mockSource} />);
+
+      const buttons = screen.getAllByRole("button");
+      fireEvent.click(buttons[0]); // Edit button is first
+      fireEvent.click(screen.getByRole("button", { name: /delete/i }));
+
+      await waitFor(() => {
+        expect(screen.getByRole("alertdialog")).toBeDefined();
+      });
+
+      // Find and click the Delete button in the dialog
+      const dialog = screen.getByRole("alertdialog");
+      const dialogDeleteButton = within(dialog).getByRole("button", { name: /^Delete$/i });
+
+      await act(async () => {
+        fireEvent.click(dialogDeleteButton);
+      });
+
+      await waitFor(() => {
+        expect(deleteExpenditureSource).toHaveBeenCalledWith("exp-1");
+      });
+    });
+
+    it("shows error when delete fails", async () => {
+      vi.mocked(deleteExpenditureSource).mockResolvedValue({
+        success: false,
+        error: "Delete failed",
+      });
+
+      render(<ExpenditureItem source={mockSource} />);
+
+      const buttons = screen.getAllByRole("button");
+      fireEvent.click(buttons[0]); // Edit button is first
+      fireEvent.click(screen.getByRole("button", { name: /delete/i }));
+
+      await waitFor(() => {
+        expect(screen.getByRole("alertdialog")).toBeDefined();
+      });
+
+      const dialog = screen.getByRole("alertdialog");
+      const dialogDeleteButton = within(dialog).getByRole("button", { name: /^Delete$/i });
+
+      await act(async () => {
+        fireEvent.click(dialogDeleteButton);
+      });
+
+      await waitFor(() => {
+        expect(screen.getByText("Delete failed")).toBeDefined();
+      });
+    });
+
+    it("shows default error message when delete error is undefined", async () => {
+      vi.mocked(deleteExpenditureSource).mockResolvedValue({
+        success: false,
+        error: undefined,
+      });
+
+      render(<ExpenditureItem source={mockSource} />);
+
+      const buttons = screen.getAllByRole("button");
+      fireEvent.click(buttons[0]); // Edit button is first
+      fireEvent.click(screen.getByRole("button", { name: /delete/i }));
+
+      await waitFor(() => {
+        expect(screen.getByRole("alertdialog")).toBeDefined();
+      });
+
+      const dialog = screen.getByRole("alertdialog");
+      const dialogDeleteButton = within(dialog).getByRole("button", { name: /^Delete$/i });
+
+      await act(async () => {
+        fireEvent.click(dialogDeleteButton);
+      });
+
+      await waitFor(() => {
+        expect(screen.getByText("Failed to delete")).toBeDefined();
+      });
     });
   });
 });

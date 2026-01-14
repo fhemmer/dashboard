@@ -1,0 +1,11 @@
+maxIterations = 10
+agent = "opencode"
+tracker = "json"
+autoCommit = false
+subagentTracingDetail = "full"
+
+[agentOptions]
+commandPath = "C:\\Users\\User\\AppData\\Local\\Microsoft\\WinGet\\Packages\\SST.opencode_Microsoft.Winget.Source_8wekyb3d8bbwe\\opencode.exe"
+
+[trackerOptions]
+path = "./prd.json"

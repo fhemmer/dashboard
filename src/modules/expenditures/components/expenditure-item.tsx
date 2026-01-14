@@ -1,5 +1,16 @@
 "use client";
 
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,9 +21,9 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { Check, Loader2, Pencil, X } from "lucide-react";
+import { Check, Loader2, Pencil, Trash2, X } from "lucide-react";
 import { useState, useTransition } from "react";
-import { updateExpenditureSource } from "../actions";
+import { deleteExpenditureSource, updateExpenditureSource } from "../actions";
 import type { BillingCycle, ExpenditureSource } from "../types";
 import { calculateMonthlyCost, formatBillingCycle, formatCurrency, getMonthName, MONTH_NAMES } from "../types";
 
@@ -71,6 +82,16 @@ export function ExpenditureItem({ source }: ExpenditureItemProps) {
     setNotes(source.notes ?? "");
     setError(null);
     setIsEditing(false);
+  };
+
+  const handleDelete = () => {
+    setError(null);
+    startTransition(async () => {
+      const result = await deleteExpenditureSource(source.id);
+      if (!result.success) {
+        setError(result.error ?? "Failed to delete");
+      }
+    });
   };
 
   const total = (Number.parseFloat(baseCost) || 0) + (Number.parseFloat(consumptionCost) || 0);
@@ -187,6 +208,28 @@ export function ExpenditureItem({ source }: ExpenditureItemProps) {
             Total: <span className="font-semibold text-foreground">{formatCurrency(total)}</span>
           </div>
           <div className="flex gap-2">
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive" disabled={isPending}>
+                  <Trash2 className="h-4 w-4 mr-1" />
+                  Delete
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Delete expenditure</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Are you sure you want to delete &quot;{source.name}&quot;? This action cannot be undone.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                    Delete
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
             <Button variant="ghost" size="sm" onClick={handleCancel} disabled={isPending}>
               <X className="h-4 w-4 mr-1" />
               Cancel
@@ -249,6 +292,27 @@ export function ExpenditureItem({ source }: ExpenditureItemProps) {
         <Button variant="ghost" size="icon" onClick={() => setIsEditing(true)}>
           <Pencil className="h-4 w-4" />
         </Button>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive">
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete expenditure</AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure you want to delete &quot;{source.name}&quot;? This action cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                Delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   );
