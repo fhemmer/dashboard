@@ -4,11 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select";
 import { Loader2, Plus } from "lucide-react";
 import { useState, useTransition } from "react";
@@ -50,13 +50,18 @@ export function AddExpenditureForm() {
     }
 
     setError(null);
+    const updatedBillingCycle = billingCycle;
+    const updatedBillingMonth = updatedBillingCycle === "yearly" && billingMonth 
+      ? Number.parseInt(billingMonth, 10) 
+      : null;
+
     startTransition(async () => {
       const result = await createExpenditureSource({
         name: name.trim(),
         baseCost: Number.parseFloat(baseCost) || 0,
-        billingCycle,
+        billingCycle: updatedBillingCycle,
         billingDayOfMonth: Number.parseInt(billingDay, 10) || 1,
-        billingMonth: billingCycle === "yearly" && billingMonth ? Number.parseInt(billingMonth, 10) : null,
+        billingMonth: updatedBillingMonth,
         consumptionCost: Number.parseFloat(consumptionCost) || 0,
         detailsUrl: detailsUrl.trim() || null,
         notes: notes.trim() || null,

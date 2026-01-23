@@ -359,6 +359,46 @@ describe("ExpenditureItem", () => {
         });
       });
     });
+
+    it("saves monthly billing after switching from yearly", async () => {
+      vi.mocked(updateExpenditureSource).mockResolvedValue({ success: true });
+
+      const yearlySource = {
+        ...mockSource,
+        billingCycle: "yearly" as const,
+        billingMonth: 6,
+      };
+      render(<ExpenditureItem source={yearlySource} />);
+
+      const buttons = screen.getAllByRole("button");
+      fireEvent.click(buttons[0]); // Edit button is first
+
+      // Change to monthly using combobox
+      const cycleCombobox = screen.getByRole("combobox", { name: /billing cycle/i });
+      fireEvent.click(cycleCombobox);
+
+      await waitFor(() => {
+        const monthlyOption = screen.getByRole("option", { name: /monthly/i });
+        fireEvent.click(monthlyOption);
+      });
+
+      await act(async () => {
+        fireEvent.click(screen.getByRole("button", { name: /save/i }));
+      });
+
+      await waitFor(() => {
+        expect(updateExpenditureSource).toHaveBeenCalledWith("exp-1", {
+          name: "AWS",
+          baseCost: 100,
+          billingCycle: "monthly",
+          billingDayOfMonth: 15,
+          billingMonth: null,
+          consumptionCost: 50,
+          detailsUrl: "https://aws.amazon.com",
+          notes: "Test notes",
+        });
+      });
+    });
   });
 
   describe("display mode for yearly billing", () => {

@@ -51,13 +51,18 @@ export function ExpenditureItem({ source }: ExpenditureItemProps) {
 
   const handleSave = () => {
     setError(null);
+    const updatedBillingCycle = billingCycle;
+    const updatedBillingMonth = updatedBillingCycle === "yearly" && billingMonth 
+      ? Number.parseInt(billingMonth, 10) 
+      : null;
+
     startTransition(async () => {
       const result = await updateExpenditureSource(source.id, {
         name,
         baseCost: Number.parseFloat(baseCost) || 0,
-        billingCycle,
+        billingCycle: updatedBillingCycle,
         billingDayOfMonth: Number.parseInt(billingDay, 10) || 1,
-        billingMonth: billingCycle === "yearly" && billingMonth ? Number.parseInt(billingMonth, 10) : null,
+        billingMonth: updatedBillingMonth,
         consumptionCost: Number.parseFloat(consumptionCost) || 0,
         detailsUrl: detailsUrl || null,
         notes: notes || null,
