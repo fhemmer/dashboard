@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "sessionId": "c977b6a5-8a3e-4584-a927-0a4f55137f67",
+  "sessionId": "d85a07ef-3325-4f57-b688-3d965e29281e",
   "status": "running",
-  "startedAt": "2026-01-14T14:41:32.323Z",
-  "updatedAt": "2026-01-14T14:41:32.323Z",
+  "startedAt": "2026-01-14T17:56:06.379Z",
+  "updatedAt": "2026-01-14T17:56:06.379Z",
   "currentIteration": 0,
   "maxIterations": 10,
   "tasksCompleted": 0,
@@ -12,8 +12,15 @@
   "trackerState": {
     "plugin": "json",
     "prdPath": "./prd.json",
-    "totalTasks": 0,
-    "tasks": []
+    "totalTasks": 1,
+    "tasks": [
+      {
+        "id": "US-001",
+        "title": "Improve test coverage",
+        "status": "open",
+        "completedInSession": false
+      }
+    ]
   },
   "iterations": [],
   "skippedTaskIds": [],

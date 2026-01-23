@@ -1,7 +1,21 @@
 {
-  "project": "Dashboard",
-  "version": "1.0.0",
+  "name": "Dashboard",
   "description": "HemSoft Dashboard - Personal productivity dashboard with AI-powered features",
-  "requirements": [],
-  "tasks": []
+  "branchName": "feature/improve-test-coverage",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Improve test coverage",
+      "description": "Analyze the codebase and add missing unit tests to improve overall test coverage. Focus on components and utilities with low or no coverage.",
+      "acceptanceCriteria": [
+        "Run bun test:coverage to identify gaps",
+        "Add tests for uncovered components",
+        "Add tests for uncovered utilities and hooks",
+        "Achieve 90% coverage threshold for statements, branches, functions, and lines",
+        "All tests pass with bun test:run"
+      ],
+      "priority": 1,
+      "passes": false
+    }
+  ]
 }
