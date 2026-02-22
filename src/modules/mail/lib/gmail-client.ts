@@ -13,149 +13,115 @@
  */
 
 import type {
-    BulkActionType,
-    MailFolder,
-    MailMessage,
-    SearchRequest,
-    SearchResult,
+  BulkActionType,
+  MailFolder,
+  MailMessage,
+  SearchRequest,
+  SearchResult,
 } from "../types";
-import { getToken, isTokenExpired } from "./token-manager";
+import {
+  BaseMailProvider,
+  withTokenValidation,
+  withSearchTokenValidation,
+} from "./base-provider";
 
-/**
- * Check if this provider is fully implemented
- */
-export function isGmailImplemented(): boolean {
-  return false; // Placeholder - return true when API integration is complete
-}
+class GmailProvider extends BaseMailProvider {
+  protected providerName = "Gmail";
 
-/**
- * Fetch unread count for a Gmail account
- * NOTE: This is a placeholder implementation that always returns 0.
- * Full implementation requires Gmail API integration.
- */
-// eslint-disable-next-line sonarjs/no-invariant-returns
-export async function getGmailUnreadCount(accountId: string): Promise<number> {
-  try {
-    const token = await getToken(accountId);
-    if (!token || isTokenExpired(token)) {
-      // Expected state when account hasn't been authenticated yet
-      return 0;
-    }
+  // Gmail-specific default folders
+  private defaultFolders: MailFolder[] = [
+    { id: "INBOX", displayName: "Inbox", type: "inbox", unreadCount: 0, totalCount: 0 },
+    { id: "SENT", displayName: "Sent", type: "sent", unreadCount: 0, totalCount: 0 },
+    { id: "SPAM", displayName: "Spam", type: "junk", unreadCount: 0, totalCount: 0 },
+    { id: "TRASH", displayName: "Trash", type: "trash", unreadCount: 0, totalCount: 0 },
+  ];
 
+  async getFolders(_accountId: string): Promise<MailFolder[]> {
     // Placeholder: Implement Gmail API call
-    // GET https://gmail.googleapis.com/gmail/v1/users/me/labels/INBOX
-
-    // Placeholder: return 0 for now
-    return 0;
-  } catch (error) {
-    console.error("Error fetching Gmail unread count:", error);
-    return 0;
+    // GET https://gmail.googleapis.com/gmail/v1/users/me/labels
+    return this.defaultFolders;
   }
 }
 
-/**
- * Fetch messages from a Gmail account
- */
+const gmail = new GmailProvider();
+
+// Export individual functions for backward compatibility
+export const isGmailImplemented = (): boolean => gmail.isImplemented();
+
+export async function getGmailUnreadCount(accountId: string): Promise<number> {
+  return withTokenValidation(
+    accountId,
+    async () => {
+      // Placeholder: Implement Gmail API call
+      // GET https://gmail.googleapis.com/gmail/v1/users/me/labels/INBOX
+      return 0;
+    },
+    0,
+    "Gmail",
+    "getUnreadCount"
+  );
+}
+
 export async function getGmailMessages(
   accountId: string,
   _folder: string = "inbox",
   _maxResults: number = 50
 ): Promise<MailMessage[]> {
-  try {
-    const token = await getToken(accountId);
-    if (!token || isTokenExpired(token)) {
-      // Expected state when account hasn't been authenticated yet
+  return withTokenValidation(
+    accountId,
+    async () => {
+      // Placeholder: Implement Gmail API calls
+      // 1. GET https://gmail.googleapis.com/gmail/v1/users/me/messages?labelIds={folder}&maxResults={maxResults}
+      // 2. For each message, GET https://gmail.googleapis.com/gmail/v1/users/me/messages/{id}
       return [];
-    }
-
-    // Placeholder: Implement Gmail API calls
-    // 1. GET https://gmail.googleapis.com/gmail/v1/users/me/messages?labelIds={folder}&maxResults={maxResults}
-    // 2. For each message, GET https://gmail.googleapis.com/gmail/v1/users/me/messages/{id}
-
-    // Placeholder: return empty array for now
-    return [];
-  } catch (error) {
-    console.error("Error fetching Gmail messages:", error);
-    return [];
-  }
+    },
+    [],
+    "Gmail",
+    "getMessages"
+  );
 }
 
-/**
- * Perform bulk action on Gmail messages
- */
 export async function performGmailBulkAction(
   accountId: string,
   messageIds: string[],
   _action: BulkActionType
 ): Promise<{ success: boolean; processedCount: number }> {
-  try {
-    const token = await getToken(accountId);
-    if (!token || isTokenExpired(token)) {
-      // Expected state when account hasn't been authenticated yet
-      return { success: false, processedCount: 0 };
-    }
-
-    // Placeholder: Implement Gmail API calls based on action type
-    // - markRead: POST /users/me/messages/batchModify with removeLabelIds: ["UNREAD"]
-    // - markUnread: POST /users/me/messages/batchModify with addLabelIds: ["UNREAD"]
-    // - moveToJunk: POST /users/me/messages/batchModify with addLabelIds: ["SPAM"]
-    // - delete: POST /users/me/messages/batchDelete with ids array
-
-    // Placeholder: return success for now
-    return { success: true, processedCount: messageIds.length };
-  } catch (error) {
-    console.error("Error performing Gmail bulk action:", error);
-    return { success: false, processedCount: 0 };
-  }
+  return withTokenValidation<{ success: boolean; processedCount: number }>(
+    accountId,
+    async () => {
+      // Placeholder: Implement Gmail API calls based on action type
+      // - markRead: POST /users/me/messages/batchModify with removeLabelIds: ["UNREAD"]
+      // - markUnread: POST /users/me/messages/batchModify with addLabelIds: ["UNREAD"]
+      // - moveToJunk: POST /users/me/messages/batchModify with addLabelIds: ["SPAM"]
+      // - delete: POST /users/me/messages/batchDelete with ids array
+      return { success: true, processedCount: messageIds.length };
+    },
+    { success: false, processedCount: 0 },
+    "Gmail",
+    "performBulkAction"
+  );
 }
 
-/**
- * Search messages in a Gmail account
- */
-export async function searchGmailMessages(
-  request: SearchRequest
-): Promise<SearchResult> {
-  try {
-    const token = await getToken(request.accountId);
-    if (!token || isTokenExpired(token)) {
-      // Expected state when account hasn't been authenticated yet
-      return { messages: [], hasMore: false, error: "Invalid token" };
-    }
-
-    // Placeholder: Implement Gmail API search
-    // GET https://gmail.googleapis.com/gmail/v1/users/me/messages?q={query}
-
-    // Placeholder: return empty results for now
-    return { messages: [], hasMore: false };
-  } catch (error) {
-    console.error("Error searching Gmail messages:", error);
-    return { messages: [], hasMore: false, error: String(error) };
-  }
+export async function searchGmailMessages(request: SearchRequest): Promise<SearchResult> {
+  return withSearchTokenValidation(
+    request,
+    async () => {
+      // Placeholder: Implement Gmail API search
+      // GET https://gmail.googleapis.com/gmail/v1/users/me/messages?q={query}
+      return { messages: [], hasMore: false };
+    },
+    { messages: [], hasMore: false, error: "Invalid token" },
+    "Gmail",
+    "searchMessages"
+  );
 }
 
-/**
- * Get labels (folders) for a Gmail account
- */
 export async function getGmailFolders(accountId: string): Promise<MailFolder[]> {
-  try {
-    const token = await getToken(accountId);
-    if (!token || isTokenExpired(token)) {
-      // Expected state when account hasn't been authenticated yet
-      return [];
-    }
-
-    // Placeholder: Implement Gmail API call
-    // GET https://gmail.googleapis.com/gmail/v1/users/me/labels
-
-    // Placeholder: return standard labels
-    return [
-      { id: "INBOX", displayName: "Inbox", type: "inbox", unreadCount: 0, totalCount: 0 },
-      { id: "SENT", displayName: "Sent", type: "sent", unreadCount: 0, totalCount: 0 },
-      { id: "SPAM", displayName: "Spam", type: "junk", unreadCount: 0, totalCount: 0 },
-      { id: "TRASH", displayName: "Trash", type: "trash", unreadCount: 0, totalCount: 0 },
-    ];
-  } catch (error) {
-    console.error("Error fetching Gmail folders:", error);
-    return [];
-  }
+  return withTokenValidation(
+    accountId,
+    async () => gmail.getFolders(accountId),
+    [],
+    "Gmail",
+    "getFolders"
+  );
 }
